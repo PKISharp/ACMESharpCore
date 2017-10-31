@@ -1,16 +1,13 @@
 # PKISharp.ACME
 An ACME client library for .NET Standard (Let's Encrypt)
 
-**This project is a very early work-in-progress.**
+***This project is a very early work-in-progress.***
 
 This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library to .NET Standard 2.0.
 
  Please Note: |
 --------------|
-If you are interested in using Let's Encrypt, or any other ACME-compliant CA in a .NET context,
-please see the [ACMESharp project](https://github.com/ebekker/ACMESharp) for a working
-implementation of an ACME client library for .NET Framework and complementary PowerShell module
-for Windows PowerShell.
+If you are interested in using Let's Encrypt, or any other ACME-compliant CA in a .NET context, please see the [ACMESharp project](https://github.com/ebekker/ACMESharp) for a working implementation of an ACME client library for .NET Framework and complementary PowerShell module for Windows PowerShell.
 
 ----
 
