@@ -1,4 +1,4 @@
-# PKISharp.ACME
+# ACMESharp Core
 An ACME client library for .NET Standard (Let's Encrypt)
 
 ***This project is a very early work-in-progress.***
