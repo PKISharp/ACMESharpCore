@@ -12,11 +12,26 @@
   * P-348
   * P-521
 
-
 * Hoped to use some other, more complete and well maintained JOSE library for
   doing things like JWS signing and JWK-related operations, but unfortunately
   the landscape for this hasn't changed too much in that still needed to use
   an internal library for this.
+
+## What's Implemented and Working
+
+* ACME Resource Directory Lookup
+* First Nonce Lookup
+* Create Account
+  * Create/Check Duplicate Account
+* Update Account
+* Change Account Key
+
+
+## What's Not Implemented/Not Working
+
+* Automatic detection/handling of Change of TOS from [ACME 7.3.4](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4) is not implemented
+* External Account Binding from [ACME 7.3.5](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.5) has not been implemented
+* 
 
 ## Contributors
 

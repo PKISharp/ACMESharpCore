@@ -26,6 +26,7 @@ namespace ACMESharp.CLI
                 Directory.CreateDirectory("_IGNORE");
 
             var client = new AcmeClient(new Uri(LetsEncryptV2StagingEndpoint));
+            client.BeforeHttpSend = BeforeHttpSend;
             client.AfterHttpSend = AftertHttpSend;
 
 
@@ -77,8 +78,33 @@ namespace ACMESharp.CLI
 
             acct = await client.UpdateAccountAsync(new[] { "mailto:bar@example.com", "mailto:baz@example.com" });
             File.WriteAllText("_IGNORE\\017-acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+
+            var newKey = new Crypto.JOSE.Impl.RSJwsTool();
+            newKey.Init();
+            await client.ChangeAccountKeyAsync(newKey);
+
+
+            _writeResponseTag = "4";
+            acct = await client.UpdateAccountAsync(new[] { "mailto:foo@example.com", "mailto:bar@example.com", "mailto:baz@example.com" });
+            File.WriteAllText("_IGNORE\\250-acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            _writeResponseTag = null;
         }
 
+        static void BeforeHttpSend(string methodName, HttpRequestMessage requ)
+        {
+            if (methodName == nameof(AcmeClient.ChangeAccountKeyAsync))
+            {
+                WriteRequestToFile($"_IGNORE\\150-change-acct-key{_writeResponseTag}-HttpRequest.json");
+            }
+
+            void WriteRequestToFile(string path)
+            {
+                var headers = requ.Headers.Concat(requ.Content.Headers)
+                    .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
+                File.WriteAllText(path, string.Join("\r\n", headers));
+                File.AppendAllText(path, "\r\n" + requ.Content.ReadAsStringAsync().Result);
+            }            
+        }
         static void AftertHttpSend(string methodName, HttpResponseMessage resp)
         {
             if (methodName == nameof(AcmeClient.CreateAccountAsync))
@@ -93,12 +119,17 @@ namespace ACMESharp.CLI
             {
                 WriteResponseToFile($"_IGNORE\\017-acct-update{_writeResponseTag}-HttpResponse.json");
             }
+            else if (methodName == nameof(AcmeClient.ChangeAccountKeyAsync))
+            {
+                WriteResponseToFile($"_IGNORE\\150-change-acct-key{_writeResponseTag}-HttpResponse.json");
+            }
 
             void WriteResponseToFile(string path)
             {
+                File.WriteAllText(path, string.Join("\r\n", "// " + resp.StatusCode + "\r\n"));
                 var headers = resp.Headers.Concat(resp.Content.Headers)
                     .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
-                File.WriteAllText(path, string.Join("\r\n", headers));
+                File.AppendAllText(path, string.Join("\r\n", headers));
                 File.AppendAllText(path, "\r\n" + resp.Content.ReadAsStringAsync().Result);
             }
         }

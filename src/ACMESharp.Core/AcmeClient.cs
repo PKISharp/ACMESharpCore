@@ -126,7 +126,8 @@ namespace ACMESharp
             var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
 
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(), true));
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(),
+                    includePublicKey: true));
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                     Constants.ContentTypeHeaderValue);
 
@@ -187,7 +188,8 @@ namespace ACMESharp
 
             var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(), true));
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(),
+                    includePublicKey: true));
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                     Constants.ContentTypeHeaderValue);
             
@@ -278,6 +280,41 @@ namespace ACMESharp
             return acct;
         }
 
+        // TODO: handle "Change of TOS" error response
+        //    https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4
+
+
+        /// <summary>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
+        /// </summary>
+        public async Task ChangeAccountKeyAsync(IJwsTool newSigner,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(_http.BaseAddress, Directory.KeyChange);
+            var requData = new KeyChangeRequest
+            {
+                Account = Account.Kid,
+                NewKey = newSigner.ExportJwk(),
+            };
+            var requPayload = ComputeAcmeSigned(requData, requUrl.ToString(),
+                    signer: newSigner, includePublicKey: true, excludeNonce: true);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requPayload, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(ChangeAccountKeyAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(ChangeAccountKeyAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Failed to change account key");
+
+            Signer = newSigner;
+        }
+
         protected void ExtractNextNonce(HttpResponseMessage resp)
         {
             var headerName = Constants.ReplayNonceHeaderName;
@@ -292,21 +329,27 @@ namespace ACMESharp
         }
 
         /// <summary>
-        /// Computes the JWS-signed ACME request body for the given message object and the current
-        /// <see cref="#Signer"/>.
+        /// Computes the JWS-signed ACME request body for the given message object
+        /// and the current or input <see cref="#Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
-                bool includePublicKey = false)
+                IJwsTool signer = null,
+                bool includePublicKey = false,
+                bool excludeNonce = false)
         {
+            if (signer == null)
+                signer = Signer;
+
             var protectedHeader = new Dictionary<string, object>
             {
-                ["alg"] = Signer.JwsAlg,
-                ["nonce"] = NextNonce,
+                ["alg"] = signer.JwsAlg,
                 ["url"] = requUrl,
             };
+            if (!excludeNonce)
+                protectedHeader["nonce"] = NextNonce;
 
             if (includePublicKey)
-                protectedHeader["jwk"] = Signer.ExportJwk();
+                protectedHeader["jwk"] = signer.ExportJwk();
             else
                 protectedHeader["kid"] = Account.Kid;
 
@@ -315,12 +358,14 @@ namespace ACMESharp
             var unprotectedHeader = (object)null; // new { };
 
             var payload = string.Empty;
-            if (message is JObject)
+            if (message is string)
+                payload = (string)message;
+            else if (message is JObject)
                 payload = ((JObject)message).ToString(Formatting.None);
             else
                 payload = JsonConvert.SerializeObject(message, Formatting.None);
 
-            var acmeSigned = JwsHelper.SignFlatJson(Signer.Sign, payload,
+            var acmeSigned = JwsHelper.SignFlatJson(signer.Sign, payload,
                     protectedHeader, unprotectedHeader);
 
             return acmeSigned;

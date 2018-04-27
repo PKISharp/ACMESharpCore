@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 
-namespace ACMESharp.Crypto.JOSE
+namespace ACMESharp.Crypto.JOSE.Impl
 {
     /// <summary>
     /// JWS Signing tool implements RS-family of algorithms as per
