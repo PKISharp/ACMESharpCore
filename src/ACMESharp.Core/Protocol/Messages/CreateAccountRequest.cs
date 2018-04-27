@@ -20,6 +20,7 @@ namespace ACMESharp.Protocol.Messages
         public bool? OnlyReturnExisting  { get; set; }
 
         [JsonProperty("externalAccountBinding", NullValueHandling=NullValueHandling.Ignore)]
-        public JwsSignedPayload ExternalAccountBinding { get; set; }
+        public object ExternalAccountBinding { get; set; }
+        //public JwsSignedPayload ExternalAccountBinding { get; set; }
     }
 }
