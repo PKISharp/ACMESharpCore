@@ -3,6 +3,8 @@
 ## Changes
 
 * Based on .NET Standard / .NET Core
+  * Moved to HttpClient from WebRequest
+* Using async code throughout
 * Uses PO files for message localization?
 * Expanded support for RSA keys to include more SHA (348, 512) and RSA (2048-4096) sizes
 * Added support for EC keys for both account and cert keys, supporting standard curves
