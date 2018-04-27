@@ -9,8 +9,12 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class CreateAccountRequest
     {
-        [JsonProperty("contact", Required = Required.Always)]
-        [Required, MinLength(1)]
+        /// <summary>
+        /// The list of contact URLs.  Although a request to create a brand new account
+        /// requires this value, when used in a request to lookup an existing account
+        /// this property can be omitted.
+        /// </summary>
+        [JsonProperty("contact")]
         public string[] Contact { get; set; }
 
         [JsonProperty("termsOfServiceAgreed", NullValueHandling=NullValueHandling.Ignore)]

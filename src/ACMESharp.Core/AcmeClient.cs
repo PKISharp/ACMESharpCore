@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -23,6 +24,11 @@ namespace ACMESharp
     /// </summary>
     public class AcmeClient
     {
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+
         private HttpClient _http;
 
         private IJwsTool _signer;
@@ -106,6 +112,7 @@ namespace ACMESharp
         public async Task<AcmeAccount> CreateAccountAsync(string[] contacts,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
+            bool throwOnExistingAccount = false,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
@@ -116,13 +123,7 @@ namespace ACMESharp
                 ExternalAccountBinding = (JwsSignedPayload)externalAccountBinding,
             };
 
-
-            var jsonSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-            var requPayload = JsonConvert.SerializeObject(requData, jsonSettings);
-
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
 
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
             requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
@@ -135,21 +136,93 @@ namespace ACMESharp
 
             ExtractNextNonce(resp);
 
-            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(await resp.Content.ReadAsStringAsync());
-            var links = new HTTP.LinkCollection(resp.Headers.GetValues("Link"));
+            if (resp.StatusCode == HttpStatusCode.OK)
+            {
+                if (throwOnExistingAccount)
+                    throw new InvalidOperationException("Existing account public key found");
+            }
+            else if (resp.StatusCode != HttpStatusCode.Created)
+            {
+                throw new InvalidOperationException("Unexpected response code:  " + resp.StatusCode);
+            }
 
+            resp.Headers.TryGetValues("Link", out var linkValues);
+            var links = new HTTP.LinkCollection(linkValues);
+
+            // If this is a response to "duplicate account" then the body
+            // will be empty and this will produce a null which we have
+            // to account for when we build up the AcmeAccount instance
+            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
+                    await resp.Content.ReadAsStringAsync());
             var acct = new AcmeAccount
             {
-                PublicKey = Signer.ExportJwk(),
-                Contacts = contacts,
                 Kid = resp.Headers.Location?.ToString(),
                 TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
-                Id = caResp.Id,
+
+                // caResp will be null if this
+                // is a duplicate account resp
+                PublicKey = caResp?.Key,
+                Contacts = caResp?.Contact,
+                Id = caResp?.Id,
             };
             
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
-                        "account creation response does not include Location header");
+                        "Account creation response does not include Location header");
+
+            return acct;
+        }
+
+        /// <summary>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.1
+        /// </summary>
+        public async Task<AcmeAccount> GetExistingAccountAsync(
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
+            var requData = new CreateAccountRequest
+            {
+                OnlyReturnExisting = true,
+            };
+
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(GetExistingAccountAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(GetExistingAccountAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Invalid or missing account");
+
+            resp.Headers.TryGetValues("Link", out var linkValues);
+            var links = new HTTP.LinkCollection(linkValues);
+
+            // If this is a response to "duplicate account" then the body
+            // will be empty and this will produce a null which we have
+            // to account for when we build up the AcmeAccount instance
+            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            var acct = new AcmeAccount
+            {
+                Kid = resp.Headers.Location?.ToString(),
+                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
+
+                // caResp will be null if this
+                // is a duplicate account resp
+                PublicKey = caResp?.Key,
+                Contacts = caResp?.Contact,
+                Id = caResp?.Id,
+            };
+            
+            if (string.IsNullOrEmpty(acct.Kid))
+                throw new InvalidDataException(
+                        "Account lookup response does not include Location header");
 
             return acct;
         }

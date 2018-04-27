@@ -20,6 +20,7 @@ namespace ACMESharp.HTTP
         public LinkCollection()
         { }
 
+        /// <param name="links">It's OK to provide a null value.</param>
         public LinkCollection(IEnumerable<Link> links)
         {
             if (links != null)
@@ -31,6 +32,7 @@ namespace ACMESharp.HTTP
             }
         }
 
+        /// <param name="linkValues">It's OK to provide a null value.</param>
         public LinkCollection(IEnumerable<string> linkValues)
         {
             if (linkValues != null)
