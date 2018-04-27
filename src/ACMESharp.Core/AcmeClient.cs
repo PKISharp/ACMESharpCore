@@ -46,6 +46,8 @@ namespace ACMESharp
             _http = http;
             Directory = dir ?? new DirectoryResponse();
 
+            Account = acct;
+
             // We default to ES256 signer
             Signer = signer ?? new Crypto.JOSE.Impl.ESJwsTool();
             Signer.Init();
@@ -61,6 +63,8 @@ namespace ACMESharp
         public IJwsTool Signer { get; private set; }
 
         public DirectoryResponse Directory { get; set; }
+
+        public AcmeAccount Account { get; set; }
 
         public string NextNonce { get; private set; }
 
@@ -131,6 +135,24 @@ namespace ACMESharp
 
             ExtractNextNonce(resp);
 
+            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(await resp.Content.ReadAsStringAsync());
+            var links = new HTTP.LinkCollection(resp.Headers.GetValues("Link"));
+
+            var acct = new AcmeAccount
+            {
+                PublicKey = Signer.ExportJwk(),
+                Contacts = contacts,
+                Kid = resp.Headers.Location?.ToString(),
+                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
+                Id = caResp.Id,
+            };
+            
+            if (string.IsNullOrEmpty(acct.Kid))
+                throw new InvalidDataException(
+                        "account creation response does not include Location header");
+
+            return acct;
+        }
 
         protected void ExtractNextNonce(HttpResponseMessage resp)
         {

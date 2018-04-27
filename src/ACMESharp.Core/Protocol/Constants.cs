@@ -27,5 +27,10 @@ namespace ACMESharp.Protocol
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.2
         /// </summary>
         public const string ReplayNonceHeaderName = "Replay-Nonce";
+
+        /// <summary>
+        /// The Link Header Relation key used to identify a URL to the Terms-Of-Service.
+        /// </summary>
+        public const string TosLinkHeaderRelationKey = "terms-of-service";
     }
 }
