@@ -63,10 +63,20 @@ namespace ACMESharp.CLI
 
         public string NextNonce { get; private set; }
 
+        public Action<string, HttpRequestMessage> BeforeHttpSend { get; set; }
+
+        public Action<string, HttpResponseMessage> AfterHttpSend { get; set; }
+
         public async Task<DirectoryResponse> GetDirectoryAsync(
             CancellationToken cancel = default(CancellationToken))
         {
             var resp = await _http.GetAsync(Directory.Directory, cancel);
+            var requ = new HttpRequestMessage(HttpMethod.Get, Directory.Directory);
+            
+            BeforeHttpSend?.Invoke(nameof(GetDirectoryAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(GetDirectoryAsync), resp);
+
             var body = await resp.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<DirectoryResponse>(body);
         }
@@ -77,8 +87,11 @@ namespace ACMESharp.CLI
         public async Task GetNonceAsync(
             CancellationToken cancel = default(CancellationToken))
         {
-            var resp = await _http.SendAsync(new HttpRequestMessage(
-                    HttpMethod.Head, Directory.NewNonce));
+            var requ = new HttpRequestMessage(HttpMethod.Head, Directory.NewNonce);
+            
+            BeforeHttpSend?.Invoke(nameof(GetNonceAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(GetNonceAsync), resp);
 
             ExtractNextNonce(resp);
         }
@@ -125,7 +138,10 @@ namespace ACMESharp.CLI
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                     Constants.ContentTypeHeaderValue);
 
-            var resp = await _http.SendAsync(requ);
+            BeforeHttpSend?.Invoke(nameof(CreateAccountAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(CreateAccountAsync), resp);
+
             ExtractNextNonce(resp);
 
             File.WriteAllText("C:\\temp\\ACMEv2-CreateAccount.json", await resp.Content.ReadAsStringAsync());
