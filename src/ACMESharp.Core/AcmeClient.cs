@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -15,7 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace ACMESharp.CLI
+namespace ACMESharp
 {
     /// <summary>
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7
@@ -26,21 +27,21 @@ namespace ACMESharp.CLI
 
         private IJwsTool _signer;
 
-        public AcmeClient(HttpClient http, DirectoryResponse dir = null, IJwsTool signer = null)
+        public AcmeClient(HttpClient http, DirectoryResponse dir = null, AcmeAccount acct = null, IJwsTool signer = null)
         {
-            Init(http, dir, signer);
+            Init(http, dir, acct, signer);
         }
 
-        public AcmeClient(Uri baseUri, DirectoryResponse dir = null, IJwsTool signer = null)
+        public AcmeClient(Uri baseUri, DirectoryResponse dir = null, AcmeAccount acct = null, IJwsTool signer = null)
         {
             var http = new HttpClient
             {
                 BaseAddress = baseUri,
             };
-            Init(http , dir, signer);
+            Init(http, dir, acct, signer);
         }
 
-        private void Init(HttpClient http, DirectoryResponse dir, IJwsTool signer)
+        private void Init(HttpClient http, DirectoryResponse dir, AcmeAccount acct, IJwsTool signer)
         {
             _http = http;
             Directory = dir ?? new DirectoryResponse();
@@ -70,7 +71,6 @@ namespace ACMESharp.CLI
         public async Task<DirectoryResponse> GetDirectoryAsync(
             CancellationToken cancel = default(CancellationToken))
         {
-            var resp = await _http.GetAsync(Directory.Directory, cancel);
             var requ = new HttpRequestMessage(HttpMethod.Get, Directory.Directory);
             
             BeforeHttpSend?.Invoke(nameof(GetDirectoryAsync), requ);
@@ -96,23 +96,10 @@ namespace ACMESharp.CLI
             ExtractNextNonce(resp);
         }
 
-        protected void ExtractNextNonce(HttpResponseMessage resp)
-        {
-            var headerName = Constants.ReplayNonceHeaderName;
-            if (resp.Headers.TryGetValues(headerName, out var values))
-            {
-                NextNonce = string.Join(",", values);
-            }
-            else
-            {
-                throw new Exception($"missing header:  {headerName}");
-            }
-        }
-
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </summary>
-        public async Task CreateAccountAsync(string[] contacts,
+        public async Task<AcmeAccount> CreateAccountAsync(string[] contacts,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
             CancellationToken cancel = default(CancellationToken))
@@ -144,14 +131,25 @@ namespace ACMESharp.CLI
 
             ExtractNextNonce(resp);
 
-            File.WriteAllText("C:\\temp\\ACMEv2-CreateAccount.json", await resp.Content.ReadAsStringAsync());
+
+        protected void ExtractNextNonce(HttpResponseMessage resp)
+        {
+            var headerName = Constants.ReplayNonceHeaderName;
+            if (resp.Headers.TryGetValues(headerName, out var values))
+            {
+                NextNonce = string.Join(",", values);
+            }
+            else
+            {
+                throw new Exception($"missing header:  {headerName}");
+            }
         }
 
         /// <summary>
         /// Computes the JWS-signed ACME request body for the given message object and the current
         /// <see cref="#Signer"/>.
         /// </summary>
-        private string ComputeAcmeSigned(object message, string requUrl)
+        protected string ComputeAcmeSigned(object message, string requUrl)
         {
             var protectedHeader = new
             {
