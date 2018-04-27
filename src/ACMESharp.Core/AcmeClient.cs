@@ -126,7 +126,7 @@ namespace ACMESharp
             var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
 
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(), true));
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                     Constants.ContentTypeHeaderValue);
 
@@ -176,7 +176,7 @@ namespace ACMESharp
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.1
         /// </summary>
-        public async Task<AcmeAccount> GetExistingAccountAsync(
+        public async Task<AcmeAccount> CheckAccountAsync(
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
@@ -187,13 +187,13 @@ namespace ACMESharp
 
             var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(), true));
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                     Constants.ContentTypeHeaderValue);
             
-            BeforeHttpSend?.Invoke(nameof(GetExistingAccountAsync), requ);
+            BeforeHttpSend?.Invoke(nameof(CheckAccountAsync), requ);
             var resp = await _http.SendAsync(requ, cancel);
-            AfterHttpSend?.Invoke(nameof(GetExistingAccountAsync), resp);
+            AfterHttpSend?.Invoke(nameof(CheckAccountAsync), resp);
             
             ExtractNextNonce(resp);
 
@@ -227,6 +227,57 @@ namespace ACMESharp
             return acct;
         }
 
+        public async Task<AcmeAccount> UpdateAccountAsync(string[] contacts,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(Account.Kid);
+            var requData = new CreateAccountRequest
+            {
+                Contact = contacts,
+            };
+
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(UpdateAccountAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(UpdateAccountAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to account update");
+
+            resp.Headers.TryGetValues("Link", out var linkValues);
+            var links = new HTTP.LinkCollection(linkValues);
+
+            // If this is a response to "duplicate account" then the body
+            // will be empty and this will produce a null which we have
+            // to account for when we build up the AcmeAccount instance
+            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            var acct = new AcmeAccount
+            {
+                Kid = resp.Headers.Location?.ToString() ?? Account.Kid,
+                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
+
+                // caResp will be null if this
+                // is a duplicate account resp
+                PublicKey = caResp?.Key,
+                Contacts = caResp?.Contact,
+                Id = caResp?.Id,
+            };
+            
+            if (string.IsNullOrEmpty(acct.Kid))
+                throw new InvalidDataException(
+                        "Account update response does not include Location header");
+
+            return acct;
+        }
+
         protected void ExtractNextNonce(HttpResponseMessage resp)
         {
             var headerName = Constants.ReplayNonceHeaderName;
@@ -244,15 +295,21 @@ namespace ACMESharp
         /// Computes the JWS-signed ACME request body for the given message object and the current
         /// <see cref="#Signer"/>.
         /// </summary>
-        protected string ComputeAcmeSigned(object message, string requUrl)
+        protected string ComputeAcmeSigned(object message, string requUrl,
+                bool includePublicKey = false)
         {
-            var protectedHeader = new
+            var protectedHeader = new Dictionary<string, object>
             {
-                alg = Signer.JwsAlg,
-                jwk = Signer.ExportJwk(),
-                nonce = NextNonce,
-                url = requUrl,
+                ["alg"] = Signer.JwsAlg,
+                ["nonce"] = NextNonce,
+                ["url"] = requUrl,
             };
+
+            if (includePublicKey)
+                protectedHeader["jwk"] = Signer.ExportJwk();
+            else
+                protectedHeader["kid"] = Account.Kid;
+
 
             // Nothing unprotected for now
             var unprotectedHeader = (object)null; // new { };
