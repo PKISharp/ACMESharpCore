@@ -163,11 +163,7 @@ namespace ACMESharp
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
-            var requData = new CreateAccountRequest
-            {
-                OnlyReturnExisting = true,
-            };
-
+            var requData = new CheckAccountRequest();
             var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
             requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(),
@@ -197,7 +193,7 @@ namespace ACMESharp
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(Account.Kid);
-            var requData = new CreateAccountRequest
+            var requData = new UpdateAccountRequest
             {
                 Contact = contacts,
             };
