@@ -147,25 +147,7 @@ namespace ACMESharp
                 throw new InvalidOperationException("Unexpected response code:  " + resp.StatusCode);
             }
 
-            resp.Headers.TryGetValues("Link", out var linkValues);
-            var links = new HTTP.LinkCollection(linkValues);
-
-            // If this is a response to "duplicate account" then the body
-            // will be empty and this will produce a null which we have
-            // to account for when we build up the AcmeAccount instance
-            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
-                    await resp.Content.ReadAsStringAsync());
-            var acct = new AcmeAccount
-            {
-                Kid = resp.Headers.Location?.ToString(),
-                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
-
-                // caResp will be null if this
-                // is a duplicate account resp
-                PublicKey = caResp?.Key,
-                Contacts = caResp?.Contact,
-                Id = caResp?.Id,
-            };
+            var acct = await DecodeAccountResponseAsync(resp);
             
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -202,26 +184,8 @@ namespace ACMESharp
             if (resp.StatusCode != HttpStatusCode.OK)
                 throw new InvalidOperationException("Invalid or missing account");
 
-            resp.Headers.TryGetValues("Link", out var linkValues);
-            var links = new HTTP.LinkCollection(linkValues);
+            var acct = await DecodeAccountResponseAsync(resp);
 
-            // If this is a response to "duplicate account" then the body
-            // will be empty and this will produce a null which we have
-            // to account for when we build up the AcmeAccount instance
-            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
-                    await resp.Content.ReadAsStringAsync());
-            var acct = new AcmeAccount
-            {
-                Kid = resp.Headers.Location?.ToString(),
-                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
-
-                // caResp will be null if this
-                // is a duplicate account resp
-                PublicKey = caResp?.Key,
-                Contacts = caResp?.Contact,
-                Id = caResp?.Id,
-            };
-            
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
                         "Account lookup response does not include Location header");
@@ -253,26 +217,8 @@ namespace ACMESharp
             if (resp.StatusCode != HttpStatusCode.OK)
                 throw new InvalidOperationException("Unexpected response to account update");
 
-            resp.Headers.TryGetValues("Link", out var linkValues);
-            var links = new HTTP.LinkCollection(linkValues);
+            var acct = await DecodeAccountResponseAsync(resp);
 
-            // If this is a response to "duplicate account" then the body
-            // will be empty and this will produce a null which we have
-            // to account for when we build up the AcmeAccount instance
-            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
-                    await resp.Content.ReadAsStringAsync());
-            var acct = new AcmeAccount
-            {
-                Kid = resp.Headers.Location?.ToString() ?? Account.Kid,
-                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
-
-                // caResp will be null if this
-                // is a duplicate account resp
-                PublicKey = caResp?.Key,
-                Contacts = caResp?.Contact,
-                Id = caResp?.Id,
-            };
-            
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
                         "Account update response does not include Location header");
@@ -313,6 +259,33 @@ namespace ACMESharp
                 throw new InvalidOperationException("Failed to change account key");
 
             Signer = newSigner;
+        }
+
+
+        protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
+        {
+            resp.Headers.TryGetValues("Link", out var linkValues);
+            var links = new HTTP.LinkCollection(linkValues);
+
+            // If this is a response to "duplicate account" then the body
+            // will be empty and this will produce a null which we have
+            // to account for when we build up the AcmeAccount instance
+            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            var acct = new AcmeAccount
+            {
+                Kid = resp.Headers.Location?.ToString() ?? Account.Kid,
+                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
+
+                // caResp will be null if this
+                // is a duplicate account resp
+                PublicKey = caResp?.Key,
+                Contacts = caResp?.Contact,
+                Id = caResp?.Id,
+            };
+            
+            return acct;
+            
         }
 
         protected void ExtractNextNonce(HttpResponseMessage resp)
