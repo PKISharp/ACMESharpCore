@@ -257,6 +257,28 @@ namespace ACMESharp
             Signer = newSigner;
         }
 
+        public async Task<AcmeAccount> DeactivateAccountAsync(
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(Account.Kid);
+            var requData = new DeactivateAccountRequest();
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(DeactivateAccountAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(DeactivateAccountAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to account update");
+
+            return await DecodeAccountResponseAsync(resp);
+        }
 
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
