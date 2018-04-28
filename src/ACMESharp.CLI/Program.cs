@@ -17,7 +17,8 @@ namespace ACMESharp.CLI
         public const string LetsEncryptEndpoint = "https://acme-v01.api.letsencrypt.org/";
         public const string LetsEncryptV2Endpoint = "https://acme-v02.api.letsencrypt.org/";
 
-        static string _writeResponseTag;
+
+        static string _seq;
 
         static async Task Main(string[] args)
         {
@@ -30,15 +31,14 @@ namespace ACMESharp.CLI
             client.AfterHttpSend = AftertHttpSend;
 
 
+            _seq = "000";
             var dir = await client.GetDirectoryAsync();
-
-            File.WriteAllText("_IGNORE\\000-dir.json", JsonConvert.SerializeObject(dir, Formatting.Indented));
+            WriteTo("dir.json", JsonConvert.SerializeObject(dir, Formatting.Indented));
             client.Directory = dir;
 
-            Console.WriteLine("Nonce Before: " + client.NextNonce);
             await client.GetNonceAsync();
-            Console.WriteLine("Nonce After: " + client.NextNonce);
 
+            _seq = "005";
             try
             {
                 await client.CheckAccountAsync();
@@ -49,17 +49,17 @@ namespace ACMESharp.CLI
                 Console.WriteLine("Lookup of non-existent Account failed AS EXPECTED");
             }
 
+            _seq = "010";
             var contacts = new[] { "mailto:foo@example.com" };
             var acct = await client.CreateAccountAsync(contacts, true);
-            File.WriteAllText("_IGNORE\\010-acct.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            WriteTo("acct.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
             client.Account = acct;
 
-            _writeResponseTag = "2";
+            _seq = "011";
             var acct2 = await client.CreateAccountAsync(contacts);
-            File.WriteAllText("_IGNORE\\011-acct2.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
-            _writeResponseTag = null;
+            WriteTo("acct.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
 
-            _writeResponseTag = "3";
+            _seq = "012";
             try
             {
                 await client.CreateAccountAsync(contacts, throwOnExistingAccount: true);
@@ -70,68 +70,67 @@ namespace ACMESharp.CLI
             {
                 Console.WriteLine("Duplicate create AS EXPECTED");
             }
-            _writeResponseTag = null;
 
+            _seq = "015";
             acct = await client.CheckAccountAsync();
             Console.WriteLine("Existing account lookup worked");
-            File.WriteAllText("_IGNORE\\015-acct-lookup.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            WriteTo("acct-lookup.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
 
+            _seq = "017";
             acct = await client.UpdateAccountAsync(new[] { "mailto:bar@example.com", "mailto:baz@example.com" });
-            File.WriteAllText("_IGNORE\\017-acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            WriteTo("acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
 
+            _seq = "200";
             var newKey = new Crypto.JOSE.Impl.RSJwsTool();
             newKey.Init();
             await client.ChangeAccountKeyAsync(newKey);
 
-
-            _writeResponseTag = "4";
+            _seq = "250";
             acct = await client.UpdateAccountAsync(new[] { "mailto:foo@example.com", "mailto:bar@example.com", "mailto:baz@example.com" });
-            File.WriteAllText("_IGNORE\\250-acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
-            _writeResponseTag = null;
+            WriteTo("acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+
+            _seq = "290";
+            await client.DeactivateAccountAsync();
+            WriteTo("acct-deactivate.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            try
+            {
+                acct = await client.UpdateAccountAsync(new[] { "mailto:foo@example.com", "mailto:bar@example.com", "mailto:baz@example.com" });
+                Console.Write("DID NOT ERROR on deactivated Account update");
+                WriteTo("acct-update.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Failed to update deactivated Account AS EXPECTED");
+            }
+        }
+
+        static void WriteTo(string name, string value)
+        {
+            File.WriteAllText($"_IGNORE\\{_seq}-{name}", value);
+        }
+
+        static void AppendTo(string name, string value)
+        {
+            File.AppendAllText($"_IGNORE\\{_seq}-{name}", value);
         }
 
         static void BeforeHttpSend(string methodName, HttpRequestMessage requ)
         {
-            if (methodName == nameof(AcmeClient.ChangeAccountKeyAsync))
-            {
-                WriteRequestToFile($"_IGNORE\\150-change-acct-key{_writeResponseTag}-HttpRequest.json");
-            }
-
-            void WriteRequestToFile(string path)
-            {
-                var headers = requ.Headers.Concat(requ.Content.Headers)
-                    .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
-                File.WriteAllText(path, string.Join("\r\n", headers));
-                File.AppendAllText(path, "\r\n" + requ.Content.ReadAsStringAsync().Result);
-            }            
+            var toName = $"{methodName}-HttpRequest.json";
+            var headers = (requ.Content == null ? requ.Headers : requ.Headers.Concat(requ.Content.Headers))
+                .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
+            WriteTo(toName, string.Join("\r\n", headers));
+            if (requ.Content != null)
+                AppendTo(toName, "\r\n" + requ.Content.ReadAsStringAsync().Result);
         }
         static void AftertHttpSend(string methodName, HttpResponseMessage resp)
         {
-            if (methodName == nameof(AcmeClient.CreateAccountAsync))
-            {
-                WriteResponseToFile($"_IGNORE\\010-acct{_writeResponseTag}-HttpResponse.json");
-            }
-            else if (methodName == nameof(AcmeClient.CheckAccountAsync))
-            {
-                WriteResponseToFile($"_IGNORE\\015-acct-lookup{_writeResponseTag}-HttpResponse.json");
-            }
-            else if (methodName == nameof(AcmeClient.UpdateAccountAsync))
-            {
-                WriteResponseToFile($"_IGNORE\\017-acct-update{_writeResponseTag}-HttpResponse.json");
-            }
-            else if (methodName == nameof(AcmeClient.ChangeAccountKeyAsync))
-            {
-                WriteResponseToFile($"_IGNORE\\150-change-acct-key{_writeResponseTag}-HttpResponse.json");
-            }
-
-            void WriteResponseToFile(string path)
-            {
-                File.WriteAllText(path, string.Join("\r\n", "// " + resp.StatusCode + "\r\n"));
-                var headers = resp.Headers.Concat(resp.Content.Headers)
-                    .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
-                File.AppendAllText(path, string.Join("\r\n", headers));
-                File.AppendAllText(path, "\r\n" + resp.Content.ReadAsStringAsync().Result);
-            }
+            var toName = $"{methodName}-HttpResponse.json";
+            WriteTo(toName, string.Join("\r\n", "// " + resp.StatusCode + "\r\n"));
+            var headers = resp.Headers.Concat(resp.Content.Headers)
+                .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
+            AppendTo(toName, string.Join("\r\n", headers));
+            AppendTo(toName, "\r\n" + resp.Content.ReadAsStringAsync().Result);
         }
     }
 }
