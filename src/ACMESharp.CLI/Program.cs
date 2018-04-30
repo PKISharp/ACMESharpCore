@@ -150,13 +150,14 @@ namespace ACMESharp.CLI
             });
             _seq = "311";
             WriteTo("order.json", JsonConvert.SerializeObject(order, Formatting.Indented));
+
             _seq = "312";
             int authzIndex = 0;
             foreach (var authz in order.Authorizations)
             {
                 int chlngIndex = 0;
                 foreach (var chlng in authz.Details.Challenges.Where(x =>
-                        x.Type == Dns01ChallengeDetails.ChallengeType))
+                        x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
                     var chlngDetails = client.ResolveChallengeForDns01(authz, chlng);
                     WriteTo($"order-authz-{authzIndex}-chlng-{chlngIndex}.json",
@@ -167,7 +168,8 @@ namespace ACMESharp.CLI
 
             _seq = "316";
             var authz1 = order.Authorizations[1];
-            var chlng1 = authz1.Details.Challenges.Where(x => x.Type == Dns01ChallengeDetails.ChallengeType).First();
+            var chlng1 = authz1.Details.Challenges.Where(x =>
+                    x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType).First();
             await client.AnswerChallengeAsync(authz1, chlng1);
 
             _seq = "321-0";

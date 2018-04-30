@@ -389,21 +389,49 @@ namespace ACMESharp
             return order;
         }
 
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8
+        /// </remarks>
+        public IChallengeValidationDetails DecodeChallengeValidation(AcmeAuthorization authz,
+                string challengeType)
+        {
+            var challenge = authz.Details.Challenges.Where(x => x.Type == challengeType)
+                    .FirstOrDefault();
+            if (challenge == null)
+            {
+                throw new InvalidOperationException(
+                        $"Challenge type [{challengeType}] not found for given Authorization");
+            }
+
+            switch (challengeType)
+            {
+                case "dns-01":
+                    return ResolveChallengeForDns01(authz, challenge);
+            }
+
+            throw new NotImplementedException(
+                    $"Unknown or unsupported Challenge type [{challengeType}]");
+        }
+
+
         /// <summary>
         /// </summary>
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.4
         /// </remarks>
-        public Dns01ChallengeDetails ResolveChallengeForDns01(AcmeAuthorization authz,
+        public Dns01ChallengeValidationDetails ResolveChallengeForDns01(AcmeAuthorization authz,
                 Challenge challenge)
         {
             var keyAuthzDigested = JwsHelper.ComputeKeyAuthorizationDigest(Signer, challenge.Token);
 
-            return new Dns01ChallengeDetails
+            return new Dns01ChallengeValidationDetails
             {
-                DnsRecordName = $@"{Dns01ChallengeDetails.DnsRecordNamePrefix}.{
+                DnsRecordName = $@"{Dns01ChallengeValidationDetails.DnsRecordNamePrefix}.{
                         authz.Details.Identifier.Value}",
-                DnsRecordType = Dns01ChallengeDetails.DnsRecordTypeDefault,
+                DnsRecordType = Dns01ChallengeValidationDetails.DnsRecordTypeDefault,
                 DnsRecordValue = keyAuthzDigested,
             };
         }
