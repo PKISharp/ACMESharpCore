@@ -408,6 +408,56 @@ namespace ACMESharp
             };
         }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
+        /// </remarks>
+        public async Task AnswerChallengeAsync(AcmeAuthorization authz,
+            Challenge challenge,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(challenge.Url);
+            var requData = new { };
+
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(AnswerChallengeAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(AnswerChallengeAsync), resp);
+
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to answer authorization challenge");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
+        /// </remarks>
+        public async Task RefreshChallengeAsync(AcmeAuthorization authz,
+            Challenge challenge,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(challenge.Url);
+            var requData = new { };
+
+            var requ = new HttpRequestMessage(HttpMethod.Get, requUrl);
+            
+            BeforeHttpSend?.Invoke(nameof(RefreshChallengeAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(RefreshChallengeAsync), resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to refresh authorization challenge");
+        }
+        
+
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
