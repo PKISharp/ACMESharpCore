@@ -441,13 +441,14 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
         /// </remarks>
-        public async Task AnswerChallengeAsync(AcmeAuthorization authz,
+        public async Task<Challenge> AnswerChallengeAsync(AcmeAuthorization authz,
             Challenge challenge,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(challenge.Url);
+            // TODO:  for now, none of the challenge types
+            // take any input data to answer the challenge
             var requData = new { };
-
             var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
             requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
             requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
@@ -461,6 +462,9 @@ namespace ACMESharp
 
             if (resp.StatusCode != HttpStatusCode.OK)
                 throw new InvalidOperationException("Unexpected response to answer authorization challenge");
+            
+            return JsonConvert.DeserializeObject<Challenge>(
+                    await resp.Content.ReadAsStringAsync());
         }
 
         /// <summary>
@@ -468,13 +472,11 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
         /// </remarks>
-        public async Task RefreshChallengeAsync(AcmeAuthorization authz,
+        public async Task<Challenge> RefreshChallengeAsync(AcmeAuthorization authz,
             Challenge challenge,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(challenge.Url);
-            var requData = new { };
-
             var requ = new HttpRequestMessage(HttpMethod.Get, requUrl);
             
             BeforeHttpSend?.Invoke(nameof(RefreshChallengeAsync), requ);
