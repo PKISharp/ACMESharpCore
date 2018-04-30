@@ -25,13 +25,18 @@
   * Create/Check Duplicate Account
 * Update Account
 * Change Account Key
-
+* Deactivate Account
+* Create Order
+* Decode Challenge details for types:
+  * `dns-01`
+* Answer Challenge
+* Refresh Challenge
 
 ## What's Not Implemented/Not Working
 
 * Automatic detection/handling of Change of TOS from [ACME 7.3.4](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4) is not implemented
 * External Account Binding from [ACME 7.3.5](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.5) has not been implemented
-* 
+* Order Pre-Authorizations from [ACME 7.4.1](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4.1) is not implemented
 
 ## Contributors
 
