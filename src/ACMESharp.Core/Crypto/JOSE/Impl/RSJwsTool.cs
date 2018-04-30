@@ -60,21 +60,31 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _sha = null;
         }
 
-        public void Save(Stream stream)
+        public string Export()
         {
-            using (var w = new StreamWriter(stream))
-            {
-                w.Write(_rsa.ToXmlString(true));
-            }
+            return _rsa.ToXmlString(true);
         }
 
-        public void Load(Stream stream)
+        public void Import(string exported)
         {
-            using (var r = new StreamReader(stream))
-            {
-                _rsa.FromXmlString(r.ReadToEnd());
-            }
+            _rsa.FromXmlString(exported);
         }
+
+        // public void Save(Stream stream)
+        // {
+        //     using (var w = new StreamWriter(stream))
+        //     {
+        //         w.Write(_rsa.ToXmlString(true));
+        //     }
+        // }
+
+        // public void Load(Stream stream)
+        // {
+        //     using (var r = new StreamReader(stream))
+        //     {
+        //         _rsa.FromXmlString(r.ReadToEnd());
+        //     }
+        // }
 
         public object ExportJwk(bool canonical = false)
         {

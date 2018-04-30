@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -64,21 +66,50 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _dsa = null;
         }
 
-        public void Save(Stream stream)
+        public string Export()
         {
-            using (var w = new StreamWriter(stream))
+            var ecParams = _dsa.ExportParameters(true);
+            var details = new ExportDetails
             {
-                w.Write(_dsa.ToXmlString(true));
-            }
+                HashSize = HashSize,
+                D = Convert.ToBase64String(ecParams.D),
+                X = Convert.ToBase64String(ecParams.Q.X),
+                Y = Convert.ToBase64String(ecParams.Q.Y),
+            };
+            return JsonConvert.SerializeObject(details);
         }
 
-        public void Load(Stream stream)
+        public void Import(string exported)
         {
-            using (var r = new StreamReader(stream))
-            {
-                _dsa.FromXmlString(r.ReadToEnd());
-            }
+            // TODO: this is inefficient and corner cases exist that will break this -- FIX THIS!!!
+
+            var details = JsonConvert.DeserializeObject<ExportDetails>(exported);
+            HashSize = details.HashSize;
+            Init();
+
+            var ecParams = _dsa.ExportParameters(true);
+            ecParams.D = Convert.FromBase64String(details.D);
+            ecParams.Q.X = Convert.FromBase64String(details.X);
+            ecParams.Q.Y = Convert.FromBase64String(details.Y);
+            _dsa.ImportParameters(ecParams);
+
         }
+
+        // public void Save(Stream stream)
+        // {
+        //     using (var w = new StreamWriter(stream))
+        //     {
+        //         w.Write(_dsa.ToXmlString(true));
+        //     }
+        // }
+
+        // public void Load(Stream stream)
+        // {
+        //     using (var r = new StreamReader(stream))
+        //     {
+        //         _dsa.FromXmlString(r.ReadToEnd());
+        //     }
+        // }
 
 
         public object ExportJwk(bool canonical = false)
@@ -107,6 +138,17 @@ namespace ACMESharp.Crypto.JOSE.Impl
         public byte[] Sign(byte[] raw)
         {
             return _dsa.SignData(raw, _shaName);
+        }
+
+        class ExportDetails
+        {
+            public int HashSize { get; set; }
+
+            public string D { get; set; }
+
+            public string X { get; set; }
+
+            public string Y { get; set; }
         }
     }
 }

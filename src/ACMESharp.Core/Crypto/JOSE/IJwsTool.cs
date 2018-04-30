@@ -14,9 +14,9 @@ namespace ACMESharp.Crypto.JOSE
 
         void Init();
 
-        void Save(Stream stream);
+        string Export();
 
-        void Load(Stream stream);
+        void Import(string exported);
 
         object ExportJwk(bool canonical = false);
 
