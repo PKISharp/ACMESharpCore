@@ -31,6 +31,7 @@
   * `dns-01`
 * Answer Challenge
 * Refresh Challenge
+* Deactivate Authorization
 
 ## What's Not Implemented/Not Working
 

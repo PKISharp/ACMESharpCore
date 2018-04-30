@@ -166,6 +166,8 @@ namespace ACMESharp.CLI
                 ++authzIndex;
             }
 
+            Console.WriteLine("Hit a Key to Answer Challenge(s):");
+            Console.ReadKey();
             _seq = "316";
             var authz1 = order.Authorizations[1];
             var chlng1 = authz1.Details.Challenges.Where(x =>
@@ -176,20 +178,23 @@ namespace ACMESharp.CLI
             await client.RefreshChallengeAsync(authz1, chlng1);
             Thread.Sleep(1000);
 
-            _seq = "321-1";
-            await client.RefreshChallengeAsync(authz1, chlng1);
-            Thread.Sleep(2000);
+            // _seq = "321-1";
+            // await client.RefreshChallengeAsync(authz1, chlng1);
+            // Thread.Sleep(2000);
 
-            _seq = "321-2";
-            await client.RefreshChallengeAsync(authz1, chlng1);
-            Thread.Sleep(4000);
+            // _seq = "321-2";
+            // await client.RefreshChallengeAsync(authz1, chlng1);
+            // Thread.Sleep(4000);
 
-            _seq = "321-3";
-            await client.RefreshChallengeAsync(authz1, chlng1);
-            Thread.Sleep(4000);
+            // _seq = "321-3";
+            // await client.RefreshChallengeAsync(authz1, chlng1);
+            // Thread.Sleep(4000);
 
-            _seq = "321-4";
-            await client.RefreshChallengeAsync(authz1, chlng1);
+            // _seq = "321-4";
+            // await client.RefreshChallengeAsync(authz1, chlng1);
+
+            // _seq = "390";
+            // await client.DeactivateAuthorizationAsync(authz1);
         }
 
         static string ReadFrom(string name)
@@ -214,9 +219,10 @@ namespace ACMESharp.CLI
         static void BeforeHttpSend(string methodName, HttpRequestMessage requ)
         {
             var toName = $"{methodName}-HttpRequest.json";
+            WriteTo(toName, $"// {requ.Method} {requ.Version} {requ.RequestUri}\r\n");
             var headers = (requ.Content == null ? requ.Headers : requ.Headers.Concat(requ.Content.Headers))
                 .Select(x => $"// {x.Key}: {string.Join(",", x.Value)}");
-            WriteTo(toName, string.Join("\r\n", headers));
+            AppendTo(toName, string.Join("\r\n", headers));
             if (requ.Content != null)
                 AppendTo(toName, "\r\n" + requ.Content.ReadAsStringAsync().Result);
         }

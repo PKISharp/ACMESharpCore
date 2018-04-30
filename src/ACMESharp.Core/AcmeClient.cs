@@ -485,6 +485,43 @@ namespace ACMESharp
 
             if (resp.StatusCode != HttpStatusCode.OK)
                 throw new InvalidOperationException("Unexpected response to refresh authorization challenge");
+            
+            return JsonConvert.DeserializeObject<Challenge>(
+                    await resp.Content.ReadAsStringAsync());
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
+        /// </remarks>
+        public async Task<AcmeAuthorization> DeactivateAuthorizationAsync(
+            AcmeAuthorization authz,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(authz.DetailsUrl);
+            var requData = new DeactivateAuthorizationRequest();
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+
+            BeforeHttpSend?.Invoke(nameof(DeactivateAuthorizationAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(DeactivateAuthorizationAsync), resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to refresh authorization challenge");
+            
+            var authzDetail = JsonConvert.DeserializeObject<Protocol.Model.Authorization>(
+                    await resp.Content.ReadAsStringAsync());
+            
+            return new AcmeAuthorization
+            {
+                DetailsUrl = authz.DetailsUrl,
+                Details = authzDetail,
+            };
         }
         
 
