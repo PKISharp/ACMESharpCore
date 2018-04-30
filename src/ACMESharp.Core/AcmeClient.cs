@@ -388,6 +388,26 @@ namespace ACMESharp
 
             return order;
         }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.4
+        /// </remarks>
+        public Dns01ChallengeDetails ResolveChallengeForDns01(AcmeAuthorization authz,
+                Challenge challenge)
+        {
+            var keyAuthzDigested = JwsHelper.ComputeKeyAuthorizationDigest(Signer, challenge.Token);
+
+            return new Dns01ChallengeDetails
+            {
+                DnsRecordName = $@"{Dns01ChallengeDetails.DnsRecordNamePrefix}.{
+                        authz.Details.Identifier.Value}",
+                DnsRecordType = Dns01ChallengeDetails.DnsRecordTypeDefault,
+                DnsRecordValue = keyAuthzDigested,
+            };
+        }
+
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
