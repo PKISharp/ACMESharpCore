@@ -9,10 +9,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
+using ACMESharp.Protocol.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -312,6 +314,80 @@ namespace ACMESharp
             return await DecodeAccountResponseAsync(resp);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
+        /// </remarks>
+        public async Task<AcmeOrder> CreateOrderAsync(string[] dnsIdentifiers,
+            DateTime? notBefore = null,
+            DateTime? notAfter = null,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(_http.BaseAddress, Directory.NewOrder);
+            var requData = new CreateOrderRequest
+            {
+                Identifiers = dnsIdentifiers.Select(x =>
+                        new Identifier { Type = "dns", Value = x}).ToArray(),
+
+                // TODO: deal with dates
+                // NotBefore = notBefore?.ToString(),
+                // NotAfter = notAfter?.ToString(),
+            };
+
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(CreateOrderAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(CreateOrderAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.Created)
+                throw new InvalidOperationException("Unexpected response to create order");
+
+            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            
+            var order = new AcmeOrder
+            {
+                OrderUrl = resp.Headers.Location?.ToString(),
+                Status = coResp.Status,
+                Expires = coResp.Expires == null
+                    ? DateTime.MinValue
+                    : DateTime.Parse(coResp.Expires),
+                DnsIdentifiers = coResp.Identifiers.Select(x => x.Value).ToArray(),
+                Authorizations = coResp.Authorizations.Select(x =>
+                        new AcmeAuthorization { DetailsUrl = x }).ToArray(),
+                FinalizeUrl = coResp.Finalize,
+            };
+
+            foreach (var authz in order.Authorizations)
+            {
+                resp = await _http.GetAsync(authz.DetailsUrl);
+                var body = await resp.Content.ReadAsStringAsync();
+
+                if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
+                {
+                    authz.FetchError = $"Failed to retrieve details: {resp.StatusCode}";
+                    if (resp.Content != null)
+                    {
+                        authz.FetchError += $"; {body}";
+                    }
+                }
+                else
+                {
+                    authz.Details = JsonConvert
+                        .DeserializeObject<Protocol.Model.Authorization>(body);
+                }
+            }
+
+            return order;
+        }
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);

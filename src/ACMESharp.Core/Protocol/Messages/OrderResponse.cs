@@ -1,77 +1,44 @@
 using System.ComponentModel.DataAnnotations;
+using ACMESharp.Protocol.Model;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Messages
 {
     /// <summary>
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.3
+    /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
     /// </summary>
     public class OrderResponse
     {
+        [JsonProperty("status")]
         [Required]
         public string Status { get; set; }
 
+        [JsonProperty("expires")]
         public string Expires { get; set; }
 
+        [JsonProperty("notBefore")]
+        public string NotBefore { get; set; }
+
+        [JsonProperty("notAfter")]
+        public string NotAfter { get; set; }
+
+        [JsonProperty("identifiers")]
         [Required, MinLength(1)]
         public Identifier[] Identifiers { get; set; }
 
-        public string NotBefore { get; set; }
-
-        public string NotAfter { get; set; }
-
-        public Problem Error { get; set; }
-
+        [JsonProperty("authorizations")]
         [Required, MinLength(1)]
         public string[] Authorizations { get; set; }
 
+        [JsonProperty("finalize")]
         [Required]
         public string Finalize { get; set; }
 
+        [JsonProperty("certificate", NullValueHandling = NullValueHandling.Ignore)]
         public string Certificate { get; set; }
+        
+        [JsonProperty("error", NullValueHandling = NullValueHandling.Ignore)]
+        public Problem Error { get; set; }
     }
-
-    public class Identifier
-    {
-        [Required]
-        public string Type { get; set; }
-
-        [Required]
-        public string Value { get; set; }
-    }
-
-    /// <summary>
-    /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.4
-    /// </summary>
-    public class Authorization
-    {
-        [Required]
-        public Identifier Identifier { get; set; }
-
-        [Required]
-        public string Status { get; set; }
-
-        public string Expires { get; set; }
-
-        [Required]
-        public Challenge[] Challenges { get; set; }
-
-        public bool? Wildcard { get; set; }
-    }
-
-    public class Problem
-    {
-
-    }
-
-    public class Challenge
-    {
-        public string Type { get; set; }
-        public string Url { get; set; }
-        public string Status { get; set; }
-        public string Token { get; set; }
-        public string Validated { get; set; }
-    }
-
-    public class Http01Challenge : Challenge
-    { }
 }
