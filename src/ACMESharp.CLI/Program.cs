@@ -2,7 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
+using ACMESharp.Authorizations;
 using Newtonsoft.Json;
 
 namespace ACMESharp.CLI
@@ -23,13 +25,18 @@ namespace ACMESharp.CLI
         static async Task Main(string[] args)
         {
             // Need a place to stash stuff
-            if (!Directory.Exists("_IGNORE"))
-                Directory.CreateDirectory("_IGNORE");
+            if (!Directory.Exists("_TMP"))
+                Directory.CreateDirectory("_TMP");
 
+          //await TestAccount();
+            await TestOrders();
+        }
+
+        static async Task TestAccount()
+        {
             var client = new AcmeClient(new Uri(LetsEncryptV2StagingEndpoint));
             client.BeforeHttpSend = BeforeHttpSend;
             client.AfterHttpSend = AftertHttpSend;
-
 
             _seq = "000";
             var dir = await client.GetDirectoryAsync();
@@ -104,14 +111,102 @@ namespace ACMESharp.CLI
             }
         }
 
+        static async Task TestOrders()
+        {
+            var client = new AcmeClient(new Uri(LetsEncryptV2StagingEndpoint));
+            client.BeforeHttpSend = BeforeHttpSend;
+            client.AfterHttpSend = AftertHttpSend;
+
+            _seq = "300";
+            var dir = await client.GetDirectoryAsync();
+            WriteTo("dir.json", JsonConvert.SerializeObject(dir, Formatting.Indented));
+            client.Directory = dir;
+
+            await client.GetNonceAsync();
+
+            AcmeAccount acct;
+            var acctSer = ReadFrom("acct.json");
+            var keysSer = ReadFrom("acct-keys.json");
+            if (string.IsNullOrEmpty(acctSer) || string.IsNullOrEmpty(keysSer))
+            {
+                Console.WriteLine("NO EXISTING ACCOUNT - Creating New");
+                var contacts = new[] { "mailto:foo@example.com" };
+                acct = await client.CreateAccountAsync(contacts, true);
+                WriteTo("acct.json", JsonConvert.SerializeObject(acct, Formatting.Indented));
+                WriteTo("acct-keys.json", client.Signer.Export());
+            }
+            else
+            {
+                Console.WriteLine("FOUND EXISTING ACCOUNT - Importing");
+                acct = JsonConvert.DeserializeObject<AcmeAccount>(acctSer);
+                client.Signer.Import(keysSer);
+            }
+            client.Account = acct;
+
+            _seq = "310";
+            var order = await client.CreateOrderAsync(new[] {
+                "foo1.acme2.zyborg.io",
+                "foo2.acme2.zyborg.io",
+            });
+            _seq = "311";
+            WriteTo("order.json", JsonConvert.SerializeObject(order, Formatting.Indented));
+            _seq = "312";
+            int authzIndex = 0;
+            foreach (var authz in order.Authorizations)
+            {
+                int chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(x =>
+                        x.Type == Dns01ChallengeDetails.ChallengeType))
+                {
+                    var chlngDetails = client.ResolveChallengeForDns01(authz, chlng);
+                    WriteTo($"order-authz-{authzIndex}-chlng-{chlngIndex}.json",
+                            JsonConvert.SerializeObject(chlngDetails, Formatting.Indented));
+                }
+                ++authzIndex;
+            }
+
+            _seq = "316";
+            var authz1 = order.Authorizations[1];
+            var chlng1 = authz1.Details.Challenges.Where(x => x.Type == Dns01ChallengeDetails.ChallengeType).First();
+            await client.AnswerChallengeAsync(authz1, chlng1);
+
+            _seq = "321-0";
+            await client.RefreshChallengeAsync(authz1, chlng1);
+            Thread.Sleep(1000);
+
+            _seq = "321-1";
+            await client.RefreshChallengeAsync(authz1, chlng1);
+            Thread.Sleep(2000);
+
+            _seq = "321-2";
+            await client.RefreshChallengeAsync(authz1, chlng1);
+            Thread.Sleep(4000);
+
+            _seq = "321-3";
+            await client.RefreshChallengeAsync(authz1, chlng1);
+            Thread.Sleep(4000);
+
+            _seq = "321-4";
+            await client.RefreshChallengeAsync(authz1, chlng1);
+        }
+
+        static string ReadFrom(string name)
+        {
+            var fromName = $"_TMP\\{_seq}-{name}";
+            if (File.Exists(fromName))
+                return File.ReadAllText(fromName);
+            
+            return null;
+        }
+
         static void WriteTo(string name, string value)
         {
-            File.WriteAllText($"_IGNORE\\{_seq}-{name}", value);
+            File.WriteAllText($"_TMP\\{_seq}-{name}", value);
         }
 
         static void AppendTo(string name, string value)
         {
-            File.AppendAllText($"_IGNORE\\{_seq}-{name}", value);
+            File.AppendAllText($"_TMP\\{_seq}-{name}", value);
         }
 
         static void BeforeHttpSend(string methodName, HttpRequestMessage requ)
