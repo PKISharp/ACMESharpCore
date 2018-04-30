@@ -19,8 +19,26 @@ namespace ACMESharp.Protocol.Model
         /// encoded in the format specified in RFC 3339 [RFC3339].
         /// This field is REQUIRED if the "status" field is "valid".
         /// </summary>
-        [JsonProperty("validate")]
+        [JsonProperty("validated")]
         public string Validated { get; set; }
+
+        /// <summary>
+        /// Details of successful validation.
+        /// </summary>
+        /// <remarks>
+        /// TODO:  This does not appear to be documented in the latest ACMEv2 draft
+        /// but experimentation shows a record such as this:
+        /// <code>
+        ///    "validationRecord": [
+        ///        {
+        ///          "hostname": "foo.example.com"
+        ///        }
+        ///    ]
+        /// </code>
+        /// There also does not appear to be any indication of the "validated
+        /// </remarks>
+        [JsonProperty("validationRecord")]
+        public object[] ValidationRecord { get; set; }
 
         /// <summary>
         /// Error that occurred while the server was validating the challenge,
