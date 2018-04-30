@@ -78,6 +78,13 @@ namespace ACMESharp
 
         public Action<string, HttpResponseMessage> AfterHttpSend { get; set; }
 
+        /// <summary>
+        /// Retrieves the Directory object from the target ACME CA.  The Directory is used
+        /// to help clients configure themselves with the right URLs for each ACME operation.
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.1
+        /// </remarks>
         public async Task<DirectoryResponse> GetDirectoryAsync(
             CancellationToken cancel = default(CancellationToken))
         {
@@ -92,8 +99,14 @@ namespace ACMESharp
         }
 
         /// <summary>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.2
+        /// Retrieves a fresh nonce to be used in subsequent communication
+        /// between the client and target ACME CA.  The client might
+        /// sometimes need to get a new nonce, e.g., on its first request
+        /// to the server or if an existing nonce is no longer valid.
         /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.2
+        /// </remarks>
         public async Task GetNonceAsync(
             CancellationToken cancel = default(CancellationToken))
         {
@@ -107,8 +120,10 @@ namespace ACMESharp
         }
 
         /// <summary>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
+        /// </remarks>
         public async Task<AcmeAccount> CreateAccountAsync(string[] contacts,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
@@ -157,8 +172,10 @@ namespace ACMESharp
         }
 
         /// <summary>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.1
         /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.1
+        /// </remarks>
         public async Task<AcmeAccount> CheckAccountAsync(
             CancellationToken cancel = default(CancellationToken))
         {
@@ -189,6 +206,14 @@ namespace ACMESharp
             return acct;
         }
 
+        /// <summary>
+        /// Updates existing Account information registered with the ACME CA.
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.2
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.3
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4
+        /// </remarks>
         public async Task<AcmeAccount> UpdateAccountAsync(string[] contacts,
             CancellationToken cancel = default(CancellationToken))
         {
@@ -227,8 +252,10 @@ namespace ACMESharp
 
 
         /// <summary>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
         /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
+        /// </remarks>
         public async Task ChangeAccountKeyAsync(IJwsTool newSigner,
             CancellationToken cancel = default(CancellationToken))
         {
@@ -257,6 +284,11 @@ namespace ACMESharp
             Signer = newSigner;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.7
+        /// </remarks>
         public async Task<AcmeAccount> DeactivateAccountAsync(
             CancellationToken cancel = default(CancellationToken))
         {
