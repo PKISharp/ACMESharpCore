@@ -523,7 +523,85 @@ namespace ACMESharp
                 Details = authzDetail,
             };
         }
-        
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
+        /// </remarks>
+        public async Task<AcmeOrder> FinalizeOrderAsync(AcmeOrder order,
+            byte[] derEncodedCsr,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var requUrl = new Uri(_http.BaseAddress, order.FinalizeUrl);
+            var requData = new FinalizeOrderRequest
+            {
+                Csr = CryptoHelper.Base64UrlEncode(derEncodedCsr),
+            };
+
+            var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
+            var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
+            requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
+            requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    Constants.ContentTypeHeaderValue);
+            
+            BeforeHttpSend?.Invoke(nameof(FinalizeOrderAsync), requ);
+            var resp = await _http.SendAsync(requ, cancel);
+            AfterHttpSend?.Invoke(nameof(FinalizeOrderAsync), resp);
+            
+            ExtractNextNonce(resp);
+
+            if (resp.StatusCode != HttpStatusCode.OK)
+                throw new InvalidOperationException("Unexpected response to finalize order");
+
+            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            
+            var newOrder = new AcmeOrder
+            {
+                OrderUrl = resp.Headers.Location?.ToString() ?? order.OrderUrl,
+                Status = coResp.Status,
+                Expires = coResp.Expires == null
+                    ? DateTime.MinValue
+                    : DateTime.Parse(coResp.Expires),
+                DnsIdentifiers = coResp.Identifiers?.Select(x => x.Value).ToArray(),
+                Authorizations = coResp.Authorizations?.Select(x =>
+                        new AcmeAuthorization { DetailsUrl = x }).ToArray(),
+                FinalizeUrl = coResp.Finalize,
+            };
+
+            if (newOrder.DnsIdentifiers == null)
+            {
+                newOrder.DnsIdentifiers = order.DnsIdentifiers;
+            }
+            
+            if (newOrder.Authorizations == null)
+            {
+                newOrder.Authorizations = order.Authorizations;
+            }
+
+            foreach (var authz in newOrder.Authorizations)
+            {
+                resp = await _http.GetAsync(authz.DetailsUrl);
+                var body = await resp.Content.ReadAsStringAsync();
+
+                if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
+                {
+                    authz.FetchError = $"Failed to retrieve details: {resp.StatusCode}";
+                    if (resp.Content != null)
+                    {
+                        authz.FetchError += $"; {body}";
+                    }
+                }
+                else
+                {
+                    authz.Details = JsonConvert
+                        .DeserializeObject<Protocol.Model.Authorization>(body);
+                }
+            }
+
+            return newOrder;
+        }
 
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
