@@ -110,5 +110,26 @@ namespace ACMESharp.Crypto
 
             return csr.CreateSigningRequest();
         }
+
+
+        /// <summary>
+        /// Returns a DER-encoded PKCS#10 Certificate Signing Request for the given ECDsa parametes
+        /// and the given hash algorithm.
+        /// </summary>
+        public static byte[] GenerateCsr(string[] dnsNames, ECDsa dsa, HashAlgorithmName hashAlgor)
+        {
+            if (dnsNames.Length < 1)
+                throw new ArgumentException("Must specify at least one name");
+
+            var sanBuilder = new SubjectAlternativeNameBuilder();
+            foreach (var n in dnsNames)
+                sanBuilder.AddDnsName(n);
+
+            var dn = new X500DistinguishedName($"CN={dnsNames[0]}");
+            var csr = new CertificateRequest(dn, dsa, hashAlgor);
+            csr.CertificateExtensions.Add(sanBuilder.Build());
+
+            return csr.CreateSigningRequest();
+        }
     }
 }
