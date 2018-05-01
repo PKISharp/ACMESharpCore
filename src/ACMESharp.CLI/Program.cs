@@ -198,12 +198,21 @@ namespace ACMESharp.CLI
             // _seq = "390";
             // await client.DeactivateAuthorizationAsync(authz1);
     
-            _seq = "380";
-            var rsa = RSA.Create();
-            var csr = CryptoHelper.GenerateCsr(order.DnsIdentifiers, rsa,
+            // _seq = "380";
+            // var rsa = RSA.Create();
+            // var csr = CryptoHelper.GenerateCsr(order.DnsIdentifiers, rsa,
+            //         HashAlgorithmName.SHA256);
+            // var newOrder = await client.FinalizeOrderAsync(order, csr);
+            // WriteTo("rsa-keys.xml", rsa.ToXmlString(true));
+            // WriteTo("csr.der.txt", Convert.ToBase64String(csr));
+            // WriteTo("order.json", JsonConvert.SerializeObject(newOrder, Formatting.Indented));
+
+            _seq = "385";
+            var dsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+            var csr = CryptoHelper.GenerateCsr(order.DnsIdentifiers, dsa,
                     HashAlgorithmName.SHA256);
             var newOrder = await client.FinalizeOrderAsync(order, csr);
-            WriteTo("rsa-keys.xml", rsa.ToXmlString(true));
+            WriteTo("ecdsa-keys.xml", dsa.ToXmlString(true));
             WriteTo("csr.der.txt", Convert.ToBase64String(csr));
             WriteTo("order.json", JsonConvert.SerializeObject(newOrder, Formatting.Indented));
         }
