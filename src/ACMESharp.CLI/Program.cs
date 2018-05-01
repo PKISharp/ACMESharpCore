@@ -2,9 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
+using ACMESharp.Crypto;
 using Newtonsoft.Json;
 
 namespace ACMESharp.CLI
@@ -166,8 +168,8 @@ namespace ACMESharp.CLI
                 ++authzIndex;
             }
 
-            Console.WriteLine("Hit a Key to Answer Challenge(s):");
-            Console.ReadKey();
+            // Console.WriteLine("Hit a Key to Answer Challenge(s):");
+            // Console.ReadKey();
             _seq = "316";
             var authz1 = order.Authorizations[1];
             var chlng1 = authz1.Details.Challenges.Where(x =>
@@ -195,6 +197,15 @@ namespace ACMESharp.CLI
 
             // _seq = "390";
             // await client.DeactivateAuthorizationAsync(authz1);
+    
+            _seq = "380";
+            var rsa = RSA.Create();
+            var csr = CryptoHelper.GenerateCsr(order.DnsIdentifiers, rsa,
+                    HashAlgorithmName.SHA256);
+            var newOrder = await client.FinalizeOrderAsync(order, csr);
+            WriteTo("rsa-keys.xml", rsa.ToXmlString(true));
+            WriteTo("csr.der.txt", Convert.ToBase64String(csr));
+            WriteTo("order.json", JsonConvert.SerializeObject(newOrder, Formatting.Indented));
         }
 
         static string ReadFrom(string name)
