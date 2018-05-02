@@ -41,7 +41,7 @@ namespace ACMESharp
                 bool disposeHttpClient = false)
         {
             Init(http, dir, acct, signer);
-            _disposeHttpClient = disposeHttpClient
+            _disposeHttpClient = disposeHttpClient;
         }
 
         public AcmeClient(Uri baseUri, DirectoryResponse dir = null,
