@@ -24,32 +24,39 @@ namespace ACMESharp
     /// <summary>
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7
     /// </summary>
-    public class AcmeClient
+    public class AcmeClient : IDisposable
     {
         private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
+        private bool _disposeHttpClient;
         private HttpClient _http;
 
         private IJwsTool _signer;
 
-        public AcmeClient(HttpClient http, DirectoryResponse dir = null, AcmeAccount acct = null, IJwsTool signer = null)
+        public AcmeClient(HttpClient http, DirectoryResponse dir = null,
+                AcmeAccount acct = null, IJwsTool signer = null,
+                bool disposeHttpClient = false)
         {
             Init(http, dir, acct, signer);
+            _disposeHttpClient = disposeHttpClient
         }
 
-        public AcmeClient(Uri baseUri, DirectoryResponse dir = null, AcmeAccount acct = null, IJwsTool signer = null)
+        public AcmeClient(Uri baseUri, DirectoryResponse dir = null,
+                AcmeAccount acct = null, IJwsTool signer = null)
         {
             var http = new HttpClient
             {
                 BaseAddress = baseUri,
             };
             Init(http, dir, acct, signer);
+            _disposeHttpClient = true;
         }
 
-        private void Init(HttpClient http, DirectoryResponse dir, AcmeAccount acct, IJwsTool signer)
+        private void Init(HttpClient http, DirectoryResponse dir,
+                AcmeAccount acct, IJwsTool signer)
         {
             _http = http;
             Directory = dir ?? new DirectoryResponse();
@@ -62,11 +69,13 @@ namespace ACMESharp
         }
 
         /// <summary>
-        /// A tool that can be used to JWS-sign request messages to the target ACME server.
+        /// A tool that can be used to JWS-sign request messages to the
+        /// target ACME server.
         /// </summary>
         /// <remarks>
-        /// If not specified during construction, a default signing tool with a new set of keys will
-        /// be constructed of type ES256 (Elliptic Curve using the P-256 curve and a SHA256 hash).
+        /// If not specified during construction, a default signing tool
+        /// with a new set of keys will be constructed of type ES256
+        /// (Elliptic Curve using the P-256 curve and a SHA256 hash).
         /// </remarks>
         public IJwsTool Signer { get; private set; }
 
@@ -685,36 +694,41 @@ namespace ACMESharp
             return acmeSigned;
         }
 
-        public async Task OrderCertificateAsync(
-            CancellationToken cancel = default(CancellationToken))
-        { }
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
 
-        public async Task GetOrderStatusAsync(
-            CancellationToken cancel = default(CancellationToken))
-        { }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    if (_disposeHttpClient)
+                        _http?.Dispose();
+                    _http = null;
+                }
 
-        // public async Task FetchChallengesAsync(
-        //     CancellationToken cancel = default(CancellationToken))
-        // { }
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
 
-        // public async Task AnswerChallengesAsync(
-        //     CancellationToken cancel = default(CancellationToken))
-        // { }
+                disposedValue = true;
+            }
+        }
 
-        // public async Task FinishCertificateOrderAsync(
-        //     CancellationToken cancel = default(CancellationToken))
-        // { }
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~AcmeClient() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
 
-        public async Task AuthorizeIdentifierAsync(
-            CancellationToken cancel = default(CancellationToken))
-        { }
-
-        public async Task IssueCertificateAsync(
-            CancellationToken cancel = default(CancellationToken))
-        { }
-
-        public async Task RevokeCertificateAsync(
-            CancellationToken cancel = default(CancellationToken))
-        { }
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

@@ -11,6 +11,8 @@
   * P-256
   * P-348
   * P-521
+* Improved Integration Testing setup
+* Better separation of concerns in the core API
 
 * Hoped to use some other, more complete and well maintained JOSE library for
   doing things like JWS signing and JWK-related operations, but unfortunately
@@ -32,6 +34,7 @@
 * Answer Challenge
 * Refresh Challenge
 * Deactivate Authorization
+* Finalize Authorization (Submit CSR)
 
 ## What's Not Implemented/Not Working
 
