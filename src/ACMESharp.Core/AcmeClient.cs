@@ -137,7 +137,7 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </remarks>
-        public async Task<AcmeAccount> CreateAccountAsync(string[] contacts,
+        public async Task<AcmeAccount> CreateAccountAsync(ReadOnlyMemory<string> contacts,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
             bool throwOnExistingAccount = false,
