@@ -642,10 +642,10 @@ namespace ACMESharp
             var acct = new AcmeAccount
             {
                 Kid = resp.Headers.Location?.ToString() ?? Account.Kid,
-                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
 
                 // caResp will be null if this
                 // is a duplicate account resp
+                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
                 PublicKey = caResp?.Key,
                 Contacts = caResp?.Contact,
                 Id = caResp?.Id,
