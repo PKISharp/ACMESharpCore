@@ -10,14 +10,14 @@ using Xunit.Abstractions;
 
 namespace ACMESharp.IntegrationTests
 {
-    [Collection(nameof(AcmeAccountTest))]
-    [CollectionDefinition(nameof(AcmeAccountTest))]
+    [Collection(nameof(AcmeAccountTests))]
+    [CollectionDefinition(nameof(AcmeAccountTests))]
     [TestOrder(0_05)]
-    public class AcmeAccountTest : IntegrationTest,
+    public class AcmeAccountTests : IntegrationTest,
         IClassFixture<StateFixture>,
         IClassFixture<ClientsFixture>
     {
-        public AcmeAccountTest(ITestOutputHelper output, StateFixture state, ClientsFixture clients)
+        public AcmeAccountTests(ITestOutputHelper output, StateFixture state, ClientsFixture clients)
             : base(state, clients)
         {
             Output = output;
