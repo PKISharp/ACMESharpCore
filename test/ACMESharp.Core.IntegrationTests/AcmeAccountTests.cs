@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
+using ACMESharp.Protocol;
+using ACMESharp.Protocol.Model;
 using ACMESharp.Testing.Xunit;
 using Newtonsoft.Json;
 using Xunit;
@@ -24,6 +28,7 @@ namespace ACMESharp.IntegrationTests
         }
 
         // https://xunit.github.io/docs/capturing-output
+        // Will only be displayed if containing test fails.
         ITestOutputHelper Output { get; }
 
         public static readonly IEnumerable<string> _contactsInit =
@@ -48,7 +53,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_010)]
-        public async void TestDirectory()
+        public async Task TestDirectory()
         {
             var tctx = SetTestContext();
 
@@ -64,42 +69,43 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_020)]
-        public async void TestCheckNonExistentAccount()
+        public async Task TestCheckNonExistentAccount()
         {
             var tctx = SetTestContext();
 
-            await Assert.ThrowsAnyAsync<Exception>(
+            await Assert.ThrowsAnyAsync<InvalidOperationException>(
                 () => Clients.Acme.CheckAccountAsync());
         }
 
         [Fact]
         [TestOrder(0_030)]
-        public async void TestCreateAccount()
+        public async Task TestCreateAccount()
         {
             var tctx = SetTestContext();
 
-            var acct = await Clients.Acme.CreateAccountAsync(_contacts, true);
+            var acct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
             this.SaveObject("acct.json", acct);
             Clients.Acme.Account = acct;
         }
 
         [Fact]
         [TestOrder(0_040)]
-        public async void TestCheckNewlyCreatedAccount()
+        public async Task TestCheckNewlyCreatedAccount()
         {
             var tctx = SetTestContext();
 
-            await Clients.Acme.CheckAccountAsync();
+            var acct = await Clients.Acme.CheckAccountAsync();
+            tctx.SaveObject("acct-lookup.json", acct);
         }
 
         [Fact]
         [TestOrder(0_050)]
-        public async void TestDuplicateCreateAccount()
+        public async Task TestDuplicateCreateAccount()
         {
             var tctx = SetTestContext();
 
             var oldAcct = this.LoadObject<AcmeAccount>("acct.json");
-            var dupAcct = await Clients.Acme.CreateAccountAsync(_contacts, true);
+            var dupAcct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
 
             // For a duplicate account, the returned object is not complete...
             Assert.Null(dupAcct.TosLink);
@@ -113,12 +119,12 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_060)]
-        public async void TestDuplicateCreateAccountWithThrow()
+        public async Task TestDuplicateCreateAccountWithThrow()
         {
             var tctx = SetTestContext();
 
-            await Assert.ThrowsAnyAsync<Exception>(
-                () => Clients.Acme.CreateAccountAsync(_contacts, true,
+            await Assert.ThrowsAnyAsync<InvalidOperationException>(
+                () => Clients.Acme.CreateAccountAsync(_contactsInit, true,
                         throwOnExistingAccount: true));
         }
     }
