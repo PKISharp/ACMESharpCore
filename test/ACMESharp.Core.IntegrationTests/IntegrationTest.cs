@@ -79,6 +79,11 @@ namespace ACMESharp.IntegrationTests
             LastContext.AppendTo(toName, "\r\n" + resp.Content.ReadAsStringAsync().Result);
         }
 
+        public void WriteTo(string saveName, byte[] value, int subseq = -1)
+        {
+            State.WriteTo($"{ComputePrefix(subseq)}-{saveName}", value);
+        }
+
         public void WriteTo(string saveName, string value, int subseq = -1)
         {
             State.WriteTo($"{ComputePrefix(subseq)}-{saveName}", value);
@@ -128,6 +133,11 @@ namespace ACMESharp.IntegrationTests
             public int Subsequence { get; set; } = -1;
 
             public StateFixture State { get; set; }
+
+            public void WriteTo(string saveName, byte[] value)
+            {
+                Test.WriteTo($"{ComputePrefix()}-{saveName}", value);
+            }
 
             public void WriteTo(string saveName, string value)
             {

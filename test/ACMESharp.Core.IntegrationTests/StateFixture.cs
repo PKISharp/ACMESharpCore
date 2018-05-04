@@ -22,6 +22,13 @@ namespace ACMESharp.IntegrationTests
 
         public ILoggerFactory Factory { get; }
 
+        public Random Rng { get; } = new Random();
+
+        public void WriteTo(string saveName, byte[] value)
+        {
+            File.WriteAllBytes($"_TMP\\{saveName}", value);
+        }
+
         public void WriteTo(string saveName, string value)
         {
             File.WriteAllText($"_TMP\\{saveName}", value);
@@ -53,5 +60,15 @@ namespace ACMESharp.IntegrationTests
 
             return json == null ? default(T) : JsonConvert.DeserializeObject<T>(json);
         }
+
+        public byte[] RandomBytes(int byteLen)
+        {
+            var bytes = new byte[byteLen];
+            Rng.NextBytes(bytes);
+            return bytes;
+        }
+
+        public string RandomBytesString(int byteLen) =>
+            BitConverter.ToString(RandomBytes(byteLen));
     }
 }
