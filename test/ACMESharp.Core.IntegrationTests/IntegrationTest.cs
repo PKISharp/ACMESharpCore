@@ -39,9 +39,12 @@ namespace ACMESharp.IntegrationTests
                 State = State,
             };
 
-            Clients.Acme.BeforeAcmeSign = BeforeAcmeSign;
-            Clients.Acme.BeforeHttpSend = BeforeAcmeSend;
-            Clients.Acme.AfterHttpSend = AfterAcmeSend;
+            if (Clients?.Acme != null)
+            {
+                Clients.Acme.BeforeAcmeSign = BeforeAcmeSign;
+                Clients.Acme.BeforeHttpSend = BeforeAcmeSend;
+                Clients.Acme.AfterHttpSend = AfterAcmeSend;
+            }
 
             return LastContext;
         }
