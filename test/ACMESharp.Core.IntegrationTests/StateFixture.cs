@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ACMESharp.Testing.Xunit;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace ACMESharp.IntegrationTests
@@ -15,7 +16,11 @@ namespace ACMESharp.IntegrationTests
             // Need a place to stash stuff
             if (!Directory.Exists("_TMP"))
                 Directory.CreateDirectory("_TMP");
+
+            Factory = new LoggerFactory().AddFile("integration-tests.log");
         }
+
+        public ILoggerFactory Factory { get; }
 
         public void WriteTo(string saveName, string value)
         {
