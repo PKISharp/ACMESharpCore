@@ -613,6 +613,7 @@ namespace ACMESharp
         {
             var resp = await SendAcmeAsync<Challenge>(
                     new Uri(challenge.Url),
+                    skipNonce: true,
                     cancel: cancel);
 
             // var requUrl = new Uri(challenge.Url);
