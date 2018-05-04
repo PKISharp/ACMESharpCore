@@ -45,7 +45,8 @@ namespace ACMESharp.IntegrationTests
         public T LoadObject<T>(string saveName)
         {
             var json = ReadFrom(saveName);
-            return JsonConvert.DeserializeObject<T>(json);
+
+            return json == null ? default(T) : JsonConvert.DeserializeObject<T>(json);
         }
     }
 }
