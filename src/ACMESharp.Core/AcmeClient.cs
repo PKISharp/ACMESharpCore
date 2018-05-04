@@ -137,7 +137,7 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </remarks>
-        public async Task<AcmeAccount> CreateAccountAsync(ReadOnlyMemory<string> contacts,
+        public async Task<AcmeAccount> CreateAccountAsync(IEnumerable<string> contacts,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
             bool throwOnExistingAccount = false,
@@ -146,7 +146,7 @@ namespace ACMESharp
             var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
             var requData = new CreateAccountRequest
             {
-                Contact = contacts.ToArray(),
+                Contact = contacts,
                 TermsOfServiceAgreed = termsOfServiceAgreed,
                 ExternalAccountBinding = (JwsSignedPayload)externalAccountBinding,
             };
@@ -230,7 +230,7 @@ namespace ACMESharp
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.3
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4
         /// </remarks>
-        public async Task<AcmeAccount> UpdateAccountAsync(string[] contacts,
+        public async Task<AcmeAccount> UpdateAccountAsync(IEnumerable<string> contacts,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(Account.Kid);
@@ -336,7 +336,7 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
         /// </remarks>
-        public async Task<AcmeOrder> CreateOrderAsync(string[] dnsIdentifiers,
+        public async Task<AcmeOrder> CreateOrderAsync(IEnumerable<string> dnsIdentifiers,
             DateTime? notBefore = null,
             DateTime? notAfter = null,
             CancellationToken cancel = default(CancellationToken))

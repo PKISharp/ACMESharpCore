@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -25,8 +26,12 @@ namespace ACMESharp.IntegrationTests
         // https://xunit.github.io/docs/capturing-output
         ITestOutputHelper Output { get; }
 
-        public static readonly ReadOnlyMemory<string> _contacts =
+        public static readonly IEnumerable<string> _contactsInit =
                 new[] { "mailto:foo@example.com" };
+        public static readonly IEnumerable<string> _contactsUpdate =
+                new[] { "mailto:bar@example.com", "mailto:baz@example.com" };
+        public static readonly IEnumerable<string> _contactsFinal =
+                new[] { "mailto:foo@example.com", "mailto:bar@example.com", "mailto:baz@example.com" };
 
 
         [Fact]

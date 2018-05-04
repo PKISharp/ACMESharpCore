@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ACMESharp.Crypto.JOSE;
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ namespace ACMESharp.Protocol.Messages
     {
         [JsonProperty("contact", Required = Required.Always)]
         [Required, MinLength(1)]
-        public string[] Contact { get; set; }
+        public IEnumerable<string> Contact { get; set; }
 
         [JsonProperty("termsOfServiceAgreed", NullValueHandling=NullValueHandling.Ignore)]
         public bool? TermsOfServiceAgreed { get; set; }
