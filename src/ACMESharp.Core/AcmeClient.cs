@@ -629,6 +629,94 @@ namespace ACMESharp
             return newOrder;
         }
 
+        async Task<HttpResponseMessage> SendAcmeAsync(
+            Uri uri, HttpMethod method = null, object message = null,
+            HttpStatusCode[] expectedStatuses = null,
+            bool skipNonce = false, bool skipSigning = false, bool includePublicKey = false,
+            CancellationToken cancel = default(CancellationToken),
+            [System.Runtime.CompilerServices.CallerMemberName]string opName = "")
+        {
+            if (method == null)
+                method = HttpMethod.Get;
+            if (expectedStatuses == null)
+                expectedStatuses = new[] { HttpStatusCode.OK };
+
+            BeforeAcmeSign?.Invoke(opName, message);
+            var requ = new HttpRequestMessage(method, uri);
+            if (message != null)
+            {
+                string payload;
+                if (skipSigning)
+                    payload = ResolvePayload(message);
+                else
+                    payload = ComputeAcmeSigned(message, uri.ToString(),
+                            includePublicKey: includePublicKey);
+                requ.Content = new StringContent(payload);
+                requ.Content.Headers.ContentType = Constants.JsonContentTypeHeaderValue;
+            }
+
+            BeforeHttpSend?.Invoke(opName, requ);
+            var resp = await _http.SendAsync(requ);
+            AfterHttpSend?.Invoke(opName, resp);
+
+            if (!skipNonce)
+                ExtractNextNonce(resp);
+
+            if (expectedStatuses.Length > 0
+                && !expectedStatuses.Contains(resp.StatusCode))
+            {
+                throw await DecodeResponseErrorAsync(resp, opName: opName);
+            }
+            
+            return resp;
+        }
+
+        /// <summary>
+        /// Convenience variation of <see cref="#SendAcmeAsync"/> that deserializes
+        /// and returns an expected type from the response content JSON.
+        /// </summary>
+        async Task<T> SendAcmeAsync<T>(
+            Uri uri, HttpMethod method = null, object message = null,
+            HttpStatusCode[] expectedStatuses = null,
+            bool skipNonce = false, bool skipSigning = false, bool includePublicKey = false,
+            CancellationToken cancel = default(CancellationToken),
+            [System.Runtime.CompilerServices.CallerMemberName]string opName = "")
+        {
+            var resp = await SendAcmeAsync(
+                    uri, method, message, expectedStatuses,
+                    skipNonce, skipSigning, includePublicKey,
+                    cancel, opName);
+
+            var respObject = JsonConvert.DeserializeObject<T>(
+                    await resp.Content.ReadAsStringAsync());
+
+            return respObject;
+        }
+
+        async Task<AcmeProtocolException> DecodeResponseErrorAsync(HttpResponseMessage resp,
+            string message = null,
+            [System.Runtime.CompilerServices.CallerMemberName]string opName = "")
+        {
+            string msg = null;
+            Problem problem = null;
+
+            // if (Constants.ProblemContentTypeHeaderValue.Equals(resp.Content?.Headers?.ContentType))
+            if (Constants.ProblemContentTypeHeaderValue.Equals(resp.Content?.Headers?.ContentType))
+            {
+                problem = JsonConvert.DeserializeObject<Problem>(
+                        await resp.Content.ReadAsStringAsync());
+                msg = problem.Detail;
+            }
+
+            if (string.IsNullOrEmpty(msg))
+            {
+                if (opName.EndsWith("Async"))
+                    opName.Substring(0, opName.Length - "Async".Length);
+                msg = $"Unexpected response status code [{resp.StatusCode}] for [{opName}]";
+            }
+            return new AcmeProtocolException(message ?? msg, problem);
+        }
+
         protected async Task<AcmeAccount> DecodeAccountResponseAsync(HttpResponseMessage resp)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
@@ -652,7 +740,6 @@ namespace ACMESharp
             };
             
             return acct;
-            
         }
 
         protected void ExtractNextNonce(HttpResponseMessage resp)
@@ -697,6 +784,15 @@ namespace ACMESharp
             // Nothing unprotected for now
             var unprotectedHeader = (object)null; // new { };
 
+            var payload = ResolvePayload(message);
+            var acmeSigned = JwsHelper.SignFlatJson(signer.Sign, payload,
+                    protectedHeader, unprotectedHeader);
+
+            return acmeSigned;
+        }
+
+        protected string ResolvePayload(object message)
+        {
             var payload = string.Empty;
             if (message is string)
                 payload = (string)message;
@@ -704,11 +800,7 @@ namespace ACMESharp
                 payload = ((JObject)message).ToString(Formatting.None);
             else
                 payload = JsonConvert.SerializeObject(message, Formatting.None);
-
-            var acmeSigned = JwsHelper.SignFlatJson(signer.Sign, payload,
-                    protectedHeader, unprotectedHeader);
-
-            return acmeSigned;
+            return payload;           
         }
 
         #region IDisposable Support
