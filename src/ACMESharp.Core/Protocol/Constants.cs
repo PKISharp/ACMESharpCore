@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+
 namespace ACMESharp.Protocol
 {
     public class Constants
@@ -15,8 +17,15 @@ namespace ACMESharp.Protocol
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.2
         /// </summary>
-        public const string ContentTypeHeaderValue = "application/jose+json";
         public const string ContentTypeHeaderName = "Content-Type";
+        /// <summary>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.2
+        /// </summary>
+        // public const string ContentTypeHeaderValue = "application/jose+json";
+        public static readonly MediaTypeHeaderValue JsonContentTypeHeaderValue =
+                MediaTypeHeaderValue.Parse("application/jose+json");
+        public static readonly MediaTypeHeaderValue ProblemContentTypeHeaderValue =
+                MediaTypeHeaderValue.Parse("application/problem+json");
 
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.6
