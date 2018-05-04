@@ -634,6 +634,42 @@ namespace ACMESharp
             return resp;
         }
 
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.5.1
+        /// </remarks>
+        public async Task<AcmeAuthorization> RefreshAuthorizationAsync(AcmeAuthorization authz,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var resp = await SendAcmeAsync<Protocol.Model.Authorization>(
+                    new Uri(authz.DetailsUrl),
+                    skipNonce: true,
+                    cancel: cancel);
+
+            // var requUrl = new Uri(challenge.Url);
+            // var requ = new HttpRequestMessage(HttpMethod.Get, requUrl);
+            
+            // BeforeAcmeSign?.Invoke(nameof(RefreshChallengeAsync), null);
+            // BeforeHttpSend?.Invoke(nameof(RefreshChallengeAsync), requ);
+            // var resp = await _http.SendAsync(requ, cancel);
+            // AfterHttpSend?.Invoke(nameof(RefreshChallengeAsync), resp);
+
+            // if (resp.StatusCode != HttpStatusCode.OK)
+            //     throw new InvalidOperationException(
+            //             "Unexpected response to refresh authorization challenge");
+            
+            // return JsonConvert.DeserializeObject<Challenge>(
+            //         await resp.Content.ReadAsStringAsync());
+
+            return new AcmeAuthorization
+            {
+                DetailsUrl = authz.DetailsUrl,
+                Details = resp,
+            };
+        }
+
         /// <summary>
         /// </summary>
         /// <remarks>
@@ -756,6 +792,56 @@ namespace ACMESharp
             }
 
             return newOrder;
+        }
+
+        public async Task<AcmeOrder> RefreshOrderAsync(AcmeOrder order,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var resp = await SendAcmeAsync(
+                    new Uri(_http.BaseAddress, order.OrderUrl),
+                    skipNonce: true,
+                    cancel: cancel);
+
+            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+                    await resp.Content.ReadAsStringAsync());
+            
+            var updatedDrder = new AcmeOrder
+            {
+                OrderUrl = resp.Headers.Location?.ToString() ?? order.OrderUrl,
+                Status = coResp.Status,
+                Expires = coResp.Expires == null
+                    ? DateTime.MinValue
+                    : DateTime.Parse(coResp.Expires),
+                DnsIdentifiers = coResp.Identifiers?.Select(x => x.Value).ToArray()
+                    ?? order.DnsIdentifiers,
+                Authorizations = coResp.Authorizations?.Select(x =>
+                        new AcmeAuthorization { DetailsUrl = x }).ToArray()
+                    ?? order.Authorizations,
+                FinalizeUrl = coResp.Finalize,
+                CertificateUrl = coResp.Certificate,
+            };
+
+            foreach (var authz in updatedDrder.Authorizations)
+            {
+                resp = await _http.GetAsync(authz.DetailsUrl);
+                var body = await resp.Content.ReadAsStringAsync();
+
+                if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
+                {
+                    authz.FetchError = $"Failed to retrieve details: {resp.StatusCode}";
+                    if (resp.Content != null)
+                    {
+                        authz.FetchError += $"; {body}";
+                    }
+                }
+                else
+                {
+                    authz.Details = JsonConvert
+                        .DeserializeObject<Protocol.Model.Authorization>(body);
+                }
+            }
+
+            return updatedDrder;
         }
 
         async Task<HttpResponseMessage> SendAcmeAsync(
