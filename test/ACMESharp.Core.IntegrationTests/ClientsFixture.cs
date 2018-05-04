@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using DnsClient;
 
 namespace ACMESharp.IntegrationTests
 {
@@ -9,11 +10,19 @@ namespace ACMESharp.IntegrationTests
     /// </summary>
     public class ClientsFixture : IDisposable
     {
+        public ClientsFixture()
+        {
+            Dns = new LookupClient();
+            Dns.UseCache = false;
+        }
+
         public Uri BaseAddress { get; set; }
 
         public HttpClient Http { get; set; }
 
         public AcmeClient Acme { get; set; }
+
+        public LookupClient Dns { get; set; }
 
 
         #region IDisposable Support
