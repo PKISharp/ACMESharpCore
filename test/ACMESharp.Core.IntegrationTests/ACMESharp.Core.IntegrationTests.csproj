@@ -5,6 +5,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+    <StartupObject>ACMESharp.IntegrationTests.DebugMain</StartupObject>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
