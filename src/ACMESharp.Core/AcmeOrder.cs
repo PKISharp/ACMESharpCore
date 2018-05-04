@@ -16,5 +16,7 @@ namespace ACMESharp
         public AcmeAuthorization[] Authorizations { get; set; }
 
         public string FinalizeUrl { get; set; }
+
+        public string CertificateUrl { get; set; }
     }
 }
