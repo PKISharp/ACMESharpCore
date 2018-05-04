@@ -94,10 +94,12 @@ namespace ACMESharp.Crypto
         /// Returns a DER-encoded PKCS#10 Certificate Signing Request for the given RSA parametes
         /// and the given hash algorithm.
         /// </summary>
-        public static byte[] GenerateCsr(string[] dnsNames, RSA rsa, HashAlgorithmName hashAlgor)
+        public static byte[] GenerateCsr(string[] dnsNames, RSA rsa, HashAlgorithmName? hashAlgor = null)
         {
             if (dnsNames.Length < 1)
                 throw new ArgumentException("Must specify at least one name");
+            if (hashAlgor == null)
+                hashAlgor = HashAlgorithmName.SHA256;
 
             var sanBuilder = new SubjectAlternativeNameBuilder();
             foreach (var n in dnsNames)
@@ -105,7 +107,7 @@ namespace ACMESharp.Crypto
 
             var dn = new X500DistinguishedName($"CN={dnsNames[0]}");
             var csr = new CertificateRequest(dn,
-                    rsa, hashAlgor, RSASignaturePadding.Pkcs1);
+                    rsa, hashAlgor.Value, RSASignaturePadding.Pkcs1);
             csr.CertificateExtensions.Add(sanBuilder.Build());
 
             return csr.CreateSigningRequest();
@@ -116,17 +118,19 @@ namespace ACMESharp.Crypto
         /// Returns a DER-encoded PKCS#10 Certificate Signing Request for the given ECDsa parametes
         /// and the given hash algorithm.
         /// </summary>
-        public static byte[] GenerateCsr(string[] dnsNames, ECDsa dsa, HashAlgorithmName hashAlgor)
+        public static byte[] GenerateCsr(string[] dnsNames, ECDsa dsa, HashAlgorithmName? hashAlgor = null)
         {
             if (dnsNames.Length < 1)
                 throw new ArgumentException("Must specify at least one name");
+            if (hashAlgor == null)
+                hashAlgor = HashAlgorithmName.SHA256;
 
             var sanBuilder = new SubjectAlternativeNameBuilder();
             foreach (var n in dnsNames)
                 sanBuilder.AddDnsName(n);
 
             var dn = new X500DistinguishedName($"CN={dnsNames[0]}");
-            var csr = new CertificateRequest(dn, dsa, hashAlgor);
+            var csr = new CertificateRequest(dn, dsa, hashAlgor.Value);
             csr.CertificateExtensions.Add(sanBuilder.Build());
 
             return csr.CreateSigningRequest();
