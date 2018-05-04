@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto
 {
@@ -16,13 +17,64 @@ namespace ACMESharp.Crypto
     /// </summary>
     public static class CryptoHelper
     {
-        public static RSAParameters GenerateRsaKeys(int bits)
+        public static RSA GenerateRsaAlgorithm(int keyBitLength)
         {
-            var rsa = RSA.Create(bits);
-            return rsa.ExportParameters(true);
+            return RSA.Create(keyBitLength);
         }
 
-        public static ECParameters GenerateEcKeys(int curveSize)
+        public static RSA GenerateRsaAlgorithm(string rsaKeys)
+        {
+            var rsa = RSA.Create();
+            var keys = JsonConvert.DeserializeObject<RsaKeys>(rsaKeys);
+            var rsaParams = new RSAParameters
+            {
+                D = keys.D,
+                DP = keys.DP,
+                DQ = keys.DQ,
+                Exponent = keys.Exponent,
+                InverseQ = keys.InverseQ,
+                Modulus = keys.Modulus,
+                P = keys.P,
+                Q = keys.Q,
+            };
+            rsa.ImportParameters(rsaParams);
+            return rsa;
+        }
+
+        public static string GenerateRsaKeys(int keyBitLength)
+        {
+            var rsa = GenerateRsaAlgorithm(keyBitLength);
+            var rsaParams = rsa.ExportParameters(true);
+            var keys = new RsaKeys
+            {
+                D = rsaParams.D,
+                DP = rsaParams.DP,
+                DQ = rsaParams.DQ,
+                Exponent = rsaParams.Exponent,
+                InverseQ = rsaParams.InverseQ,
+                Modulus = rsaParams.Modulus,
+                P = rsaParams.P,
+                Q = rsaParams.Q,
+            };
+            var json = JsonConvert.SerializeObject(keys);
+            return json;
+        }
+
+        // https://github.com/dotnet/corefx/issues/23686
+        // https://gist.github.com/Jargon64/5b172c452827e15b21882f1d76a94be4/
+        private class RsaKeys
+        {
+            public byte[] Modulus { get; set; }
+            public byte[] Exponent { get; set; }
+            public byte[] P { get; set; }
+            public byte[] Q { get; set; }
+            public byte[] DP { get; set; }
+            public byte[] DQ { get; set; }
+            public byte[] InverseQ { get; set; }
+            public byte[] D { get; set; }
+        }
+
+        public static ECDsa GenerateEcAlgorithm(int curveSize)
         {
             ECCurve curve;
             switch (curveSize)
@@ -37,9 +89,19 @@ namespace ACMESharp.Crypto
                     throw new ArgumentOutOfRangeException("only 256 and 384 curves are supported");
             }
 
+            return ECDsa.Create(curve);
+        }
 
-            var ec = ECDsa.Create(curve);
-            return ec.ExportParameters(true);
+        public static ECDsa GenerateEcAlgorithm(string ecKeys)
+        {
+            var dsa = ECDsa.Create();
+            dsa.FromXmlString(ecKeys);
+            return dsa;
+        }
+
+        public static string GenerateEcKeys(int curveSize)
+        {
+            return GenerateEcAlgorithm(curveSize).ToXmlString(true);;
         }
 
         /// <summary>
