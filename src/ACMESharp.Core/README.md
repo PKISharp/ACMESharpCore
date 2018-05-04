@@ -42,6 +42,12 @@
 * External Account Binding from [ACME 7.3.5](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.5) has not been implemented
 * Order Pre-Authorizations from [ACME 7.4.1](https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4.1) is not implemented
 
+## Temporarily Broken
+
+* Temporarily rolling back to .NET Core 2.0 (netcoreapp2.0)
+  * found compatibility issues with AWSSDK and .NET Core 2.1 (netcoreapp2.1)
+  * tracking issue at https://github.com/aws/aws-sdk-net/issues/823
+
 ## Contributors
 
 * Translate PO files
