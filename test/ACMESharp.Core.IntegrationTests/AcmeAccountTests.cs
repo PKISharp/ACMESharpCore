@@ -127,5 +127,63 @@ namespace ACMESharp.IntegrationTests
                 () => Clients.Acme.CreateAccountAsync(_contactsInit, true,
                         throwOnExistingAccount: true));
         }
+
+        [Fact]
+        [TestOrder(0_070)]
+        public async Task TestUpdateAccount()
+        {
+            var tctx = SetTestContext();
+
+            var acct = await Clients.Acme.UpdateAccountAsync(_contactsUpdate);
+            tctx.SaveObject("acct-updated.json", acct);
+        }
+
+        [Fact]
+        [TestOrder(0_080)]
+        public async Task TestRotateAccountKey()
+        {
+            var tctx = SetTestContext();
+
+            var newKey = new Crypto.JOSE.Impl.RSJwsTool();
+            newKey.Init();
+
+            var acct = await Clients.Acme.ChangeAccountKeyAsync(newKey);
+            tctx.SaveObject("acct-keychanged.json", acct);
+        }
+
+        [Fact]
+        [TestOrder(0_085)]
+        public async Task TestUpdateAccountAfterKeyRotation()
+        {
+            var tctx = SetTestContext();
+
+            var acct = await Clients.Acme.UpdateAccountAsync(_contactsFinal);
+            tctx.SaveObject("acct-updatednewkey.json", acct);
+        }
+
+        [Fact]
+        [TestOrder(0_090)]
+        public async Task TestDeactivateAccount()
+        {
+            var tctx = SetTestContext();
+
+            var acct = await Clients.Acme.DeactivateAccountAsync();
+            tctx.SaveObject("acct-deactivated.json", acct);
+        }
+
+        [Fact]
+        [TestOrder(0_095)]
+        public async Task TestUpdateAccountAfterDeactivation()
+        {
+            var tctx = SetTestContext();
+
+            var ex = await Assert.ThrowsAnyAsync<AcmeProtocolException>(
+                () => Clients.Acme.UpdateAccountAsync(_contactsUpdate));
+            
+            Assert.Equal(ProblemType.Unauthorized, ex.ProblemType);
+            Assert.Contains("deactivated", ex.ProblemDetail,
+                    StringComparison.OrdinalIgnoreCase);
+            Assert.Equal((int)HttpStatusCode.Forbidden, ex.ProblemStatus);
+        }
     }
 }
