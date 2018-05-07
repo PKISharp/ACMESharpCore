@@ -107,15 +107,6 @@ namespace ACMESharp
                     new Uri(_http.BaseAddress, Directory.Directory),
                     skipNonce: true,
                     cancel: cancel);
-
-            // // var requ = new HttpRequestMessage(HttpMethod.Get, Directory.Directory);
-            
-            // // BeforeHttpSend?.Invoke(nameof(GetDirectoryAsync), requ);
-            // // var resp = await _http.SendAsync(requ, cancel);
-            // // AfterHttpSend?.Invoke(nameof(GetDirectoryAsync), resp);
-
-            // // var body = await resp.Content.ReadAsStringAsync();
-            // // return JsonConvert.DeserializeObject<DirectoryResponse>(body);
         }
 
         /// <summary>
@@ -142,14 +133,6 @@ namespace ACMESharp
                         HttpStatusCode.NoContent,
                     },
                     cancel: cancel);
-
-            // // var requ = new HttpRequestMessage(HttpMethod.Head, Directory.NewNonce);
-            
-            // // BeforeHttpSend?.Invoke(nameof(GetNonceAsync), requ);
-            // // var resp = await _http.SendAsync(requ, cancel);
-            // // AfterHttpSend?.Invoke(nameof(GetNonceAsync), resp);
-
-            // // ExtractNextNonce(resp);
         }
 
         /// <summary>
@@ -176,38 +159,12 @@ namespace ACMESharp
                     expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
                     includePublicKey: true,
                     cancel: cancel);
-            
-            // var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
-            // var requData = new CreateAccountRequest
-            // {
-            //     Contact = contacts.ToArray(),
-            //     TermsOfServiceAgreed = termsOfServiceAgreed,
-            //     ExternalAccountBinding = (JwsSignedPayload)externalAccountBinding,
-            // };
-
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(),
-            //         includePublicKey: true));
-            // requ.Content.Headers.ContentType = Constants.JsonContentTypeHeaderValue;
-
-            // BeforeAcmeSign?.Invoke(nameof(CreateAccountAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(CreateAccountAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(CreateAccountAsync), resp);
-
-            // ExtractNextNonce(resp);
 
             if (resp.StatusCode == HttpStatusCode.OK)
             {
                 if (throwOnExistingAccount)
                     throw new InvalidOperationException("Existing account public key found");
             }
-            // else if (resp.StatusCode != HttpStatusCode.Created)
-            // {
-            //     throw await DecodeResponseErrorAsync(resp);
-            // }
 
             var acct = await DecodeAccountResponseAsync(resp);
             
@@ -241,23 +198,6 @@ namespace ACMESharp
                     expectedStatuses: SkipExpectedStatuses,
                     includePublicKey: true,
                     cancel: cancel);
-
-
-            // var requUrl = new Uri(_http.BaseAddress, Directory.NewAccount);
-            // var requData = new CheckAccountRequest();
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString(),
-            //         includePublicKey: true));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(CheckAccountAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(CheckAccountAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(CheckAccountAsync), resp);
-            
-            // ExtractNextNonce(resp);
 
             if (resp.StatusCode == HttpStatusCode.BadRequest)
                 throw new InvalidOperationException(
@@ -295,28 +235,6 @@ namespace ACMESharp
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel);
-
-            // var requUrl = new Uri(Account.Kid);
-            // var requData = new UpdateAccountRequest
-            // {
-            //     Contact = contacts,
-            // };
-
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(UpdateAccountAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(UpdateAccountAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(UpdateAccountAsync), resp);
-            
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException("Unexpected response to account update");
 
             var acct = await DecodeAccountResponseAsync(resp);
 
@@ -356,29 +274,6 @@ namespace ACMESharp
                     message: innerPayload,
                     cancel: cancel);
 
-            // var requUrl = new Uri(_http.BaseAddress, Directory.KeyChange);
-            // var requData = new KeyChangeRequest
-            // {
-            //     Account = Account.Kid,
-            //     NewKey = newSigner.ExportJwk(),
-            // };
-            // var innerPayload = ComputeAcmeSigned(requData, requUrl.ToString(),
-            //         signer: newSigner, includePublicKey: true, excludeNonce: true);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(innerPayload, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(ChangeAccountKeyAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(ChangeAccountKeyAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(ChangeAccountKeyAsync), resp);
-            
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException("Failed to change account key");
-
             Signer = newSigner;
 
             return await DecodeAccountResponseAsync(resp);
@@ -397,24 +292,6 @@ namespace ACMESharp
                     method: HttpMethod.Post,
                     message: new DeactivateAccountRequest(),
                     cancel: cancel);
-
-            // var requUrl = new Uri(Account.Kid);
-            // var requData = new DeactivateAccountRequest();
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(DeactivateAccountAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(DeactivateAccountAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(DeactivateAccountAsync), resp);
-            
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw await DecodeResponseErrorAsync(resp);
 
             return await DecodeAccountResponseAsync(resp);
         }
@@ -444,33 +321,6 @@ namespace ACMESharp
                     message: message,
                     expectedStatuses: new[] { HttpStatusCode.Created },
                     cancel: cancel);
-
-            // var requUrl = new Uri(_http.BaseAddress, Directory.NewOrder);
-            // var requData = new CreateOrderRequest
-            // {
-            //     Identifiers = dnsIdentifiers.Select(x =>
-            //             new Identifier { Type = "dns", Value = x}).ToArray(),
-
-            //     // TODO: deal with dates
-            //     // NotBefore = notBefore?.ToString(),
-            //     // NotAfter = notAfter?.ToString(),
-            // };
-
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(CreateOrderAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(CreateOrderAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(CreateOrderAsync), resp);
-            
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.Created)
-            //     throw new InvalidOperationException("Unexpected response to create order");
 
             var coResp = JsonConvert.DeserializeObject<OrderResponse>(
                     await resp.Content.ReadAsStringAsync());
@@ -575,29 +425,6 @@ namespace ACMESharp
                     // take any input data to answer the challenge
                     message: new { },
                     cancel: cancel);
-
-            // var requUrl = new Uri(challenge.Url);
-            // // TODO:  for now, none of the challenge types
-            // // take any input data to answer the challenge
-            // var requData = new { };
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(AnswerChallengeAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(AnswerChallengeAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(AnswerChallengeAsync), resp);
-
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException(
-            //             "Unexpected response to answer authorization challenge");
-            
-            // return JsonConvert.DeserializeObject<Challenge>(
-            //         await resp.Content.ReadAsStringAsync());
         
             return resp;
         }
@@ -616,21 +443,6 @@ namespace ACMESharp
                     skipNonce: true,
                     cancel: cancel);
 
-            // var requUrl = new Uri(challenge.Url);
-            // var requ = new HttpRequestMessage(HttpMethod.Get, requUrl);
-            
-            // BeforeAcmeSign?.Invoke(nameof(RefreshChallengeAsync), null);
-            // BeforeHttpSend?.Invoke(nameof(RefreshChallengeAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(RefreshChallengeAsync), resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException(
-            //             "Unexpected response to refresh authorization challenge");
-            
-            // return JsonConvert.DeserializeObject<Challenge>(
-            //         await resp.Content.ReadAsStringAsync());
-
             return resp;
         }
 
@@ -647,21 +459,6 @@ namespace ACMESharp
                     new Uri(authz.DetailsUrl),
                     skipNonce: true,
                     cancel: cancel);
-
-            // var requUrl = new Uri(challenge.Url);
-            // var requ = new HttpRequestMessage(HttpMethod.Get, requUrl);
-            
-            // BeforeAcmeSign?.Invoke(nameof(RefreshChallengeAsync), null);
-            // BeforeHttpSend?.Invoke(nameof(RefreshChallengeAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(RefreshChallengeAsync), resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException(
-            //             "Unexpected response to refresh authorization challenge");
-            
-            // return JsonConvert.DeserializeObject<Challenge>(
-            //         await resp.Content.ReadAsStringAsync());
 
             return new AcmeAuthorization
             {
@@ -684,26 +481,6 @@ namespace ACMESharp
                     method: HttpMethod.Post,
                     message: new DeactivateAuthorizationRequest(),
                     cancel: cancel);
-
-            // var requUrl = new Uri(authz.DetailsUrl);
-            // var requData = new DeactivateAuthorizationRequest();
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-
-            // BeforeAcmeSign?.Invoke(nameof(DeactivateAuthorizationAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(DeactivateAuthorizationAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(DeactivateAuthorizationAsync), resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException(
-            //             "Unexpected response to refresh authorization challenge");
-            
-            // var authzDetail = JsonConvert.DeserializeObject<Protocol.Model.Authorization>(
-            //         await resp.Content.ReadAsStringAsync());
             
             return new AcmeAuthorization
             {
@@ -730,28 +507,6 @@ namespace ACMESharp
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel);
-
-            // var requUrl = new Uri(_http.BaseAddress, order.FinalizeUrl);
-            // var requData = new FinalizeOrderRequest
-            // {
-            //     Csr = CryptoHelper.Base64UrlEncode(derEncodedCsr),
-            // };
-
-            // //!var requPayload = JsonConvert.SerializeObject(requData, _jsonSettings);
-            // var requ = new HttpRequestMessage(HttpMethod.Post, requUrl);
-            // requ.Content = new StringContent(ComputeAcmeSigned(requData, requUrl.ToString()));
-            // requ.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
-            //         Constants.ContentTypeHeaderValue);
-            
-            // BeforeAcmeSign?.Invoke(nameof(FinalizeOrderAsync), requData);
-            // BeforeHttpSend?.Invoke(nameof(FinalizeOrderAsync), requ);
-            // var resp = await _http.SendAsync(requ, cancel);
-            // AfterHttpSend?.Invoke(nameof(FinalizeOrderAsync), resp);
-            
-            // ExtractNextNonce(resp);
-
-            // if (resp.StatusCode != HttpStatusCode.OK)
-            //     throw new InvalidOperationException("Unexpected response to finalize order");
 
             var coResp = JsonConvert.DeserializeObject<OrderResponse>(
                     await resp.Content.ReadAsStringAsync());
