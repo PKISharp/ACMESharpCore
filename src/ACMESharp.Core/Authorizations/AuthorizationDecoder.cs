@@ -55,5 +55,28 @@ namespace ACMESharp.Authorizations
                 DnsRecordValue = keyAuthzDigested,
             };
         }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.3
+        /// </remarks>
+        public static Http01ChallengeValidationDetails ResolveChallengeForHttp01(
+                AcmeAuthorization authz, Challenge challenge, IJwsTool signer)
+        {
+            var keyAuthz = JwsHelper.ComputeKeyAuthorization(
+                    signer, challenge.Token);
+
+            return new Http01ChallengeValidationDetails
+            {
+                HttpResourceUrl = $@"http://{authz.Details.Identifier.Value}/{
+                        Http01ChallengeValidationDetails.HttpPathPrefix}/{
+                        challenge.Token}",
+                HttpResourcePath = $@"{Http01ChallengeValidationDetails.HttpPathPrefix}/{
+                        challenge.Token}",
+                HttpResourceContentType = Http01ChallengeValidationDetails.HttpResourceContentTypeDefault,
+                HttpResourceValue = keyAuthz,
+            };
+        }
     }
 }

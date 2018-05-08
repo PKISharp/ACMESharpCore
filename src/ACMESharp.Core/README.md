@@ -31,6 +31,7 @@
 * Create Order
 * Decode Challenge details for types:
   * `dns-01`
+  * `http-01`
 * Answer Challenge
 * Refresh Challenge
 * Deactivate Authorization
