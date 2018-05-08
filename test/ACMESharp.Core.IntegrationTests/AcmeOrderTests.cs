@@ -46,7 +46,9 @@ namespace ACMESharp.IntegrationTests
         public static readonly IEnumerable<string> _contacts =
                 new[] { "mailto:foo@example.com" };
         
-        public const string TestSubdomain = "integtests.acme2.zyborg.io";
+        protected  const string TestDnsSubdomain = "integtests.acme2.zyborg.io";
+
+        protected  const string TestHttpSubdomain = "acmetesting.zyborg.io";
 
         [Fact]
         [TestOrder(0)]
@@ -107,19 +109,23 @@ namespace ACMESharp.IntegrationTests
             Assert.Equal(Clients.Acme.Account.Kid, check.Kid);
         }
 
+        //
+        // Single-name Order validated using DNS
+        //
+
         [Fact]
         [TestOrder(0_110)]
         public async Task TestCreateSingleNameOrder()
         {
             var tctx = SetTestContext();
 
-            var randomNames = new[] {
-                $"{State.RandomBytesString(5)}.{TestSubdomain}"
+            var dnsNames = new[] {
+                $"{State.RandomBytesString(5)}.{TestDnsSubdomain}"
             };
-            SaveObject("order_names-single.json", randomNames);
-            Log.LogInformation("Generated random DNS name: {0}", randomNames);
+            SaveObject("order_names-single.json", dnsNames);
+            Log.LogInformation("Generated random DNS name: {0}", dnsNames);
 
-            var order = await Clients.Acme.CreateOrderAsync(randomNames);
+            var order = await Clients.Acme.CreateOrderAsync(dnsNames);
             SaveObject("order-single.json", order);
         }
 
@@ -448,6 +454,367 @@ namespace ACMESharp.IntegrationTests
             }
         }
 
+
+
+        //
+        // Single-name Order validated using HTTP
+        //
+
+
+
+        [Fact]
+        [TestOrder(0_210, "SingleHttp")]
+        public async Task Test_Create_Order_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var dnsNames = new[] {
+                TestHttpSubdomain,
+                // $"foo-{State.RandomBytesString(5)}.{TestHttpSubdomain}",
+                // $"bar-{State.RandomBytesString(5)}.{TestHttpSubdomain}",
+                // $"bar-{State.RandomBytesString(5)}.{TestHttpSubdomain}",
+            };
+            tctx.GroupSaveObject("order_names.json", dnsNames);
+            Log.LogInformation("Using Test DNS subdomain name: {0}", dnsNames);
+
+            var order = await Clients.Acme.CreateOrderAsync(dnsNames);
+            tctx.GroupSaveObject("order.json", order);
+        }
+
+        [Fact]
+        [TestOrder(0_215, "SingleHttp")]
+        public async Task Test_Create_OrderDuplicate_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldNames = tctx.GroupLoadObject<string[]>("order_names.json");
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            Assert.NotNull(oldNames);
+            Assert.Equal(1, oldNames.Length);
+            Assert.NotNull(oldOrder);
+            Assert.NotNull(oldOrder.OrderUrl);
+
+            var newOrder = await Clients.Acme.CreateOrderAsync(oldNames);
+            tctx.GroupSaveObject("order-dup.json", newOrder);
+
+            ValidateDuplicateOrder(oldOrder, newOrder);
+        }
+
+        [Fact]
+        [TestOrder(0_220, "SingleHttp")]
+        public void Test_Decode_OrderChallengeForHttp01_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    Log.LogInformation("Decoding Authorization {0} Challenge {1}",
+                            authzIndex, chlngIndex);
+                    
+                    var chlngDetails = AuthorizationDecoder.ResolveChallengeForHttp01(
+                            authz, chlng, Clients.Acme.Signer);
+
+                    Assert.Equal(Http01ChallengeValidationDetails.Http01ChallengeType,
+                            chlngDetails.ChallengeType, ignoreCase: true);
+                    Assert.NotNull(chlngDetails.HttpResourceUrl);
+                    Assert.NotNull(chlngDetails.HttpResourcePath);
+                    Assert.NotNull(chlngDetails.HttpResourceContentType);
+                    Assert.NotNull(chlngDetails.HttpResourceValue);
+
+                    tctx.GroupSaveObject($"order-authz_{authzIndex}-chlng_{chlngIndex}.json",
+                            chlngDetails);
+                    ++chlngIndex;
+                }
+                ++authzIndex;
+            }
+        }
+
+        [Fact]
+        [TestOrder(0_230, "SingleHttp")]
+        public async Task Test_Create_OrderAnswerContent_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                            $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
+
+                    Log.LogInformation("Creating HTTP Content for Authorization {0} Challenge {1} as per {@Details}",
+                            authzIndex, chlngIndex, chlngDetails);
+
+                    await Aws.S3.EditFile(
+                            chlngDetails.HttpResourcePath,
+                            chlngDetails.HttpResourceContentType,
+                            chlngDetails.HttpResourceValue);
+                }
+            }
+        }
+
+        [Fact]
+        [TestOrder(0_235, "SingleHttp")]
+        public async Task Test_Exists_OrderAnswerContent_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            Thread.Sleep(10*1000);
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                            $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
+
+                    Log.LogInformation("Waiting on HTTP content for Authorization {0} Challenge {1} as per {@Details}",
+                            authzIndex, chlngIndex, chlngDetails);
+ 
+                    var created = await ValidateHttpContent(chlngDetails.HttpResourceUrl,
+                            contentType: chlngDetails.HttpResourceContentType,
+                            targetValue: chlngDetails.HttpResourceValue);
+
+                    Assert.True(created, "    Failed HTTP set/read expected content");
+                }
+            }
+        }
+
+        [Fact]
+        [TestOrder(0_240, "SingleHttp")]
+        public async Task Test_Answer_OrderChallenges_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    Log.LogInformation("Answering Authorization {0} Challenge {1}", authzIndex, chlngIndex);
+                    var updated = await Clients.Acme.AnswerChallengeAsync(authz, chlng);
+                }
+            }
+        }
+
+        [Fact]
+        [TestOrder(0_245, "SingleHttp")]
+        public async Task Test_AreValid_OrderChallengesAndAuthorization_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    int maxTry = 20;
+                    int trySleep = 5 * 1000;
+                    
+                    for (var tryCount = 0; tryCount < maxTry; ++tryCount)
+                    {
+                        if (tryCount > 0)
+                            // Wait just a bit for
+                            // subsequent queries
+                            Thread.Sleep(trySleep);
+
+                        var updatedChlng = await Clients.Acme.RefreshChallengeAsync(authz, chlng);
+
+                        // The Challenge is either Valid, still Pending or some other UNEXPECTED state
+
+                        if ("valid" == updatedChlng.Status)
+                        {
+                            Log.LogInformation("    Authorization {0} Challenge {1} is VALID!", authzIndex, chlngIndex);
+                            break;
+                        }
+
+                        if ("pending" != updatedChlng.Status)
+                        {
+                            Log.LogInformation("    Authorization {0} Challenge {1} in **UNEXPECTED STATUS**: {@UpdateChallengeDetails}",
+                                    authzIndex, chlngIndex, updatedChlng);
+                            throw new InvalidOperationException("Unexpected status for answered Challenge: " + updatedChlng.Status);
+                        }
+                    }
+                }
+
+                var updatedAuthz = await Clients.Acme.RefreshAuthorizationAsync(authz);
+                Assert.Equal("valid", updatedAuthz.Details.Status);
+            }
+        }
+
+        // [Fact]
+        // [TestOrder(0_250, "SingleHttp")]
+        // public async Task Test_IsValid_OrderStatus_ForSingleHttp()
+        // {
+        //     var tctx = SetTestContext();
+
+        //     // TODO: Validate overall order status is "valid"
+
+        //     // This state is expected based on the ACME spec
+        //     // BUT -- LE's implementation does not appear to
+        //     // respect this contract -- the status of the
+        //     // Order stays in the pending state even though
+        //     // we are able to successfully Finalize the Order
+        // }
+
+        [Fact]
+        [TestOrder(0_260, "SingleHttp")]
+        public async Task Test_Finalize_Order_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var rsaKeys = CryptoHelper.GenerateRsaKeys(4096);
+            var rsa = CryptoHelper.GenerateRsaAlgorithm(rsaKeys);
+            tctx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
+            var derEncodedCsr = CryptoHelper.GenerateCsr(oldOrder.DnsIdentifiers, rsa);
+            tctx.GroupWriteTo("order-csr.der", derEncodedCsr);
+
+            var updatedOrder = await Clients.Acme.FinalizeOrderAsync(oldOrder, derEncodedCsr);
+
+            int maxTry = 20;
+            int trySleep = 5 * 1000;
+            var valid = false;
+
+            for (var tryCount = 0; tryCount < maxTry; ++tryCount)
+            {
+                if (tryCount > 0)
+                {
+                    // Wait just a bit for
+                    // subsequent queries
+                    Thread.Sleep(trySleep);
+
+                    // Only need to refresh
+                    // after the first check
+                    Log.LogInformation($"  Retry #{tryCount} refreshing Order");
+                    updatedOrder = await Clients.Acme.RefreshOrderAsync(oldOrder);
+                    tctx.GroupSaveObject("order-updated.json", updatedOrder);
+                }
+
+                if (!valid)
+                {
+                    // The Order is either Valid, still Pending or some other UNEXPECTED state
+
+                    if ("valid" == updatedOrder.Status)
+                    {
+                        valid = true;
+                        Log.LogInformation("Order is VALID!");
+                    }
+                    else if ("pending" != updatedOrder.Status)
+                    {
+                        Log.LogInformation("Order in **UNEXPECTED STATUS**: {@UpdateChallengeDetails}", updatedOrder);
+                        throw new InvalidOperationException("Unexpected status for Order: " + updatedOrder.Status);
+                    }
+                }
+
+                if (valid)
+                {
+                    // Once it's valid, then we need to wait for the Cert
+                    
+                    if (!string.IsNullOrEmpty(updatedOrder.CertificateUrl))
+                    {
+                        Log.LogInformation("Certificate URL is ready!");
+                        break;
+                    }
+                }
+            }
+
+            Assert.NotNull(updatedOrder.CertificateUrl);
+
+            var certBytes = await Clients.Http.GetByteArrayAsync(updatedOrder.CertificateUrl);
+            WriteTo("order-cert.crt", certBytes);
+        }
+
+        [Fact]
+        [TestOrder(0_270, "SingleHttp")]
+        public async Task Test_Delete_OrderAnswerHttpContent_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                            $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
+
+                    Log.LogInformation("Deleting HTTP content for Authorization {0} Challenge {1} as per {@Details}",
+                            authzIndex, chlngIndex, chlngDetails);
+
+                    await Aws.S3.EditFile(
+                            chlngDetails.HttpResourcePath,
+                            null, null);
+                }
+            }
+        }
+        
+        [Fact]
+        [TestOrder(0_275, "SingleHttp")]
+        public async Task Test_IsDeleted_OrderAnswerHttpContent_ForSingleHttp()
+        {
+            var tctx = SetTestContext();
+
+            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+
+            Thread.Sleep(1*1000);
+
+            var authzIndex = 0;
+            foreach (var authz in oldOrder.Authorizations)
+            {
+                var chlngIndex = 0;
+                foreach (var chlng in authz.Details.Challenges.Where(
+                    x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
+                {
+                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                            $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
+
+                    Log.LogInformation("Waiting on HTTP content deleted for Authorization {0} Challenge {1} as per {@Details}",
+                            authzIndex, chlngIndex, chlngDetails);
+ 
+                    var deleted = await ValidateHttpContent(chlngDetails.HttpResourceUrl,
+                            targetMissing: true);
+
+                    Assert.True(deleted, "    Failed HTTP content delete/read expected missing TXT record");
+                }
+            }
+        }
+
+        //
+        // Shared code
+        //
+
         protected async Task<bool> ValidateDnsTxtRecord(string name,
                 string targetValue = null,
                 bool targetMissing = false,
@@ -484,7 +851,7 @@ namespace ACMESharp.IntegrationTests
                     {
                         if (!targetMissing && targetValue == null)
                         {
-                            Log.LogInformation($"    Try #{tryCount} - Found ANY DNS Value: {dnsVal}");
+                            Log.LogInformation($"    Try #{tryCount} - Found ANY DNS value: {dnsVal}");
                             return true;
                         }
 
@@ -499,6 +866,65 @@ namespace ACMESharp.IntegrationTests
                     else
                     {
                         Log.LogInformation($"    Try #{tryCount} - Found EMPTY DNS value");
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        protected async Task<bool> ValidateHttpContent(string url,
+                string contentType = null,
+                string targetValue = null,
+                bool targetMissing = false,
+                int maxTry = 20,
+                int trySleep = 10 * 1000)
+        {
+            for (var tryCount = 0; tryCount < maxTry; ++tryCount)
+            {
+                if (tryCount > 0)
+                    // Wait just a bit for
+                    // subsequent queries
+                    Thread.Sleep(trySleep);
+                
+                var x = await Clients.Http.GetAsync(url);
+
+                if (x.StatusCode != HttpStatusCode.OK)
+                {
+                    Log.LogInformation($"    Try #{tryCount} HTTP GET Error: [{x.StatusCode}]");
+                    if (x.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        if (targetMissing)
+                            return true;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Unhandled HTTP response: " + x.StatusCode);
+                    }
+                }
+                else
+                {
+                    var getContent = await x.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(getContent))
+                    {
+                        if (!targetMissing && targetValue == null)
+                        {
+                            Log.LogInformation($"    Try #{tryCount} - Found ANY HTTP content: {getContent}");
+                            return true;
+                        }
+
+                        if (targetValue?.Equals(getContent) ?? false)
+                        {
+                            Log.LogInformation($"    Try #{tryCount} - Found expected HTTP content: {getContent}");
+                            return true;
+                        }
+
+                        Log.LogInformation($"    Try #{tryCount} - Found non-matching HTTP content: {getContent}");
+                    }
+                    else
+                    {
+                        Log.LogInformation($"    Try #{tryCount} - Found EMPTY HTTP content");
                     }
                 }
             }
@@ -580,7 +1006,8 @@ namespace ACMESharp.IntegrationTests
                 foreach (var chlng in authz.Details.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    var chlngDetails = Clients.Acme.ResolveChallengeForDns01(authz, chlng);
+                    var chlngDetails = AuthorizationDecoder.ResolveChallengeForDns01(
+                            authz, chlng, Clients.Acme.Signer);
                     SaveObject($"order-san1-authz_{authzIndex}-chlng_{chlngIndex}.json", chlngDetails);
                     ++chlngIndex;
                 }
