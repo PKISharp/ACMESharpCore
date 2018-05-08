@@ -7,9 +7,12 @@ namespace ACMESharp.IntegrationTests
     {
         public AwsFixture()
         {
-            var jsonPath = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\_IGNORE\R53Helper.json";
-            var json = File.ReadAllText(jsonPath);
-            R53 = JsonConvert.DeserializeObject<R53Helper>(json);
+            var jsonPathBase = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\_IGNORE\";
+
+            R53 = JsonConvert.DeserializeObject<R53Helper>(
+                    File.ReadAllText(jsonPathBase + "R53Helper.json"));
+            S3 = JsonConvert.DeserializeObject<S3Helper>(
+                    File.ReadAllText(jsonPathBase + "S3Helper.json"));
 
             // For testing this makes it easier to repeat tests
             // that use the same DNS names and need to be refreshed
@@ -17,5 +20,7 @@ namespace ACMESharp.IntegrationTests
         }
 
         public R53Helper R53 { get; }
+
+        public S3Helper S3 { get; }
     }
 }
