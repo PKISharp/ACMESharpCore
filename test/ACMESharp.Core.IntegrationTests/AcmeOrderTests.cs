@@ -145,7 +145,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_120)]
-        public void TestDecodeSingleNameOrder()
+        public void TestDecodeDns01SingleNameOrder()
         {
             var tctx = SetTestContext();
 
@@ -158,9 +158,11 @@ namespace ACMESharp.IntegrationTests
                 foreach (var chlng in authz.Details.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    Log.LogInformation("Decoding Authorization {0} Challenge {1}", authzIndex, chlngIndex);
+                    Log.LogInformation("Decoding Authorization {0} Challenge {1}",
+                            authzIndex, chlngIndex);
                     
-                    var chlngDetails = Clients.Acme.ResolveChallengeForDns01(authz, chlng);
+                    var chlngDetails = AuthorizationDecoder.ResolveChallengeForDns01(
+                            authz, chlng, Clients.Acme.Signer);
 
                     Assert.Equal(Dns01ChallengeValidationDetails.Dns01ChallengeType,
                             chlngDetails.ChallengeType, ignoreCase: true);
@@ -168,7 +170,8 @@ namespace ACMESharp.IntegrationTests
                     Assert.NotNull(chlngDetails.DnsRecordValue);
                     Assert.Equal("TXT", chlngDetails.DnsRecordType, ignoreCase: true);
 
-                    SaveObject($"order-single-authz_{authzIndex}-chlng_{chlngIndex}.json", chlngDetails);
+                    SaveObject($"order-single-authz_{authzIndex}-chlng_{chlngIndex}.json",
+                            chlngDetails);
                     ++chlngIndex;
                 }
                 ++authzIndex;
