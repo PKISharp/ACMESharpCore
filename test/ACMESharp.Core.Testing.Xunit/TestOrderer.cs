@@ -53,6 +53,11 @@ namespace ACMESharp.Testing.Xunit
             return member.GetCustomAttribute<TestOrderAttribute>()?.Order ?? int.MaxValue;
         }
 
+        public static string GetTestGroup(MemberInfo member)
+        {
+            return member.GetCustomAttribute<TestOrderAttribute>()?.Group;
+        }
+
         public static int GetTestOrder(object instance)
         {
             var t = instance.GetType();

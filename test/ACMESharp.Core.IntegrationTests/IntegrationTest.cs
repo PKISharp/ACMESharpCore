@@ -35,6 +35,7 @@ namespace ACMESharp.IntegrationTests
                 Name = caller,
                 Member = m[0],
                 TestOrder = TestOrderer.GetTestOrder(m[0]),
+                TestGroup = TestOrderer.GetTestGroup(m[0]),
                 Subsequence = subseq,
                 State = State,
             };
@@ -130,6 +131,8 @@ namespace ACMESharp.IntegrationTests
 
             public int TestOrder { get; set; }
 
+            public string TestGroup { get; set; }
+
             public int Subsequence { get; set; } = -1;
 
             public StateFixture State { get; set; }
@@ -156,7 +159,7 @@ namespace ACMESharp.IntegrationTests
 
             public void SaveObject(string saveName, object o)
             {
-                Test.SaveObject($"{TestOrder:D4}-{saveName}", o);
+                Test.SaveObject($"{ComputePrefix()}-{saveName}", o);
             }
 
             public T LoadObject<T>(string saveName)
@@ -164,11 +167,51 @@ namespace ACMESharp.IntegrationTests
                 return Test.LoadObject<T>($"{ComputePrefix()}-{saveName}");
             }
 
+            public void GroupWriteTo(string saveName, byte[] value)
+            {
+                Test.WriteTo($"{ComputeGroupPrefix()}{saveName}", value);
+            }
+
+            public void GroupWriteTo(string saveName, string value)
+            {
+                Test.WriteTo($"{ComputeGroupPrefix()}{saveName}", value);
+            }
+
+            public void GroupAppendTo(string saveName, string value)
+            {
+                Test.AppendTo($"{ComputeGroupPrefix()}{saveName}", value);
+            }
+
+            public string GroupReadFrom(string saveName)
+            {
+                return Test.ReadFrom($"{ComputeGroupPrefix()}{saveName}");
+            }
+
+            public void GroupSaveObject(string saveName, object o)
+            {
+                Test.SaveObject($"{ComputeGroupPrefix()}{saveName}", o);
+            }
+
+            public T GroupLoadObject<T>(string saveName)
+            {
+                return Test.LoadObject<T>($"{ComputeGroupPrefix()}{saveName}");
+            }
+
+            private string ComputeGroupPrefix()
+            {
+                if (TestGroup != null)
+                    return $"{TestGroup}_";
+                else
+                    return string.Empty;
+            }
+
             private string ComputePrefix()
             {
                 var pfx = TestOrder.ToString("D4");
                 if (Subsequence >= 0)
                     pfx += $"-{Subsequence}";
+                if (TestGroup != null)
+                    pfx += $"_{TestGroup}";
                 return pfx;                
             }
         }        

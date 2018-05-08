@@ -18,11 +18,14 @@ namespace ACMESharp.Testing.Xunit
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public sealed class TestOrderAttribute : Attribute
     {
-        public TestOrderAttribute(int order)
+        public TestOrderAttribute(int order, string group = null)
         {
             Order = order;
+            Group = group;
         }
 
         public int Order { get; }
+
+        public string Group { get; }
     }
 }
