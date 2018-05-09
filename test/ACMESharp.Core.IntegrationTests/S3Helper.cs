@@ -11,9 +11,7 @@ namespace ACMESharp.IntegrationTests
 {
     public class S3Helper
     {
-        public string AwsAccessKey { get; set; }
-
-        public string AwsSecretKey { get; set; }
+        public string AwsProfileName { get; set; }
 
         public string AwsRegion { get; set; }
 

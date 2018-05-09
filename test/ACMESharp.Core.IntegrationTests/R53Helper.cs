@@ -15,9 +15,7 @@ namespace ACMESharp.IntegrationTests
     {
         public const int DefaultRecordTtl = 300;
 
-        public string AwsAccessKey { get; set; }
-
-        public string AwsSecretKey { get; set; }
+        public string AwsProfileName = "acmesharp-tests";
 
         public string AwsRegion { get; set; }
 
@@ -39,7 +37,7 @@ namespace ACMESharp.IntegrationTests
         public async Task<ListResourceRecordSetsResponse> GetRecords(
                 string startingDnsName, string startingDnsType = null)
         {
-            var crd = StoredProfileCredentials.GetProfile("acmesharp-tests");
+            var crd = StoredProfileCredentials.GetProfile(AwsProfileName);
             var cfg = new AmazonRoute53Config
             {
                 RegionEndpoint = RegionEndpoint.USEast1,
