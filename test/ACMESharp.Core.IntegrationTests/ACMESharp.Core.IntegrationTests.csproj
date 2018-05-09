@@ -33,4 +33,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="config\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
