@@ -1,0 +1,5 @@
+{
+    "AwsProfileName": "acmesharp-tests",
+    "AwsRegion":    "us-east-1",
+    "HostedZoneId": "@@TEST_HOSTED_ZONE_ID@@"
+}

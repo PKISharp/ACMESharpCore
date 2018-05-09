@@ -1,0 +1,8 @@
+{
+    "AwsProfileName": "acmesharp-tests",
+    "AwsRegion":    "us-east-1",
+    "BucketName":   "@@TEST_BUCKET_NAME@@"
+    
+    // This seems to break things with a "BadRequest" response
+    //,"CannedAcl":    "PublicRead"
+}
