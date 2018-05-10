@@ -2,12 +2,21 @@ using System.Net.Http.Headers;
 
 namespace ACMESharp.Protocol
 {
-    public class Constants
+    public static class Constants
     {
+        static Constants()
+        {
+            var asmVer = typeof(Constants).Assembly.GetName().Version;
+            UserAgentHeaderValue = $"ACMESharp/{asmVer} (ACME 2.0)";
+        }
+
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.1
         /// </summary>
-        public const string UserAgentHeaderValue = "ACMESharp/1.9.0 (ACME 2.0)";
+        /// <remarks>
+        /// Computed dynamically at assembly load to incorporate the full.
+        /// </remarks>
+        public static readonly string UserAgentHeaderValue;
 
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.1
