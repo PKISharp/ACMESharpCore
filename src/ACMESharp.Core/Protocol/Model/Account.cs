@@ -1,12 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace ACMESharp.Protocol.Messages
+namespace ACMESharp.Protocol.Model
 {
     /// <summary>
+    /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.2
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
     /// </summary>
-    public class CreateAccountResponse
+    public class Account
     {
         public string Id { get; set; }
 
@@ -18,6 +21,9 @@ namespace ACMESharp.Protocol.Messages
 
         public string Status { get; set; }
 
+        public bool? TermsOfServiceAgreed { get; set; }
+
+        public string Orders { get; set; }
 
         // TODO: are these standard or specific to LE?
         //    "agreement": "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf",

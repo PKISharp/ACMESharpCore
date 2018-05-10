@@ -39,7 +39,7 @@ namespace ACMESharp.IntegrationTests
             var order = await Clients.Acme.CreateOrderAsync(dnsNames);
             tctx.GroupSaveObject("order.json", order);
 
-            Assert.True(order.Authorizations[0].Details.Wildcard, "Is a wildcard Order");
+            Assert.True(order.Authorizations.First().Details.Wildcard, "Is a wildcard Order");
         }
 
         [Fact]

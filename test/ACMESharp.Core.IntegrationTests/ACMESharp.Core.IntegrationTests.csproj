@@ -14,7 +14,7 @@
     <PackageReference Include="AWSSDK.S3" Version="3.3.18.2" />
     <PackageReference Include="DnsClient" Version="1.0.7" />
     <!-- <PackageReference Include="AWSSDK.Route53" Version="3.3.15.5" /> -->
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0-dev-00023" />
     <PackageReference Include="xunit" Version="2.3.1" />

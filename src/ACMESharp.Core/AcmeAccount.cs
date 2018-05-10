@@ -1,13 +1,28 @@
+using System.Collections.Generic;
+using ACMESharp.Protocol.Model;
+
 namespace ACMESharp
 {
     /// <summary>
     /// Represents the details of a registered ACME Account with a specific ACME CA.
     /// </summary>
-    public class AcmeAccount
+    public class AcmeAccount : AcmeAccount.IAccountDetails
     {
-        public string[] Contacts { get; set; }
+        private Account _account;
 
-        public object PublicKey { get; set; }
+        public AcmeAccount(Account account, string kid, string tosLink)
+        {
+            _account = account;
+
+            Kid = kid;
+            TosLink = tosLink;
+        }
+
+        Account IAccountDetails.AccountDetails => _account;
+
+        public IEnumerable<string> Contacts => _account.Contact;
+
+        public object PublicKey => _account?.Key;
 
         /// <summary>
         /// This is the Key Identifier used in most messages sent to the ACME CA after
@@ -23,14 +38,40 @@ namespace ACMESharp
         /// </para>
         /// </remarks>
         /// <returns></returns>
-        public string Kid { get; set; }
+        public string Kid { get; }
 
-        public string TosLink { get; set; }
+        public string TosLink { get; }
 
         /// <summary>
         /// CA-assigned unique identifier for the Account.
         /// </summary>
         /// <returns></returns>
-        public string Id { get; set; }
+        public string Id => _account?.Id;
+
+        public AccountStatus Status { get; }
+
+        public AccountStatus GeStatus()
+        {
+            switch (_account?.Status)
+            {
+                case "valid": return AccountStatus.Valid;
+                case "deactivated": return AccountStatus.Deactivated;
+                case "revoked": return AccountStatus.Revoked;
+                default: return AccountStatus.Unknown;
+            }
+        }
+
+        public enum AccountStatus
+        {
+            Unknown = 0,
+            Valid = 1,
+            Deactivated = 2,
+            Revoked = 3,
+        }
+
+        public interface IAccountDetails
+        {
+            Account AccountDetails { get; }
+        }
     }
 }

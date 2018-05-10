@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ACMESharp.Protocol.Model;
 
 namespace ACMESharp
@@ -13,7 +14,7 @@ namespace ACMESharp
 
         public string[] DnsIdentifiers { get; set; }
 
-        public AcmeAuthorization[] Authorizations { get; set; }
+        public IEnumerable<AcmeAuthorization> Authorizations { get; set; }
 
         public string FinalizeUrl { get; set; }
 

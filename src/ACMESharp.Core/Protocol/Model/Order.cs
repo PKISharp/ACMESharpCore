@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 using ACMESharp.Protocol.Model;
 using Newtonsoft.Json;
 
-namespace ACMESharp.Protocol.Messages
+namespace ACMESharp.Protocol.Model
 {
     /// <summary>
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.3
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
     /// </summary>
-    public class OrderResponse
+    public class Order
     {
         [JsonProperty("status")]
         [Required]

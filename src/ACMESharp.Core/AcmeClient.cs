@@ -330,7 +330,7 @@ namespace ACMESharp
                     expectedStatuses: new[] { HttpStatusCode.Created },
                     cancel: cancel);
 
-            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+            var coResp = JsonConvert.DeserializeObject<Order>(
                     await resp.Content.ReadAsStringAsync());
             
             var order = new AcmeOrder
@@ -468,7 +468,7 @@ namespace ACMESharp
                     message: message,
                     cancel: cancel);
 
-            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+            var coResp = JsonConvert.DeserializeObject<Order>(
                     await resp.Content.ReadAsStringAsync());
             
             var newOrder = new AcmeOrder
@@ -517,7 +517,7 @@ namespace ACMESharp
                     skipNonce: true,
                     cancel: cancel);
 
-            var coResp = JsonConvert.DeserializeObject<OrderResponse>(
+            var coResp = JsonConvert.DeserializeObject<Order>(
                     await resp.Content.ReadAsStringAsync());
             
             var updatedDrder = new AcmeOrder
@@ -655,19 +655,14 @@ namespace ACMESharp
             // If this is a response to "duplicate account" then the body
             // will be empty and this will produce a null which we have
             // to account for when we build up the AcmeAccount instance
-            var caResp = JsonConvert.DeserializeObject<CreateAccountResponse>(
+            var caResp = JsonConvert.DeserializeObject<Account>(
                     await resp.Content.ReadAsStringAsync());
-            var acct = new AcmeAccount
-            {
-                Kid = resp.Headers.Location?.ToString() ?? Account.Kid,
 
-                // caResp will be null if this
-                // is a duplicate account resp
-                TosLink = links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri,
-                PublicKey = caResp?.Key,
-                Contacts = caResp?.Contact,
-                Id = caResp?.Id,
-            };
+            // caResp will be null if this
+            // is a duplicate account resp
+            var acct = new AcmeAccount(caResp,
+                    resp.Headers.Location?.ToString() ?? Account.Kid,
+                    links.GetFirstOrDefault(Constants.TosLinkHeaderRelationKey)?.Uri);
             
             return acct;
         }
