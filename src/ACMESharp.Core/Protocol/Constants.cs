@@ -7,7 +7,7 @@ namespace ACMESharp.Protocol
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.1
         /// </summary>
-        public const string UserAgentHeaderValue = "ACMESharp/1.9.0";
+        public const string UserAgentHeaderValue = "ACMESharp/1.9.0 (ACME 2.0)";
 
         /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.1
