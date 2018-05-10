@@ -12,9 +12,11 @@ using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
+using ACMESharp.Logging;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Model;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -35,30 +37,33 @@ namespace ACMESharp
 
         private bool _disposeHttpClient;
         private HttpClient _http;
-
         private IJwsTool _signer;
+        private ILogger _log;
 
         public AcmeClient(HttpClient http, DirectoryResponse dir = null,
                 AcmeAccount acct = null, IJwsTool signer = null,
-                bool disposeHttpClient = false)
+                bool disposeHttpClient = false,
+                ILogger logger = null)
         {
-            Init(http, dir, acct, signer);
+            Init(http, dir, acct, signer, logger);
             _disposeHttpClient = disposeHttpClient;
         }
 
         public AcmeClient(Uri baseUri, DirectoryResponse dir = null,
-                AcmeAccount acct = null, IJwsTool signer = null)
+                AcmeAccount acct = null, IJwsTool signer = null,
+                ILogger logger = null)
         {
             var http = new HttpClient
             {
                 BaseAddress = baseUri,
             };
-            Init(http, dir, acct, signer);
+            Init(http, dir, acct, signer, logger);
             _disposeHttpClient = true;
         }
 
         private void Init(HttpClient http, DirectoryResponse dir,
-                AcmeAccount acct, IJwsTool signer)
+                AcmeAccount acct, IJwsTool signer,
+                ILogger logger)
         {
             _http = http;
             Directory = dir ?? new DirectoryResponse();
@@ -68,6 +73,9 @@ namespace ACMESharp
             // We default to ES256 signer
             Signer = signer ?? new Crypto.JOSE.Impl.ESJwsTool();
             Signer.Init();
+
+            _log = logger ?? NullLogger.Instance;
+            _log.LogInformation("ACME client initialized");
         }
 
         /// <summary>
