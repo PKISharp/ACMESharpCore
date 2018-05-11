@@ -20,7 +20,7 @@ namespace ACMESharp
 
         Account IAccountDetails.AccountDetails => _account;
 
-        public IEnumerable<string> Contacts => _account.Contact;
+        public IEnumerable<string> Contacts => _account?.Contact;
 
         public object PublicKey => _account?.Key;
 
