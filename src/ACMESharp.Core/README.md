@@ -36,6 +36,9 @@
 * Refresh Challenge
 * Deactivate Authorization
 * Finalize Authorization (Submit CSR)
+* Cross-platform support
+  * Tested on [Windows](https://ci.appveyor.com/project/ebekker/acmesharpcore/build/job/6vive79j4xprmh93/tests)
+  * Tested on [Linux](https://ci.appveyor.com/project/ebekker/acmesharpcore/build/job/1a528ap82uol4bsg/tests) (Ubuntu 16.04)
 
 ## What's Not Implemented/Not Working
 
