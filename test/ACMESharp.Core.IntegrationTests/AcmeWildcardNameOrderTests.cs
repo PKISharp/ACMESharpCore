@@ -380,9 +380,10 @@ namespace ACMESharp.IntegrationTests
                             authzIndex, chlngIndex, chlngDetails);
  
                     var deleted = await ValidateDnsTxtRecord(chlngDetails.DnsRecordName,
-                            targetMissing: true);
+                            targetMissing: true, trySleep: 20000);
 
-                    Assert.True(deleted, "    Failed DNS delete/read expected missing TXT record");
+                    Assert.True(deleted, "Failed DNS delete/read expected missing TXT record: "
+                            + chlngDetails.DnsRecordName);
 
                     ++chlngIndex;
                 }

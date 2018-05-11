@@ -379,7 +379,8 @@ namespace ACMESharp.IntegrationTests
                     var deleted = await ValidateHttpContent(chlngDetails.HttpResourceUrl,
                             targetMissing: true);
 
-                    Assert.True(deleted, "    Failed HTTP content delete/read expected missing TXT record");
+                    Assert.True(deleted, "Failed HTTP content delete/read expected missing TXT record: "
+                            + chlngDetails.HttpResourceUrl);
 
                     ++chlngIndex;
                 }
