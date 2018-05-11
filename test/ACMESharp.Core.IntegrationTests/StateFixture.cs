@@ -26,22 +26,22 @@ namespace ACMESharp.IntegrationTests
 
         public void WriteTo(string saveName, byte[] value)
         {
-            File.WriteAllBytes($"_TMP\\{saveName}", value);
+            File.WriteAllBytes($"_TMP/{saveName}", value);
         }
 
         public void WriteTo(string saveName, string value)
         {
-            File.WriteAllText($"_TMP\\{saveName}", value);
+            File.WriteAllText($"_TMP/{saveName}", value);
         }
 
         public void AppendTo(string saveName, string value)
         {
-            File.AppendAllText($"_TMP\\{saveName}", value);
+            File.AppendAllText($"_TMP/{saveName}", value);
         }
 
         public string ReadFrom(string saveName)
         {
-            var fromName = $"_TMP\\{saveName}";
+            var fromName = $"_TMP/{saveName}";
             if (File.Exists(fromName))
                 return File.ReadAllText(fromName);
             

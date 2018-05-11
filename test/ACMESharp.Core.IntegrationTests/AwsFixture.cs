@@ -8,7 +8,7 @@ namespace ACMESharp.IntegrationTests
         public AwsFixture()
         {
             var thisAsmLocation = Path.GetDirectoryName(typeof(AwsFixture).Assembly.Location);
-            var jsonPathBase = Path.Combine(thisAsmLocation, @"config\_IGNORE\");
+            var jsonPathBase = Path.Combine(thisAsmLocation, @"config/_IGNORE/");
 
             R53 = JsonConvert.DeserializeObject<R53Helper>(
                     File.ReadAllText(jsonPathBase + "R53Helper.json"));
