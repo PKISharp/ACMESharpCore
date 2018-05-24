@@ -1,4 +1,5 @@
-# ACMESharp Core
+# ACMESharp Core <img align="right" width="100" src="https://raw.githubusercontent.com/PKISharp/ACMESharpCore/master/docs/acmesharp-logo-color.png">
+
 An ACME client library for .NET Standard (Let's Encrypt)
 
 ***This project is a very early work-in-progress.***
