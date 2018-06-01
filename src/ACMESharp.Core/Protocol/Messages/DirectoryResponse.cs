@@ -1,6 +1,6 @@
-namespace ACMESharp.Protocol.Messages
+namespace ACMESharp.Protocol.Model
 {
-    public class DirectoryResponse
+    public class ServiceDirectory
     {
         public string Directory { get; set; } = "/directory";
 

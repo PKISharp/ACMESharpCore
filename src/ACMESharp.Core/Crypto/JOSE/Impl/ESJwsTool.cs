@@ -22,8 +22,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
         public int HashSize { get; set; } = 256;
 
         /// <summary>
-        /// Specifies the size in bits of the RSA key to use.
-        /// Supports values in the range 2048 - 4096 inclusive.
+        /// Specifies the elliptic curve to use.
         /// </summary>
         /// <returns></returns>
         public ECCurve Curve { get; private set; }

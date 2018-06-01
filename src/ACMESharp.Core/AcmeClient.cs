@@ -40,7 +40,7 @@ namespace ACMESharp
         private IJwsTool _signer;
         private ILogger _log;
 
-        public AcmeClient(HttpClient http, DirectoryResponse dir = null,
+        public AcmeClient(HttpClient http, ServiceDirectory dir = null,
                 AcmeAccount acct = null, IJwsTool signer = null,
                 bool disposeHttpClient = false,
                 ILogger logger = null)
@@ -49,7 +49,7 @@ namespace ACMESharp
             _disposeHttpClient = disposeHttpClient;
         }
 
-        public AcmeClient(Uri baseUri, DirectoryResponse dir = null,
+        public AcmeClient(Uri baseUri, ServiceDirectory dir = null,
                 AcmeAccount acct = null, IJwsTool signer = null,
                 ILogger logger = null)
         {
@@ -61,12 +61,12 @@ namespace ACMESharp
             _disposeHttpClient = true;
         }
 
-        private void Init(HttpClient http, DirectoryResponse dir,
+        private void Init(HttpClient http, ServiceDirectory dir,
                 AcmeAccount acct, IJwsTool signer,
                 ILogger logger)
         {
             _http = http;
-            Directory = dir ?? new DirectoryResponse();
+            Directory = dir ?? new ServiceDirectory();
 
             Account = acct;
 
@@ -89,7 +89,7 @@ namespace ACMESharp
         /// </remarks>
         public IJwsTool Signer { get; private set; }
 
-        public DirectoryResponse Directory { get; set; }
+        public ServiceDirectory Directory { get; set; }
 
         public AcmeAccount Account { get; set; }
 
@@ -108,10 +108,10 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.1
         /// </remarks>
-        public async Task<DirectoryResponse> GetDirectoryAsync(
+        public async Task<ServiceDirectory> GetDirectoryAsync(
             CancellationToken cancel = default(CancellationToken))
         {
-            return await SendAcmeAsync<DirectoryResponse>(
+            return await SendAcmeAsync<ServiceDirectory>(
                     new Uri(_http.BaseAddress, Directory.Directory),
                     skipNonce: true,
                     cancel: cancel);
