@@ -55,7 +55,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_010)]
         public async Task TestDirectory()
         {
-            var tctx = SetTestContext();
+            var testestCtx = SetTestContext();
 
             SetTestContext(0);
             var dir = await Clients.Acme.GetDirectoryAsync();
@@ -71,7 +71,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_020)]
         public async Task TestCheckNonExistentAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             await Assert.ThrowsAnyAsync<InvalidOperationException>(
                 () => Clients.Acme.CheckAccountAsync());
@@ -81,7 +81,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_030)]
         public async Task TestCreateAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
             this.SaveObject("acct.json", acct);
@@ -92,17 +92,17 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_040)]
         public async Task TestCheckNewlyCreatedAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.CheckAccountAsync();
-            tctx.SaveObject("acct-lookup.json", acct);
+            testCtx.SaveObject("acct-lookup.json", acct);
         }
 
         [Fact]
         [TestOrder(0_050)]
         public async Task TestDuplicateCreateAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var oldAcct = this.LoadObject<AcmeAccount>("acct.json");
             var dupAcct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
@@ -118,7 +118,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_060)]
         public async Task TestDuplicateCreateAccountWithThrow()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             await Assert.ThrowsAnyAsync<InvalidOperationException>(
                 () => Clients.Acme.CreateAccountAsync(_contactsInit, true,
@@ -129,50 +129,50 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_070)]
         public async Task TestUpdateAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.UpdateAccountAsync(_contactsUpdate);
-            tctx.SaveObject("acct-updated.json", acct);
+            testCtx.SaveObject("acct-updated.json", acct);
         }
 
         [Fact]
         [TestOrder(0_080)]
         public async Task TestRotateAccountKey()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var newKey = new Crypto.JOSE.Impl.RSJwsTool();
             newKey.Init();
 
             var acct = await Clients.Acme.ChangeAccountKeyAsync(newKey);
-            tctx.SaveObject("acct-keychanged.json", acct);
+            testCtx.SaveObject("acct-keychanged.json", acct);
         }
 
         [Fact]
         [TestOrder(0_085)]
         public async Task TestUpdateAccountAfterKeyRotation()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.UpdateAccountAsync(_contactsFinal);
-            tctx.SaveObject("acct-updatednewkey.json", acct);
+            testCtx.SaveObject("acct-updatednewkey.json", acct);
         }
 
         [Fact]
         [TestOrder(0_090)]
         public async Task TestDeactivateAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.DeactivateAccountAsync();
-            tctx.SaveObject("acct-deactivated.json", acct);
+            testCtx.SaveObject("acct-deactivated.json", acct);
         }
 
         [Fact]
         [TestOrder(0_095)]
         public async Task TestUpdateAccountAfterDeactivation()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var ex = await Assert.ThrowsAnyAsync<AcmeProtocolException>(
                 () => Clients.Acme.UpdateAccountAsync(_contactsUpdate));

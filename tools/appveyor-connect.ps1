@@ -17,7 +17,7 @@ if (-not $avDetails -or -not "$avDetails".Trim().Length) {
     return
 }
 
-$hostport   = ""
+$hostport = ""
 $username = ""
 $password = ""
 

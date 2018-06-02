@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
+using ACMESharp.Protocol.Model;
 using ACMESharp.Testing.Xunit;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -28,28 +29,32 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_110, "MultiDns")]
         public async Task Test_Create_Order_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var dnsNames = new[] {
                 $"{State.RandomBytesString(5)}-1st.{TestDnsSubdomain}",
                 $"{State.RandomBytesString(5)}-2nd.{TestDnsSubdomain}",
                 $"{State.RandomBytesString(5)}-3rd.{TestDnsSubdomain}",
             };
-            tctx.GroupSaveObject("order_names.json", dnsNames);
+            testCtx.GroupSaveObject("order_names.json", dnsNames);
             Log.LogInformation("Generated random DNS name: {0}", dnsNames);
 
             var order = await Clients.Acme.CreateOrderAsync(dnsNames);
-            tctx.GroupSaveObject("order.json", order);
+            testCtx.GroupSaveObject("order.json", order);
+
+            var authzDetails = order.Payload.Authorizations.Select(x =>
+                Clients.Acme.GetAuthorizationDetailsAsync(x).GetAwaiter().GetResult());
+            testCtx.GroupSaveObject("order-authz.json", authzDetails);
         }
 
         [Fact]
         [TestOrder(0_115, "MultiDns")]
         public async Task Test_Create_OrderDuplicate_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldNames = tctx.GroupLoadObject<string[]>("order_names.json");
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldNames = testCtx.GroupLoadObject<string[]>("order_names.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             Assert.NotNull(oldNames);
             Assert.Equal(3, oldNames.Length);
@@ -57,7 +62,7 @@ namespace ACMESharp.IntegrationTests
             Assert.NotNull(oldOrder.OrderUrl);
 
             var newOrder = await Clients.Acme.CreateOrderAsync(oldNames);
-            tctx.GroupSaveObject("order-dup.json", newOrder);
+            testCtx.GroupSaveObject("order-dup.json", newOrder);
 
             ValidateDuplicateOrder(oldOrder, newOrder);
         }
@@ -66,15 +71,16 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_120, "MultiDns")]
         public void Test_Decode_OrderChallengeForDns01_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
                     Log.LogInformation("Decoding Authorization {0} Challenge {1}",
@@ -89,7 +95,7 @@ namespace ACMESharp.IntegrationTests
                     Assert.NotNull(chlngDetails.DnsRecordValue);
                     Assert.Equal("TXT", chlngDetails.DnsRecordType, ignoreCase: true);
 
-                    tctx.GroupSaveObject($"order-authz_{authzIndex}-chlng_{chlngIndex}.json",
+                    testCtx.GroupSaveObject($"order-authz_{authzIndex}-chlng_{chlngIndex}.json",
                             chlngDetails);
                     ++chlngIndex;
                 }
@@ -101,18 +107,19 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_130, "MultiDns")]
         public async Task Test_Create_OrderAnswerDnsRecords_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Dns01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Dns01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Creating DNS for Authorization {0} Challenge {1} as per {@Details}",
@@ -131,20 +138,21 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_135, "MultiDns")]
         public async Task Test_Exist_OrderAnswerDnsRecords_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             Thread.Sleep(10*1000);
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Dns01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Dns01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Waiting on DNS record for Authorization {0} Challenge {1} as per {@Details}",
@@ -163,26 +171,27 @@ namespace ACMESharp.IntegrationTests
             // We're adding an artificial wait here -- even though we were able to successfully
             // read the expected DNS record, in practice we found it's not always "universally"
             // available from all the R53 PoP servers, specifically from where LE STAGE queries
-            Thread.Sleep(10 * 1000 * oldOrder.DnsIdentifiers.Length);
+            Thread.Sleep(10 * 1000 * oldOrder.Payload.Identifiers.Length);
         }
 
         [Fact]
         [TestOrder(0_140, "MultiDns")]
         public async Task Test_Answer_OrderChallenges_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
                     Log.LogInformation("Answering Authorization {0} Challenge {1}", authzIndex, chlngIndex);
-                    var updated = await Clients.Acme.AnswerChallengeAsync(authz, chlng);
+                    var updated = await Clients.Acme.AnswerChallengeAsync(chlng.Url);
 
                     ++chlngIndex;
                 }
@@ -194,15 +203,17 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_145, "MultiDns")]
         public async Task Test_AreValid_OrderChallengesAndAuthorization_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
+                var authzUrl = oldOrder.Payload.Authorizations[authzIndex];
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
                     int maxTry = 20;
@@ -215,7 +226,7 @@ namespace ACMESharp.IntegrationTests
                             // subsequent queries
                             Thread.Sleep(trySleep);
 
-                        var updatedChlng = await Clients.Acme.RefreshChallengeAsync(authz, chlng);
+                        var updatedChlng = await Clients.Acme.GetChallengeDetailsAsync(chlng.Url);
 
                         // The Challenge is either Valid, still Pending or some other UNEXPECTED state
 
@@ -236,8 +247,8 @@ namespace ACMESharp.IntegrationTests
                 }
                 ++authzIndex;
 
-                var updatedAuthz = await Clients.Acme.RefreshAuthorizationAsync(authz);
-                Assert.Equal("valid", updatedAuthz.Details.Status);
+                var updatedAuthz = await Clients.Acme.GetAuthorizationDetailsAsync(authzUrl);
+                Assert.Equal("valid", updatedAuthz.Status);
             }
         }
 
@@ -245,7 +256,7 @@ namespace ACMESharp.IntegrationTests
         // [TestOrder(0_150, "MultiDns")]
         // public async Task TestValidStatusForSingleNameOrder()
         // {
-        //     var tctx = SetTestContext();
+        //     var testCtx = SetTestContext();
 
         //     // TODO: Validate overall order status is "valid"
 
@@ -260,17 +271,19 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_160, "MultiDns")]
         public async Task Test_Finalize_Order_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             var rsaKeys = CryptoHelper.GenerateRsaKeys(4096);
             var rsa = CryptoHelper.GenerateRsaAlgorithm(rsaKeys);
-            tctx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
-            var derEncodedCsr = CryptoHelper.GenerateCsr(oldOrder.DnsIdentifiers, rsa);
-            tctx.GroupWriteTo("order-csr.der", derEncodedCsr);
+            testCtx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
+            var derEncodedCsr = CryptoHelper.GenerateCsr(
+                    oldOrder.Payload.Identifiers.Select(x => x.Value), rsa);
+            testCtx.GroupWriteTo("order-csr.der", derEncodedCsr);
 
-            var updatedOrder = await Clients.Acme.FinalizeOrderAsync(oldOrder, derEncodedCsr);
+            var updatedOrder = await Clients.Acme.FinalizeOrderAsync(
+                    oldOrder.Payload.Finalize, derEncodedCsr);
 
             int maxTry = 20;
             int trySleep = 5 * 1000;
@@ -287,23 +300,23 @@ namespace ACMESharp.IntegrationTests
                     // Only need to refresh
                     // after the first check
                     Log.LogInformation($"  Retry #{tryCount} refreshing Order");
-                    updatedOrder = await Clients.Acme.RefreshOrderAsync(oldOrder);
-                    tctx.GroupSaveObject("order-updated.json", updatedOrder);
+                    updatedOrder = await Clients.Acme.GetOrderDetailsAsync(oldOrder.OrderUrl);
+                    testCtx.GroupSaveObject("order-updated.json", updatedOrder);
                 }
 
                 if (!valid)
                 {
                     // The Order is either Valid, still Pending or some other UNEXPECTED state
 
-                    if ("valid" == updatedOrder.Status)
+                    if ("valid" == updatedOrder.Payload.Status)
                     {
                         valid = true;
                         Log.LogInformation("Order is VALID!");
                     }
-                    else if ("pending" != updatedOrder.Status)
+                    else if ("pending" != updatedOrder.Payload.Status)
                     {
                         Log.LogInformation("Order in **UNEXPECTED STATUS**: {@UpdateChallengeDetails}", updatedOrder);
-                        throw new InvalidOperationException("Unexpected status for Order: " + updatedOrder.Status);
+                        throw new InvalidOperationException("Unexpected status for Order: " + updatedOrder.Payload.Status);
                     }
                 }
 
@@ -311,7 +324,7 @@ namespace ACMESharp.IntegrationTests
                 {
                     // Once it's valid, then we need to wait for the Cert
                     
-                    if (!string.IsNullOrEmpty(updatedOrder.CertificateUrl))
+                    if (!string.IsNullOrEmpty(updatedOrder.Payload.Certificate))
                     {
                         Log.LogInformation("Certificate URL is ready!");
                         break;
@@ -319,28 +332,29 @@ namespace ACMESharp.IntegrationTests
                 }
             }
 
-            Assert.NotNull(updatedOrder.CertificateUrl);
+            Assert.NotNull(updatedOrder.Payload.Certificate);
 
-            var certBytes = await Clients.Http.GetByteArrayAsync(updatedOrder.CertificateUrl);
-            tctx.GroupWriteTo("order-cert.crt", certBytes);
+            var certBytes = await Clients.Http.GetByteArrayAsync(updatedOrder.Payload.Certificate);
+            testCtx.GroupWriteTo("order-cert.crt", certBytes);
         }
 
         [Fact]
         [TestOrder(0_170, "MultiDns")]
         public async Task Test_Delete_OrderAnswerDnsRecords_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Dns01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Dns01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Deleting DNS for Authorization {0} Challenge {1} as per {@Details}",
@@ -358,22 +372,23 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_175, "MultiDns")]
-        public async Task Test_IsDeleted_OrderAnswerDnsRecords_ForMutliDns()
+        public async Task Test_IsDeleted_OrderAnswerDnsRecords_ForMultiDns()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             Thread.Sleep(10*1000);
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Dns01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Dns01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Waiting on DNS record deleted for Authorization {0} Challenge {1} as per {@Details}",

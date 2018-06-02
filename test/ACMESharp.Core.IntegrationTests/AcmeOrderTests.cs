@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
+using ACMESharp.Protocol.Model;
 using ACMESharp.Testing.Xunit;
 using DnsClient;
 using Microsoft.Extensions.Logging;
@@ -56,7 +57,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0)]
         public async Task InitAcmeClient()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             Clients.BaseAddress = new Uri(Constants.LetsEncryptV2StagingEndpoint);
             Clients.Http = new HttpClient()
@@ -64,7 +65,7 @@ namespace ACMESharp.IntegrationTests
                 BaseAddress = Clients.BaseAddress,
             };
 
-            var acct = LoadObject<AcmeAccount>("acct.json");
+            var acct = LoadObject<AccountDetails>("acct.json");
             var keys = LoadObject<string>("acct-keys.json");
             if (acct == null || string.IsNullOrEmpty(keys))
             {
@@ -105,7 +106,7 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_010)]
         public async Task TestAccount()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var check = await Clients.Acme.CheckAccountAsync();
             Assert.Equal(Clients.Acme.Account.Kid, check.Kid);
@@ -115,7 +116,7 @@ namespace ACMESharp.IntegrationTests
         // Shared utility code
         //
 
-        protected void ValidateDuplicateOrder(AcmeOrder oldOrder, AcmeOrder newOrder)
+        protected void ValidateDuplicateOrder(OrderDetails oldOrder, OrderDetails newOrder)
         {
             Assert.Equal(oldOrder.OrderUrl, newOrder.OrderUrl);
 
@@ -124,18 +125,18 @@ namespace ACMESharp.IntegrationTests
             // and the subsequent version truncates the milliseconds component so we
             // just eliminate that discrepency for this test for the time being...
 
-            var oldOrderExpires = DateTime.Parse(oldOrder.Expires.ToString("yyyy-MM-ddTHH:mm:ss"));
-            var newOrderExpires = DateTime.Parse(newOrder.Expires.ToString("yyyy-MM-ddTHH:mm:ss"));
+            var oldOrderExpires = DateTime.Parse(oldOrder.Payload.Expires); //.ToString("yyyy-MM-ddTHH:mm:ss"));
+            var newOrderExpires = DateTime.Parse(newOrder.Payload.Expires); //.ToString("yyyy-MM-ddTHH:mm:ss"));
 
             Log.LogWarning("Temporary reformating OldOrder Expires date:"
                     + " {0:yyyy-MM-ddTHH:mm:ss.fffffff zzz} -> {1:yyyy-MM-ddTHH:mm:ss.fffffff zzz}",
-                    oldOrder.Expires, oldOrderExpires);
+                    oldOrder.Payload.Expires, oldOrderExpires);
             Log.LogWarning("Temporary reformating NewOrder Expires date:"
                     + " {0:yyyy-MM-ddTHH:mm:ss.fffffff zzz} -> {1:yyyy-MM-ddTHH:mm:ss.fffffff zzz}",
-                    newOrder.Expires, newOrderExpires);
+                    newOrder.Payload.Expires, newOrderExpires);
             
-            oldOrder.Expires = oldOrderExpires;
-            newOrder.Expires = newOrderExpires;
+            oldOrder.Payload.Expires = oldOrderExpires.ToString();
+            newOrder.Payload.Expires = newOrderExpires.ToString();
 
             // The order of Authz and Challenges within is not guaranteed so
             // we need to sort them into a canoncal format before comparing
@@ -147,14 +148,10 @@ namespace ACMESharp.IntegrationTests
                 JsonConvert.SerializeObject(newOrder));
 
             /// Local function to put Order into a canonical sort order
-            void Canonicalize(AcmeOrder order)
+            void Canonicalize(OrderDetails order)
             {
-                order.DnsIdentifiers = order.DnsIdentifiers.OrderBy(x => x).ToArray();
-                order.Authorizations = order.Authorizations.OrderBy(x => x.DetailsUrl).ToArray();
-                foreach (var authz in order.Authorizations)
-                {
-                    authz.Details.Challenges = authz.Details.Challenges.OrderBy(x => x.Type).ToArray();
-                }
+                order.Payload.Identifiers = order.Payload.Identifiers.OrderBy(x => x.Type + x.Value).ToArray();
+                order.Payload.Authorizations = order.Payload.Authorizations.OrderBy(x => x).ToArray();
             }
         }
 

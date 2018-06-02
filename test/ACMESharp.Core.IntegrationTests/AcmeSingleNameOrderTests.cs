@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
+using ACMESharp.Protocol.Model;
 using ACMESharp.Testing.Xunit;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -26,26 +27,30 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_210, "SingleHttp")]
         public async Task Test_Create_Order_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
             var dnsNames = new[] {
                 TestHttpSubdomain,
             };
-            tctx.GroupSaveObject("order_names.json", dnsNames);
+            testCtx.GroupSaveObject("order_names.json", dnsNames);
             Log.LogInformation("Using Test DNS subdomain name: {0}", dnsNames);
 
             var order = await Clients.Acme.CreateOrderAsync(dnsNames);
-            tctx.GroupSaveObject("order.json", order);
+            testCtx.GroupSaveObject("order.json", order);
+
+            var authzDetails = order.Payload.Authorizations.Select(x =>
+                Clients.Acme.GetAuthorizationDetailsAsync(x).GetAwaiter().GetResult());
+            testCtx.GroupSaveObject("order-authz.json", authzDetails);
         }
 
         [Fact]
         [TestOrder(0_215, "SingleHttp")]
         public async Task Test_Create_OrderDuplicate_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldNames = tctx.GroupLoadObject<string[]>("order_names.json");
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldNames = testCtx.GroupLoadObject<string[]>("order_names.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             Assert.NotNull(oldNames);
             Assert.Equal(1, oldNames.Length);
@@ -53,24 +58,25 @@ namespace ACMESharp.IntegrationTests
             Assert.NotNull(oldOrder.OrderUrl);
 
             var newOrder = await Clients.Acme.CreateOrderAsync(oldNames);
-            tctx.GroupSaveObject("order-dup.json", newOrder);
+            testCtx.GroupSaveObject("order-dup.json", newOrder);
 
             ValidateDuplicateOrder(oldOrder, newOrder);
         }
 
         [Fact]
         [TestOrder(0_220, "SingleHttp")]
-        public void Test_Decode_OrderChallengeForHttp01_ForSingleHttp()
+        public async void Test_Decode_OrderChallengeForHttp01_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
                     Log.LogInformation("Decoding Authorization {0} Challenge {1}",
@@ -86,7 +92,7 @@ namespace ACMESharp.IntegrationTests
                     Assert.NotNull(chlngDetails.HttpResourceContentType);
                     Assert.NotNull(chlngDetails.HttpResourceValue);
 
-                    tctx.GroupSaveObject($"order-authz_{authzIndex}-chlng_{chlngIndex}.json",
+                    testCtx.GroupSaveObject($"order-authz_{authzIndex}-chlng_{chlngIndex}.json",
                             chlngDetails);
 
                     ++chlngIndex;
@@ -99,18 +105,19 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_230, "SingleHttp")]
         public async Task Test_Create_OrderAnswerHttpContent_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Http01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Creating HTTP Content for Authorization {0} Challenge {1} as per {@Details}",
@@ -131,20 +138,21 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_235, "SingleHttp")]
         public async Task Test_Exists_OrderAnswerHttpContent_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             Thread.Sleep(1*1000);
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Http01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Waiting on HTTP content for Authorization {0} Challenge {1} as per {@Details}",
@@ -166,19 +174,20 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_240, "SingleHttp")]
         public async Task Test_Answer_OrderChallenges_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
                     Log.LogInformation("Answering Authorization {0} Challenge {1}", authzIndex, chlngIndex);
-                    var updated = await Clients.Acme.AnswerChallengeAsync(authz, chlng);
+                    var updated = await Clients.Acme.AnswerChallengeAsync(chlng.Url);
 
                     ++chlngIndex;
                 }
@@ -190,15 +199,17 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_245, "SingleHttp")]
         public async Task Test_AreValid_OrderChallengesAndAuthorization_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
+                var authzUrl = oldOrder.Payload.Authorizations[authzIndex];
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
                     int maxTry = 20;
@@ -211,7 +222,7 @@ namespace ACMESharp.IntegrationTests
                             // subsequent queries
                             Thread.Sleep(trySleep);
 
-                        var updatedChlng = await Clients.Acme.RefreshChallengeAsync(authz, chlng);
+                        var updatedChlng = await Clients.Acme.GetChallengeDetailsAsync(chlng.Url);
 
                         // The Challenge is either Valid, still Pending or some other UNEXPECTED state
 
@@ -233,8 +244,8 @@ namespace ACMESharp.IntegrationTests
                 }
                 ++authzIndex;
 
-                var updatedAuthz = await Clients.Acme.RefreshAuthorizationAsync(authz);
-                Assert.Equal("valid", updatedAuthz.Details.Status);
+                var updatedAuthz = await Clients.Acme.GetAuthorizationDetailsAsync(authzUrl);
+                Assert.Equal("valid", updatedAuthz.Status);
             }
         }
 
@@ -242,7 +253,7 @@ namespace ACMESharp.IntegrationTests
         // [TestOrder(0_250, "SingleHttp")]
         // public async Task Test_IsValid_OrderStatus_ForSingleHttp()
         // {
-        //     var tctx = SetTestContext();
+        //     var testCtx = SetTestContext();
 
         //     // TODO: Validate overall order status is "valid"
 
@@ -257,17 +268,19 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_260, "SingleHttp")]
         public async Task Test_Finalize_Order_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             var rsaKeys = CryptoHelper.GenerateRsaKeys(4096);
             var rsa = CryptoHelper.GenerateRsaAlgorithm(rsaKeys);
-            tctx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
-            var derEncodedCsr = CryptoHelper.GenerateCsr(oldOrder.DnsIdentifiers, rsa);
-            tctx.GroupWriteTo("order-csr.der", derEncodedCsr);
+            testCtx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
+            var derEncodedCsr = CryptoHelper.GenerateCsr(
+                    oldOrder.Payload.Identifiers.Select(x => x.Value), rsa);
+            testCtx.GroupWriteTo("order-csr.der", derEncodedCsr);
 
-            var updatedOrder = await Clients.Acme.FinalizeOrderAsync(oldOrder, derEncodedCsr);
+            var updatedOrder = await Clients.Acme.FinalizeOrderAsync(
+                    oldOrder.Payload.Finalize, derEncodedCsr);
 
             int maxTry = 20;
             int trySleep = 5 * 1000;
@@ -284,23 +297,23 @@ namespace ACMESharp.IntegrationTests
                     // Only need to refresh
                     // after the first check
                     Log.LogInformation($"  Retry #{tryCount} refreshing Order");
-                    updatedOrder = await Clients.Acme.RefreshOrderAsync(oldOrder);
-                    tctx.GroupSaveObject("order-updated.json", updatedOrder);
+                    updatedOrder = await Clients.Acme.GetOrderDetailsAsync(oldOrder.OrderUrl);
+                    testCtx.GroupSaveObject("order-updated.json", updatedOrder);
                 }
 
                 if (!valid)
                 {
                     // The Order is either Valid, still Pending or some other UNEXPECTED state
 
-                    if ("valid" == updatedOrder.Status)
+                    if ("valid" == updatedOrder.Payload.Status)
                     {
                         valid = true;
                         Log.LogInformation("Order is VALID!");
                     }
-                    else if ("pending" != updatedOrder.Status)
+                    else if ("pending" != updatedOrder.Payload.Status)
                     {
                         Log.LogInformation("Order in **UNEXPECTED STATUS**: {@UpdateChallengeDetails}", updatedOrder);
-                        throw new InvalidOperationException("Unexpected status for Order: " + updatedOrder.Status);
+                        throw new InvalidOperationException("Unexpected status for Order: " + updatedOrder.Payload.Status);
                     }
                 }
 
@@ -308,7 +321,7 @@ namespace ACMESharp.IntegrationTests
                 {
                     // Once it's valid, then we need to wait for the Cert
                     
-                    if (!string.IsNullOrEmpty(updatedOrder.CertificateUrl))
+                    if (!string.IsNullOrEmpty(updatedOrder.Payload.Certificate))
                     {
                         Log.LogInformation("Certificate URL is ready!");
                         break;
@@ -316,28 +329,29 @@ namespace ACMESharp.IntegrationTests
                 }
             }
 
-            Assert.NotNull(updatedOrder.CertificateUrl);
+            Assert.NotNull(updatedOrder.Payload.Certificate);
 
-            var certBytes = await Clients.Http.GetByteArrayAsync(updatedOrder.CertificateUrl);
-            tctx.GroupWriteTo("order-cert.crt", certBytes);
+            var certBytes = await Clients.Http.GetByteArrayAsync(updatedOrder.Payload.Certificate);
+            testCtx.GroupWriteTo("order-cert.crt", certBytes);
         }
 
         [Fact]
         [TestOrder(0_270, "SingleHttp")]
         public async Task Test_Delete_OrderAnswerHttpContent_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Http01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Deleting HTTP content for Authorization {0} Challenge {1} as per {@Details}",
@@ -357,20 +371,21 @@ namespace ACMESharp.IntegrationTests
         [TestOrder(0_275, "SingleHttp")]
         public async Task Test_IsDeleted_OrderAnswerHttpContent_ForSingleHttp()
         {
-            var tctx = SetTestContext();
+            var testCtx = SetTestContext();
 
-            var oldOrder = tctx.GroupLoadObject<AcmeOrder>("order.json");
+            var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
+            var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
             Thread.Sleep(1*1000);
 
             var authzIndex = 0;
-            foreach (var authz in oldOrder.Authorizations)
+            foreach (var authz in oldAuthz)
             {
                 var chlngIndex = 0;
-                foreach (var chlng in authz.Details.Challenges.Where(
+                foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Http01ChallengeValidationDetails.Http01ChallengeType))
                 {
-                    var chlngDetails = tctx.GroupLoadObject<Http01ChallengeValidationDetails>(
+                    var chlngDetails = testCtx.GroupLoadObject<Http01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
                     Log.LogInformation("Waiting on HTTP content deleted for Authorization {0} Challenge {1} as per {@Details}",
