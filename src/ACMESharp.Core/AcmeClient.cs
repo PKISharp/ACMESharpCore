@@ -365,7 +365,7 @@ namespace ACMESharp
             // var coResp = JsonConvert.DeserializeObject<Order>(
             //         await resp.Content.ReadAsStringAsync());
             
-            // var updatedDrder = new AcmeOrder
+            // var updatedOrder = new AcmeOrder
             // {
             //     OrderUrl = resp.Headers.Location?.ToString() ?? order.OrderUrl,
             //     Status = coResp.Status,
@@ -381,7 +381,7 @@ namespace ACMESharp
             //     CertificateUrl = coResp.Certificate,
             // };
 
-            // foreach (var authz in updatedDrder.Authorizations)
+            // foreach (var authz in updatedOrder.Authorizations)
             // {
             //     resp = await _http.GetAsync(authz.DetailsUrl);
             //     var body = await resp.Content.ReadAsStringAsync();
@@ -401,7 +401,7 @@ namespace ACMESharp
             //     }
             // }
 
-            // return updatedDrder;
+            // return updatedOrder;
         }
 
         /// <summary>

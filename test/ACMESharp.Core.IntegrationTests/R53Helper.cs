@@ -31,7 +31,7 @@ namespace ACMESharp.IntegrationTests
 
         /// <summary>
         /// Returns all records up to 100 at a time, starting with the
-        /// one with the optional name and/or type, sorted in lexographical
+        /// one with the optional name and/or type, sorted in lexical
         /// order by name (with labels reversed) then by type.
         /// </summary>
         public async Task<ListResourceRecordSetsResponse> GetRecords(
@@ -62,7 +62,7 @@ namespace ACMESharp.IntegrationTests
         public async Task EditTxtRecord(string dnsName, IEnumerable<string> dnsValues, bool delete = false)
         {
             var dnsValuesJoined = string.Join("\" \"", dnsValues);
-            var rrset = new Amazon.Route53.Model.ResourceRecordSet
+            var rrSet = new Amazon.Route53.Model.ResourceRecordSet
             {
                 TTL = DefaultRecordTtl,
                 Name = dnsName,
@@ -74,12 +74,12 @@ namespace ACMESharp.IntegrationTests
                 }
             };
 
-            await EditR53Record(rrset, delete);
+            await EditR53Record(rrSet, delete);
         }
 
         public async Task EditARecord(string dnsName, string dnsValue, bool delete = false)
         {
-            var rrset =new Amazon.Route53.Model.ResourceRecordSet
+            var rrSet =new Amazon.Route53.Model.ResourceRecordSet
             {
                 TTL = DefaultRecordTtl,
                 Name = dnsName,
@@ -90,12 +90,12 @@ namespace ACMESharp.IntegrationTests
                 }
             };
 
-            await EditR53Record(rrset);
+            await EditR53Record(rrSet);
         }
 
         public async Task EditCnameRecord(string dnsName, string dnsValue, bool delete = false)
         {
-            var rrset = new Amazon.Route53.Model.ResourceRecordSet
+            var rrSet = new Amazon.Route53.Model.ResourceRecordSet
             {
                 TTL = DefaultRecordTtl,
                 Name = dnsName,
@@ -106,10 +106,10 @@ namespace ACMESharp.IntegrationTests
                 }
             };
 
-            await EditR53Record(rrset);
+            await EditR53Record(rrSet);
         }
 
-        public async Task EditR53Record(Amazon.Route53.Model.ResourceRecordSet rrset,
+        public async Task EditR53Record(Amazon.Route53.Model.ResourceRecordSet rrSet,
                 bool delete = false)
         {
           //var creds = new BasicAWSCredentials(AwsAccessKey, AwsSecretKey);
@@ -129,7 +129,7 @@ namespace ACMESharp.IntegrationTests
                                 Action = delete
                                     ? Amazon.Route53.ChangeAction.DELETE
                                     : Amazon.Route53.ChangeAction.UPSERT,
-                                ResourceRecordSet = rrset
+                                ResourceRecordSet = rrSet
                             }
                         }
                     }
