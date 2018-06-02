@@ -1,11 +1,21 @@
 {
     "cSpell.words": [
+        "Algor",
         "CNAME",
+        "Canonicalize",
+        "ECDSA",
+        "PKCS",
         "UPSERT",
+        "Xunit",
         "authz",
+        "chlng",
         "deserializes",
         "finalizer",
+        "integtests",
+        "mailto",
+        "nist",
         "requ",
-        "uncomment"
+        "uncomment",
+        "zyborg"
     ]
 }
