@@ -215,7 +215,7 @@ namespace ACMESharp
             if (resp.StatusCode != HttpStatusCode.OK)
                 throw await DecodeResponseErrorAsync(resp);
 
-            var acct = await DecodeAccountResponseAsync(resp);
+            var acct = await DecodeAccountResponseAsync(resp, existing: Account);
 
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -235,17 +235,18 @@ namespace ACMESharp
         public async Task<AccountDetails> UpdateAccountAsync(IEnumerable<string> contacts,
             CancellationToken cancel = default(CancellationToken))
         {
+            var requUrl = new Uri(_http.BaseAddress, Account.Kid);
             var message = new UpdateAccountRequest
             {
                 Contact = contacts,
             };
             var resp = await SendAcmeAsync(
-                    new Uri(Account.Kid),
+                    requUrl,
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel);
 
-            var acct = await DecodeAccountResponseAsync(resp);
+            var acct = await DecodeAccountResponseAsync(resp, existing: Account);
 
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -285,7 +286,7 @@ namespace ACMESharp
 
             Signer = newSigner;
 
-            return await DecodeAccountResponseAsync(resp);
+            return await DecodeAccountResponseAsync(resp, existing: Account);
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace ACMESharp
                     message: new DeactivateAccountRequest(),
                     cancel: cancel);
 
-            return await DecodeAccountResponseAsync(resp);
+            return await DecodeAccountResponseAsync(resp, existing: Account);
         }
 
         /// <summary>
@@ -668,7 +669,18 @@ namespace ACMESharp
             return new AcmeProtocolException(message ?? msg, problem);
         }
 
-        protected async Task<AccountDetails> DecodeAccountResponseAsync(HttpResponseMessage resp)
+        /// <summary>
+        /// Decodes an HTTP response, including the JSON payload and the ancillary HTTP data,
+        /// into Account details.
+        /// </summary>
+        /// <param name="resp"></param>
+        /// <param name="existing">Optionally, provide a previously decoded Account object
+        ///         whose elements will be re-used as necessary to populate the new result
+        ///         Account object; some ACME Account operations do not return the full
+        ///         details of an existing Account</param>
+        /// <returns></returns>
+        protected async Task<AccountDetails> DecodeAccountResponseAsync(HttpResponseMessage resp,
+                AccountDetails existing = null)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
             var acctUrl = resp.Headers.Location?.ToString();
@@ -685,8 +697,8 @@ namespace ACMESharp
             var acct = new AccountDetails
             {
                 Account = typedResp,
-                Kid = acctUrl,
-                TosLink = tosLink,
+                Kid = acctUrl ?? existing?.Kid,
+                TosLink = tosLink ?? existing?.TosLink,
             };
             
             return acct;

@@ -109,9 +109,6 @@ namespace ACMESharp.IntegrationTests
 
             // For a duplicate account, the returned object is not complete...
             Assert.Null(dupAcct.TosLink);
-            Assert.Null(dupAcct.PublicKey);
-            Assert.Null(dupAcct.Contacts);
-            Assert.Null(dupAcct.Id);
 
             // ...but the KID should be there and identical
             Assert.Equal(oldAcct.Kid, dupAcct.Kid);
