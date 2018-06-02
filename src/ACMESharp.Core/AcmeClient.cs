@@ -696,7 +696,7 @@ namespace ACMESharp
             // is a duplicate account resp
             var acct = new AccountDetails
             {
-                Account = typedResp,
+                Payload = typedResp,
                 Kid = acctUrl ?? existing?.Kid,
                 TosLink = tosLink ?? existing?.TosLink,
             };
@@ -711,7 +711,7 @@ namespace ACMESharp
 
             var order = new OrderDetails
             {
-                Order = typedResponse,
+                Payload = typedResponse,
                 OrderUrl = orderUrl,
             };
 

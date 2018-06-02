@@ -2,7 +2,7 @@ namespace ACMESharp.Protocol.Model
 {
     public class AccountDetails
     {
-        public Account Account { get; set; }
+        public Account Payload { get; set; }
 
         public string Kid { get; set; }
 

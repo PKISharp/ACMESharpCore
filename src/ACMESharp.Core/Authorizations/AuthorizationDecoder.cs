@@ -14,9 +14,9 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8
         /// </remarks>
         public static IChallengeValidationDetails DecodeChallengeValidation(
-                AcmeAuthorization authz, string challengeType, IJwsTool signer)
+                Authorization authz, string challengeType, IJwsTool signer)
         {
-            var challenge = authz.Details.Challenges.Where(x => x.Type == challengeType)
+            var challenge = authz.Challenges.Where(x => x.Type == challengeType)
                     .FirstOrDefault();
             if (challenge == null)
             {
@@ -42,7 +42,7 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.4
         /// </remarks>
         public static Dns01ChallengeValidationDetails ResolveChallengeForDns01(
-                AcmeAuthorization authz, Challenge challenge, IJwsTool signer)
+                Authorization authz, Challenge challenge, IJwsTool signer)
         {
             var keyAuthzDigested = JwsHelper.ComputeKeyAuthorizationDigest(
                     signer, challenge.Token);
@@ -50,7 +50,7 @@ namespace ACMESharp.Authorizations
             return new Dns01ChallengeValidationDetails
             {
                 DnsRecordName = $@"{Dns01ChallengeValidationDetails.DnsRecordNamePrefix}.{
-                        authz.Details.Identifier.Value}",
+                        authz.Identifier.Value}",
                 DnsRecordType = Dns01ChallengeValidationDetails.DnsRecordTypeDefault,
                 DnsRecordValue = keyAuthzDigested,
             };
@@ -62,14 +62,14 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.3
         /// </remarks>
         public static Http01ChallengeValidationDetails ResolveChallengeForHttp01(
-                AcmeAuthorization authz, Challenge challenge, IJwsTool signer)
+                Authorization authz, Challenge challenge, IJwsTool signer)
         {
             var keyAuthz = JwsHelper.ComputeKeyAuthorization(
                     signer, challenge.Token);
 
             return new Http01ChallengeValidationDetails
             {
-                HttpResourceUrl = $@"http://{authz.Details.Identifier.Value}/{
+                HttpResourceUrl = $@"http://{authz.Identifier.Value}/{
                         Http01ChallengeValidationDetails.HttpPathPrefix}/{
                         challenge.Token}",
                 HttpResourcePath = $@"{Http01ChallengeValidationDetails.HttpPathPrefix}/{
