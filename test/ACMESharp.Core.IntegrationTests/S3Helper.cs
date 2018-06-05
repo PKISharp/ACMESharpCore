@@ -31,7 +31,9 @@ namespace ACMESharp.IntegrationTests
 
         public async Task EditFile(string filePath, string contentType, string content)
         {
+#pragma warning disable 618 // "'StoredProfileCredentials' is obsolete..."
             var creds = new StoredProfileAWSCredentials("acmesharp-tests");
+#pragma warning restore 618
             var reg = RegionEndpoint.GetBySystemName(AwsRegion);
             var delete = content == null;
 

@@ -65,7 +65,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_220, "SingleHttp")]
-        public async void Test_Decode_OrderChallengeForHttp01_ForSingleHttp()
+        public void Test_Decode_OrderChallengeForHttp01_ForSingleHttp()
         {
             var testCtx = SetTestContext();
 

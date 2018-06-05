@@ -37,7 +37,9 @@ namespace ACMESharp.IntegrationTests
         public async Task<ListResourceRecordSetsResponse> GetRecords(
                 string startingDnsName, string startingDnsType = null)
         {
+#pragma warning disable 618 // "'StoredProfileCredentials' is obsolete..."
             var crd = StoredProfileCredentials.GetProfile(AwsProfileName);
+#pragma warning restore 618
             var cfg = new AmazonRoute53Config
             {
                 RegionEndpoint = RegionEndpoint.USEast1,
@@ -112,8 +114,10 @@ namespace ACMESharp.IntegrationTests
         public async Task EditR53Record(Amazon.Route53.Model.ResourceRecordSet rrSet,
                 bool delete = false)
         {
+#pragma warning disable 618 // "'StoredProfileCredentials' is obsolete..."
           //var creds = new BasicAWSCredentials(AwsAccessKey, AwsSecretKey);
             var creds = new StoredProfileAWSCredentials("acmesharp-tests");
+#pragma warning restore 618
             var reg = RegionEndpoint.GetBySystemName(AwsRegion);
             using (var r53 = new Amazon.Route53.AmazonRoute53Client(creds, reg))
             {
