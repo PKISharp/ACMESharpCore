@@ -5,15 +5,15 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Core", "src\ACMESharp.Core\ACMESharp.Core.csproj", "{7271DEFE-BC5D-4716-883E-1C1343AF38EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp", "src\ACMESharp\ACMESharp.csproj", "{7271DEFE-BC5D-4716-883E-1C1343AF38EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CB261B10-6C7A-4B27-BB1E-448ACC76A10B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Core.IntegrationTests", "test\ACMESharp.Core.IntegrationTests\ACMESharp.Core.IntegrationTests.csproj", "{98D57789-FC6E-4369-B5FF-EB2EBC6EB6E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.IntegrationTests", "test\ACMESharp.IntegrationTests\ACMESharp.IntegrationTests.csproj", "{98D57789-FC6E-4369-B5FF-EB2EBC6EB6E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Core.Testing.Xunit", "test\ACMESharp.Core.Testing.Xunit\ACMESharp.Core.Testing.Xunit.csproj", "{8451C04A-61F3-4F7F-B033-BBF41C2391D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Testing.Xunit", "test\ACMESharp.Testing.Xunit\ACMESharp.Testing.Xunit.csproj", "{8451C04A-61F3-4F7F-B033-BBF41C2391D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Core.UnitTests", "test\ACMESharp.Core.UnitTests\ACMESharp.Core.UnitTests.csproj", "{1470EE7A-CD1B-42E5-BCF3-88EB5194F40C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.UnitTests", "test\ACMESharp.UnitTests\ACMESharp.UnitTests.csproj", "{1470EE7A-CD1B-42E5-BCF3-88EB5194F40C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

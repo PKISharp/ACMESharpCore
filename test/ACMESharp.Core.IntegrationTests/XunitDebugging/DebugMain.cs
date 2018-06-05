@@ -429,7 +429,7 @@ Console.Error.WriteLine("RTFWVers={0}", runtimeFrameworkVersion);
             // Debug hack to be able to run from the compilation folder
             if (!Directory.Exists(consoleFolder))
                 //consoleFolder = Path.GetFullPath(Path.Combine(ThisAssemblyPath, "..", "..", "..", "..", "xunit.console", "bin", "Debug", netCoreAppVersion));
-                consoleFolder = Path.GetFullPath(Path.Combine(ThisAssemblyPath, "..", "..", "..", "..", "ACMESharp.Core.IntegrationTests", "bin", "Debug", netCoreAppVersion));
+                consoleFolder = Path.GetFullPath(Path.Combine(ThisAssemblyPath, "..", "..", "..", "..", "ACMESharp.IntegrationTests", "bin", "Debug", netCoreAppVersion));
 
 Console.Error.WriteLine("ConsoleFolder={0}", consoleFolder);
             if (!Directory.Exists(consoleFolder))
@@ -439,7 +439,7 @@ Console.Error.WriteLine("ConsoleFolder={0}", consoleFolder);
             }
 
             //var runner = Path.Combine(consoleFolder, "xunit.console.dll");
-            var runner = Path.Combine(consoleFolder, "ACMESharp.Core.IntegrationTests.dll");
+            var runner = Path.Combine(consoleFolder, "ACMESharp.IntegrationTests.dll");
             var workingDirectory = Path.GetFullPath(outputPath);
             var targetFileNameWithoutExtension = Path.GetFileNameWithoutExtension(targetFileName);
             var depsFile = targetFileNameWithoutExtension + ".deps.json";

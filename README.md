@@ -6,7 +6,7 @@ An ACME client library for .NET Standard (Let's Encrypt)
 
 This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library to .NET Standard 2.0.
 
-A first version of the client library has been completed with a number of useful features, check out the [library-specific README](/src/ACMESharp.Core) for details as they develop.
+A first version of the client library has been completed with a number of useful features, check out the [library-specific README](/src/ACMESharp) for details as they develop.
 
  Please Note: |
 --------------|

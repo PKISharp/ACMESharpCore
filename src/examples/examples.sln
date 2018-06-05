@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Core", "..\ACMESharp.Core\ACMESharp.Core.csproj", "{2D582638-6E48-424B-B93C-9B68C29C9A61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp", "..\ACMESharp\ACMESharp.csproj", "{2D582638-6E48-424B-B93C-9B68C29C9A61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMETerm", "ACMETerm\ACMETerm.csproj", "{2F8F18CE-52E8-4B64-A7E6-56FCE2C99C15}"
 EndProject

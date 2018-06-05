@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ACMESharp.Core.Testing.Xunit\ACMESharp.Core.Testing.Xunit.csproj" />
-    <ProjectReference Include="..\..\src\ACMESharp.Core\ACMESharp.Core.csproj" />
+    <ProjectReference Include="..\ACMESharp.Testing.Xunit\ACMESharp.Testing.Xunit.csproj" />
+    <ProjectReference Include="..\..\src\ACMESharp\ACMESharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace ACMESharp.Testing.Xunit
         // Xunit.TestCollectionOrderer assembly-level attributes however we define
         // a static class constructor whose purpose is to verify their correctness
         public const string TypeName = "ACMESharp.Testing.Xunit.TestOrderer";
-        public const string AssemblyName = "ACMESharp.Core.Testing.Xunit";
+        public const string AssemblyName = "ACMESharp.Testing.Xunit";
 
         private Random _rng = new Random();
 

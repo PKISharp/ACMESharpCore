@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ACMESharp.Core\ACMESharp.Core.csproj" />
+    <ProjectReference Include="..\..\src\ACMESharp\ACMESharp.csproj" />
   </ItemGroup>
 
 </Project>
