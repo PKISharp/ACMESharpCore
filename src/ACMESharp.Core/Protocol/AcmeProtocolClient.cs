@@ -589,6 +589,8 @@ namespace ACMESharp.Protocol
         ///         payload signature instead of the Account's key ID as prescribed with certain
         ///         ACME protocol messages, defaults to <c>false</c></param>
         /// <param name="cancel">Optional cancellation token</param>
+        /// <param name="opName">Name of operation, will be auto-populated with calling method
+        ///         name if unspecified</param>
         /// <returns>The returned HTTP response message, unaltered, after inspecting the
         ///         response details for possible error or problem result</returns>
         async Task<HttpResponseMessage> SendAcmeAsync(
@@ -634,7 +636,7 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
-        /// Convenience variation of <see cref="#SendAcmeAsync"/> that deserializes
+        /// Convenience variation of <see cref="SendAcmeAsync"/> that deserializes
         /// and returns an expected type from the response content JSON.
         /// </summary>
         /// <remarks>
@@ -782,7 +784,7 @@ namespace ACMESharp.Protocol
 
         /// <summary>
         /// Computes the JWS-signed ACME request body for the given message object
-        /// and the current or input <see cref="#Signer"/>.
+        /// and the current or input <see cref="Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
             IJwsTool signer = null,

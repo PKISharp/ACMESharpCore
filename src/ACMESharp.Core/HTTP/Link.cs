@@ -6,9 +6,9 @@ namespace ACMESharp.HTTP
     /// <summary>
     /// Represents a Link header value that represents the well-defined HTTP response
     /// entity header
-    /// <see cref="https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Response_fields"><c>Link</c></see>
+    /// <see href="https://en.wikipedia.org/wiki/List_of_HTTP_header_fields#Response_fields"><c>Link</c></see>
     /// and more fully specified in
-    /// <see cref="https://tools.ietf.org/html/rfc5988#section-5">RFC 5988 Section 5</see>.
+    /// <see href="https://tools.ietf.org/html/rfc5988#section-5">RFC 5988 Section 5</see>.
     /// </summary>
     /// <remarks>
     /// This class only implements a subset of the mechanics and nuances of the Link header

@@ -10,7 +10,7 @@ namespace ACMESharp.Crypto.JOSE
     /// </summary>
     /// <remarks>
     /// ACME only requires a subset of JWS functionality, such as only requiring support
-    /// for the <see cref="https://tools.ietf.org/html/rfc7515#section-7.2.2">Flattened
+    /// for the <see href="https://tools.ietf.org/html/rfc7515#section-7.2.2">Flattened
     /// JWS JSON Serialization</see> format, and so this helper class' scope and
     /// implementation of JWS is limited to those features required for ACME.
     /// </remarks>
@@ -24,6 +24,7 @@ namespace ACMESharp.Crypto.JOSE
          *    o "payload", with the value BASE64URL(JWS Payload)
          *    o "signature", with the value BASE64URL(JWS Signature)
          *
+         *  <!--cSpell:disable-->
          *  Example:
          *    {
          *      "header": {
@@ -38,6 +39,7 @@ namespace ACMESharp.Crypto.JOSE
          *      "payload": "ewogICJyZXNvdXJjZSI6ICJuZXctcmVnIiwKICAiY29udGFjdCI6IFsKICAgICJtYWlsdG86bGV0c2VuY3J5cHRAbWFpbGluYXRvci5jb20iCiAgXQp9",
          *      "signature": "dCK1T9T5Tg1-ZLpJKimHBvvjDNPloJPELvAVyLeRpjxx3sN8GNhqybRONDUz7umXDUaCKSkOX2osZ9GkVJNlda4FLLwn2a_TXHRWXyDyM-LI6ZTOHKW-dSVUR-HUo7MOAA-rdjbEmEOMq00jeLvmepEkElYdRTFEvo42XZHShjY1ybS96iwJbKDetJQCHHYOXrOtKhPC9zKv8FeMgl0ppwzV2YYISEeMZpM70ER0SiI7ECQ3ISn1dpPJBzU-3AEx2lLurkU3PaXbTQ6XoHqr9EmhmjnzsaWAGeL5m_e0JdAbBNcNkNeowGAhSztC5tKDnqn4SFvfgH-e9rDdmDslng"
          *    }
+         *  <!--cSpell:enable-->
          *
          * References:
          *   https://tools.ietf.org/html/rfc7515
@@ -94,11 +96,9 @@ namespace ACMESharp.Crypto.JOSE
 
         /// <summary>
         /// Computes a thumbprint of the JWK using the argument Hash Algorithm
-        /// as per <see cref="https://tools.ietf.org/html/rfc7638">RFC 7638</see>,
+        /// as per <see href="https://tools.ietf.org/html/rfc7638">RFC 7638</see>,
         /// JSON Web Key (JWK) Thumbprint.
         /// </summary>
-        /// <param name="algor"></param>
-        /// <returns></returns>
         public static byte[] ComputeThumbprint(IJwsTool signer, HashAlgorithm algor)
         {
             // As per RFC 7638 Section 3, we export the JWK in a canonical form
@@ -115,7 +115,7 @@ namespace ACMESharp.Crypto.JOSE
         /// <summary>
         /// Computes the ACME Key Authorization of the JSON Web Key (JWK) of an argument
         /// Signer as prescribed in the
-        /// <see cref="https://tools.ietf.org/html/draft-ietf-acme-acme-01#section-7.1"
+        /// <see href="https://tools.ietf.org/html/draft-ietf-acme-acme-01#section-7.1"
         /// >ACME specification, section 7.1</see>.
         /// </summary>
         public static string ComputeKeyAuthorization(IJwsTool signer, string token)
