@@ -42,7 +42,7 @@ namespace ACMECLI
                 throw new Exception("DNS lookup error:  " + dnsResp.ErrorMessage);
             }
             
-            return dnsResp.AllRecords.Select(x => x.RecordToString());
+            return dnsResp.AllRecords.Select(x => x.ToString());
         }
     }
 }
