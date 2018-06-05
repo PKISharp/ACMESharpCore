@@ -48,7 +48,7 @@ namespace ACMESharp.IntegrationTests
             {
                 BaseAddress = Clients.BaseAddress
             };
-            Clients.Acme = new AcmeClient(Clients.Http);
+            Clients.Acme = new AcmeProtocolClient(Clients.Http);
         }
 
         [Fact]

@@ -22,12 +22,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace ACMESharp
+namespace ACMESharp.Protocol
 {
     /// <summary>
     /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7
     /// </summary>
-    public class AcmeClient : IDisposable
+    public class AcmeProtocolClient : IDisposable
     {
         private static readonly HttpStatusCode[] SkipExpectedStatuses = new HttpStatusCode[0];
 
@@ -41,7 +41,7 @@ namespace ACMESharp
         private IJwsTool _signer;
         private ILogger _log;
 
-        public AcmeClient(HttpClient http, ServiceDirectory dir = null,
+        public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
                 AccountDetails acct = null, IJwsTool signer = null,
                 bool disposeHttpClient = false,
                 ILogger logger = null)
@@ -50,7 +50,7 @@ namespace ACMESharp
             _disposeHttpClient = disposeHttpClient;
         }
 
-        public AcmeClient(Uri baseUri, ServiceDirectory dir = null,
+        public AcmeProtocolClient(Uri baseUri, ServiceDirectory dir = null,
                 AccountDetails acct = null, IJwsTool signer = null,
                 ILogger logger = null)
         {

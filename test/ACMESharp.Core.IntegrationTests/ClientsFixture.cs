@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using ACMESharp.Protocol;
 using DnsClient;
 
 namespace ACMESharp.IntegrationTests
@@ -20,7 +21,7 @@ namespace ACMESharp.IntegrationTests
 
         public HttpClient Http { get; set; }
 
-        public AcmeClient Acme { get; set; }
+        public AcmeProtocolClient Acme { get; set; }
 
         public LookupClient Dns { get; set; }
 

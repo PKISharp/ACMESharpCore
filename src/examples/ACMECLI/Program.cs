@@ -116,7 +116,7 @@ namespace ACMECLI
 
         private string _statePath;
         private HttpClient _http;
-        private AcmeClient _acme;
+        private AcmeProtocolClient _acme;
         private DateTime? _testWaitUntil;
 
 
@@ -176,7 +176,7 @@ namespace ACMECLI
             }
 
             _http = new HttpClient { BaseAddress = new Uri(url), };
-            _acme = new AcmeClient(_http, acmeDir, account, accountSigner);
+            _acme = new AcmeProtocolClient(_http, acmeDir, account, accountSigner);
             if (acmeDir == null || RefreshDir)
             {
                 Console.WriteLine("Refreshing Service Directory");
