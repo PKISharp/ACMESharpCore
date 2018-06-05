@@ -1,4 +1,4 @@
-namespace ACMESharp.Protocol.Model
+namespace ACMESharp.Protocol.Resources
 {
     public class ServiceDirectory
     {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ACMESharp.Crypto.JOSE;
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Messages

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using ACMESharp.Protocol;
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 using ACMESharp.Testing.Xunit;
 using Newtonsoft.Json;
 using Xunit;

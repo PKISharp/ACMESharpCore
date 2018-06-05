@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 using ACMESharp.Testing.Xunit;
 using Microsoft.Extensions.Logging;
 using Xunit;

@@ -1,4 +1,6 @@
-namespace ACMESharp.Protocol.Model
+using ACMESharp.Protocol.Resources;
+
+namespace ACMESharp.Protocol
 {
     /// <summary>
     /// An aggregation of Account details including resource payload and ancillary,

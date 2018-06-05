@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.Serialization;
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 
 namespace ACMESharp.Protocol
 {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace ACMESharp.Protocol.Model
+namespace ACMESharp.Protocol.Resources
 {
     public class Identifier
     {

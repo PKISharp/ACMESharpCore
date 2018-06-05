@@ -1,4 +1,4 @@
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 
 namespace ACMESharp
 {
