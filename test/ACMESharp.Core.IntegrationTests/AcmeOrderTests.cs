@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
+using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
 using ACMESharp.Testing.Xunit;
 using DnsClient;
