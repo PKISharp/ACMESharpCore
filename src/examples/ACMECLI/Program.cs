@@ -13,8 +13,9 @@ using ACMESharp;
 using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
+using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
-using ACMESharp.Protocol.Model;
+using ACMESharp.Protocol.Resources;
 using McMaster.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
