@@ -4,7 +4,21 @@
    // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
    "version": "0.2.0",
    "configurations": [
-
+        {
+          "name": "Launch examples/ACMECLI",
+          "type": "coreclr",
+          "request": "launch",
+          //"preLaunchTask": "build",
+          "program": "${workspaceRoot}/src/examples/ACMECLI/bin/Debug/netcoreapp2.1/ACMECLI.dll",
+          //"args": ["--dns","foo.cli.acme2.zyborg.io","--dns","bar1.cli.acme2.zyborg.io","--dns","bar2.cli.acme2.zyborg.io","--dns","bar3.cli.acme2.zyborg.io","--ca-name","letsencryptstaging","--agree-tos","--email","acmefoo@mailinator.com"],
+          //"args": ["--dns","foo.cli.acme2.zyborg.io","--dns","bar1.cli.acme2.zyborg.io","--dns","bar2.cli.acme2.zyborg.io","--dns","bar3.cli.acme2.zyborg.io","--ca-name","letsencryptstaging","--agree-tos","--email","acmefoo@mailinator.com","--challenge-type","dns-01","--test-challenges","--refresh-order"],
+          //"args": ["--dns","foo.cli.acme2.zyborg.io","--ca-name","letsencryptstaging","--agree-tos","--email","acmefoo@mailinator.com","--challenge-type","dns-01","--test-challenges","--refresh-order"],
+          //"args": ["--state","./_IGNORE","--dns","foo.cli.acme2.zyborg.io","--dns","bar1.cli.acme2.zyborg.io","","--ca-name","letsencryptstaging","--agree-tos","--email","acmefoo@mailinator.com","--challenge-type","dns-01","--test-challenges","--refresh-order","--refresh-challenges","--finalize","--export-cert","./foo.crt","--export-pfx","./foo.pfx"],
+          "args": ["--state","./_IGNORE","--dns","foo3.cli.acme2.zyborg.io","--ca-name","letsencryptstaging","--agree-tos","--email","acmefoo@mailinator.com","--dns","bar1.cli.acme2.zyborg.io","--dns","bar2.cli.acme2.zyborg.io","--dns","bar3.cli.acme2.zyborg.io","--challenge-type","dns-01","--refresh-order","--refresh-challenges","--test-challenges","--wait-for-test","--answer-challenges","--wait-for-authz","--finalize","--wait-for-cert"],
+          "cwd": "${workspaceRoot}/src/examples/ACMECLI",
+          "stopAtEntry": false,
+          "console": "internalConsole"
+        },
         {
             "name": "Launch CLI (console)",
             "type": "coreclr",
