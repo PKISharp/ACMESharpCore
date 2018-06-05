@@ -72,8 +72,12 @@ namespace ACMESharp
             Account = acct;
 
             // We default to ES256 signer
-            Signer = signer ?? new Crypto.JOSE.Impl.ESJwsTool();
-            Signer.Init();
+            if (signer == null)
+            {
+                signer = new Crypto.JOSE.Impl.ESJwsTool();
+                signer.Init();
+            }
+            Signer = signer;
 
             _log = logger ?? NullLogger.Instance;
             _log.LogInformation("ACME client initialized");
