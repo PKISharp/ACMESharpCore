@@ -342,7 +342,8 @@ namespace ACMESharp
                     expectedStatuses: new[] { HttpStatusCode.Created },
                     cancel: cancel);
 
-            return await DecodeOrderResponseAsync(resp);
+            var order = await DecodeOrderResponseAsync(resp);
+            return order;
         }
 
         /// <summary>
@@ -351,8 +352,15 @@ namespace ACMESharp
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.3
+        /// <para>
+        /// You can optionally pass in an existing Order details object if this
+        /// is refreshing the state of an existing one, and some values that
+        /// don't change, but also are not supplied in subsequent requests, such
+        /// as the Order URL, will be copied over.
+        /// </para>
         /// </remarks>
         public async Task<OrderDetails> GetOrderDetailsAsync(string orderUrl,
+            OrderDetails existing = null,
             CancellationToken cancel = default(CancellationToken))
         {
             var resp = await SendAcmeAsync(
@@ -360,7 +368,8 @@ namespace ACMESharp
                     skipNonce: true,
                     cancel: cancel);
 
-            return await DecodeOrderResponseAsync(resp);
+            var order = await DecodeOrderResponseAsync(resp, existing);
+            return order;
 
             // var resp = await SendAcmeAsync(
             //         new Uri(_http.BaseAddress, order.OrderUrl),
@@ -684,7 +693,7 @@ namespace ACMESharp
         ///         details of an existing Account</param>
         /// <returns></returns>
         protected async Task<AccountDetails> DecodeAccountResponseAsync(HttpResponseMessage resp,
-                AccountDetails existing = null)
+            AccountDetails existing = null)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
             var acctUrl = resp.Headers.Location?.ToString();
@@ -708,7 +717,8 @@ namespace ACMESharp
             return acct;
         }
 
-        protected async Task<OrderDetails> DecodeOrderResponseAsync(HttpResponseMessage resp)
+        protected async Task<OrderDetails> DecodeOrderResponseAsync(HttpResponseMessage resp,
+            OrderDetails existing = null)
         {
             var orderUrl = resp.Headers.Location?.ToString();
             var typedResponse = await Deserialize<Order>(resp);
@@ -716,7 +726,7 @@ namespace ACMESharp
             var order = new OrderDetails
             {
                 Payload = typedResponse,
-                OrderUrl = orderUrl,
+                OrderUrl = orderUrl ?? existing?.OrderUrl,
             };
 
             return order;
@@ -775,9 +785,9 @@ namespace ACMESharp
         /// and the current or input <see cref="#Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
-                IJwsTool signer = null,
-                bool includePublicKey = false,
-                bool excludeNonce = false)
+            IJwsTool signer = null,
+            bool includePublicKey = false,
+            bool excludeNonce = false)
         {
             if (signer == null)
                 signer = Signer;
