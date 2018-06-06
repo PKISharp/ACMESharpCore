@@ -40,7 +40,7 @@ namespace ACMESharp.Protocol
             {
                 if (problemType.StartsWith(Problem.StandardProblemTypeNamespace))
                 {
-                    ProblemType = Enum.Parse<ProblemType>(problemType.Substring(
+                    ProblemType = (ProblemType)Enum.Parse(typeof(ProblemType), problemType.Substring(
                             Problem.StandardProblemTypeNamespace.Length), true);
                 }
             }

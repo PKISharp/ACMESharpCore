@@ -277,10 +277,10 @@ namespace ACMESharp.IntegrationTests
             var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
             var oldAuthz = testCtx.GroupLoadObject<Authorization[]>("order-authz.json");
 
-            var rsaKeys = CryptoHelper.GenerateRsaKeys(4096);
-            var rsa = CryptoHelper.GenerateRsaAlgorithm(rsaKeys);
+            var rsaKeys = CryptoHelper.Rsa.GenerateKeys(4096);
+            var rsa = CryptoHelper.Rsa.GenerateAlgorithm(rsaKeys);
             testCtx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
-            var derEncodedCsr = CryptoHelper.GenerateCsr(
+            var derEncodedCsr = CryptoHelper.Rsa.GenerateCsr(
                     oldOrder.Payload.Identifiers.Select(x => x.Value), rsa);
             testCtx.GroupWriteTo("order-csr.der", derEncodedCsr);
 

@@ -426,17 +426,17 @@ namespace ACMECLI
                         switch (KeyAlgor)
                         {
                             case Constants.RsaKeyType:
-                                certKeys = CryptoHelper.GenerateRsaKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
-                                using (var rsa = CryptoHelper.GenerateRsaAlgorithm(certKeys))
+                                certKeys = CryptoHelper.Rsa.GenerateKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
+                                using (var rsa = CryptoHelper.Rsa.GenerateAlgorithm(certKeys))
                                 {
-                                    certCsr = CryptoHelper.GenerateCsr(Dns, rsa);
+                                    certCsr = CryptoHelper.Rsa.GenerateCsr(Dns, rsa);
                                 }
                                 break;
                             case Constants.EcKeyType:
-                                certKeys = CryptoHelper.GenerateEcKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
-                                using (var ec = CryptoHelper.GenerateEcAlgorithm(certKeys))
+                                certKeys = CryptoHelper.Ec.GenerateKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
+                                using (var ec = CryptoHelper.Ec.GenerateAlgorithm(certKeys))
                                 {
-                                    certCsr = CryptoHelper.GenerateCsr(Dns, ec);
+                                    certCsr = CryptoHelper.Ec.GenerateCsr(Dns, ec);
                                 }
                                 break;
                             default:

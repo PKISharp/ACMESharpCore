@@ -53,7 +53,7 @@ namespace ACMESharp.UnitTests
             CollectionAssert.AreEqual(protectedBytesExpected, protectedBytesActual);
            
             string protectedB64uExpected = "eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9"; // From the RFC example
-            string protectedB64uActual = CryptoHelper.Base64UrlEncode(protectedBytesActual);
+            string protectedB64uActual = CryptoHelper.Base64.UrlEncode(protectedBytesActual);
             Assert.AreEqual(protectedB64uExpected, protectedB64uActual);
 
             string payloadSample = // From the RFC example
@@ -75,7 +75,7 @@ namespace ACMESharp.UnitTests
             string payloadB64uExpected = // From the RFC example
                     "eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFt" +
                     "cGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
-            string payloadB64uActual = CryptoHelper.Base64UrlEncode(payloadBytesActual);
+            string payloadB64uActual = CryptoHelper.Base64.UrlEncode(payloadBytesActual);
             Assert.AreEqual(payloadB64uExpected, payloadB64uActual);
 
             string signingInput = $"{protectedB64uActual}.{payloadB64uActual}";
@@ -100,7 +100,7 @@ namespace ACMESharp.UnitTests
             //    "k":"AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75
             //         aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow"
             //   }
-            byte[] symKey = CryptoHelper.Base64UrlDecode(
+            byte[] symKey = CryptoHelper.Base64.UrlDecode(
                     "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75" +
                     "aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
             byte[] hmacExpected = // From the RFC example:
@@ -117,7 +117,7 @@ namespace ACMESharp.UnitTests
             CollectionAssert.AreEqual(hmacExpected, hmacActual);
 
             string hmacB64uExpected = "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"; // From RFC example
-            string hmacB64uActual = CryptoHelper.Base64UrlEncode(hmacActual);
+            string hmacB64uActual = CryptoHelper.Base64.UrlEncode(hmacActual);
             Assert.AreEqual(hmacB64uExpected, hmacB64uActual);
 
             string jwsSigExpected = // From RFC example
@@ -211,14 +211,14 @@ namespace ACMESharp.UnitTests
 
             var rsaKeyParams = new System.Security.Cryptography.RSAParameters
             {
-                Exponent = CryptoHelper.Base64UrlDecode(rsaKeyPartE),
-                Modulus  = CryptoHelper.Base64UrlDecode(rsaKeyPartN),
-                D        = CryptoHelper.Base64UrlDecode(rsaKeyPartD),
-                P        = CryptoHelper.Base64UrlDecode(rsaKeyPartP),
-                Q        = CryptoHelper.Base64UrlDecode(rsaKeyPartQ),
-                DP       = CryptoHelper.Base64UrlDecode(rsaKeyPartDP),
-                DQ       = CryptoHelper.Base64UrlDecode(rsaKeyPartDQ),
-                InverseQ = CryptoHelper.Base64UrlDecode(rsaKeyPartQI)
+                Exponent = CryptoHelper.Base64.UrlDecode(rsaKeyPartE),
+                Modulus  = CryptoHelper.Base64.UrlDecode(rsaKeyPartN),
+                D        = CryptoHelper.Base64.UrlDecode(rsaKeyPartD),
+                P        = CryptoHelper.Base64.UrlDecode(rsaKeyPartP),
+                Q        = CryptoHelper.Base64.UrlDecode(rsaKeyPartQ),
+                DP       = CryptoHelper.Base64.UrlDecode(rsaKeyPartDP),
+                DQ       = CryptoHelper.Base64.UrlDecode(rsaKeyPartDQ),
+                InverseQ = CryptoHelper.Base64.UrlDecode(rsaKeyPartQI)
             };
 
             return rsaKeyParams;
@@ -237,7 +237,7 @@ namespace ACMESharp.UnitTests
             CollectionAssert.AreEqual(protectedBytesExpected, protectedBytesActual);
 
             string protectedB64uExpected = "eyJhbGciOiJSUzI1NiJ9"; // From the RFC example
-            string protectedB64uActual = CryptoHelper.Base64UrlEncode(protectedBytesActual);
+            string protectedB64uActual = CryptoHelper.Base64.UrlEncode(protectedBytesActual);
             Assert.AreEqual(protectedB64uExpected, protectedB64uActual);
 
             string payloadSample = // From the RFC example
@@ -245,7 +245,7 @@ namespace ACMESharp.UnitTests
                     " \"exp\":1300819380,\r\n" +
                     " \"http://example.com/is_root\":true}";
             byte[] payloadBytesActual = Encoding.UTF8.GetBytes(payloadSample);
-            string payloadB64uActual = CryptoHelper.Base64UrlEncode(payloadBytesActual);
+            string payloadB64uActual = CryptoHelper.Base64.UrlEncode(payloadBytesActual);
             string signingInput = $"{protectedB64uActual}.{payloadB64uActual}";
 
             byte[] signingBytesExpected = // From the RFC example
@@ -302,7 +302,7 @@ namespace ACMESharp.UnitTests
                     "0GarZRmB_eSN9383LcOLn6_dO--xi12jzDwusC-eOkHWEsqtFZESc6BfI7noOPqv" +
                     "hJ1phCnvWh6IeYI2w9QOYEUipUTI8np6LbgGY9Fs98rqVt5AXLIhWkWywlVmtVrB" +
                     "p0igcN_IoypGlUPQGe77Rw";
-            string sigB64uActual = CryptoHelper.Base64UrlEncode(sigActual);
+            string sigB64uActual = CryptoHelper.Base64.UrlEncode(sigActual);
             Assert.AreEqual(sigB64uExpected, sigB64uActual);
         }
     }

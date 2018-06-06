@@ -126,8 +126,8 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
                     crv = CurveName,
                     kty = "EC", // https://tools.ietf.org/html/rfc7518#section-6.2
-                    x = CryptoHelper.Base64UrlEncode(keyParams.Q.X),
-                    y = CryptoHelper.Base64UrlEncode(keyParams.Q.Y),
+                    x = CryptoHelper.Base64.UrlEncode(keyParams.Q.X),
+                    y = CryptoHelper.Base64.UrlEncode(keyParams.Q.Y),
                 };
             }
 

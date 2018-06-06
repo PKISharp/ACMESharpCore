@@ -99,9 +99,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
                     // As per RFC 7638 Section 3, these are the *required* elements of the
                     // JWK and are sorted in lexicographic order to produce a canonical form
 
-                    e = CryptoHelper.Base64UrlEncode(keyParams.Exponent),
+                    e = CryptoHelper.Base64.UrlEncode(keyParams.Exponent),
                     kty = "RSA", // https://tools.ietf.org/html/rfc7518#section-6.3
-                    n = CryptoHelper.Base64UrlEncode(keyParams.Modulus),
+                    n = CryptoHelper.Base64.UrlEncode(keyParams.Modulus),
                 };
             }
 

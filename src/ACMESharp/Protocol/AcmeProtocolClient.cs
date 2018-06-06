@@ -509,7 +509,7 @@ namespace ACMESharp.Protocol
         {
             var message = new FinalizeOrderRequest
             {
-                Csr = CryptoHelper.Base64UrlEncode(derEncodedCsr),
+                Csr = CryptoHelper.Base64.UrlEncode(derEncodedCsr),
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderFinalizeUrl),

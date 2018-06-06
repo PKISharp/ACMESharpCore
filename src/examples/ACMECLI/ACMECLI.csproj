@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ACMESharp\ACMESharp.csproj" />
+    <ProjectReference Include="..\..\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj" />
   </ItemGroup>
 
 </Project>
