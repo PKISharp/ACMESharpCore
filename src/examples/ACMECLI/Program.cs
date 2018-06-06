@@ -46,11 +46,10 @@ namespace ACMECLI
         public IEnumerable<string> Email { get; }
 
         [Option(ShortName = "", Description = "Flag indicates that you agree to CA's terms of service")]
-        public bool AgreeTos { get; }
+        public bool AcceptTos { get; }
 
         [Option(CommandOptionType.MultipleValue,
                 ShortName = "", Description = "One or more DNS names to include in the cert; the first is primary subject name, subsequent are subject alternative names (can be repeated)")]
-        [Required]
         public IEnumerable<string> Dns { get; }
 
         [Option(ShortName = "", Description = "Flag indicates to refresh the state of pending ACME Order")]
@@ -191,7 +190,7 @@ namespace ACMECLI
             if (account == null || accountSigner == null)
             {
                 Console.WriteLine("Generating/Registering NEW Account Key");
-                if (!AgreeTos)
+                if (!AcceptTos)
                 {
                     Console.WriteLine("You must agree (using CLI flag) to terms of service to create an account:");
                     Console.WriteLine("  " + _acme.Directory.Meta.TermsOfService);
@@ -201,7 +200,7 @@ namespace ACMECLI
                 if ((Email?.Count() ?? 0) == 0)
                     throw new Exception("At least one email must be specified as a contact for new account");
 
-                account = await _acme.CreateAccountAsync(Email.Select(x => "mailto:" + x), AgreeTos);
+                account = await _acme.CreateAccountAsync(Email.Select(x => "mailto:" + x), AcceptTos);
                 accountSigner = _acme.Signer;
                 accountKey = new AccountKey
                 {
@@ -228,6 +227,11 @@ namespace ACMECLI
             Console.WriteLine($"  Impl Class Type....: {_acme.Signer.GetType().Name}");
             Console.WriteLine($"  Key Export Hash....: {accountKeyHash}");
             Console.WriteLine();
+
+            if (Dns?.Count() == 0)
+                // No DNS names means we can only handle the
+                // Account and no request to create an Order
+                return;
 
             Console.WriteLine("################################################################################");
             Console.WriteLine("## ORDER");
