@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ACMESharp\ACMESharp.csproj" />
+    <ProjectReference Include="..\..\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj" />
+  </ItemGroup>
+
+</Project>
