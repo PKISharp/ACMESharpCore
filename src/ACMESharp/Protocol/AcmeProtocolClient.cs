@@ -123,6 +123,32 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
+        /// Convenience routine to retrieve the raw bytes of the Terms of Service
+        /// endpoint defined in an ACME Resource Directory meta details.
+        /// </summary>
+        /// <returns>Returns a tuple containing the content type, the filename as best
+        ///         can be determined by the response headers or the request URL, and
+        ///         the raw content bytes; typically this might resolve to a PDF file</returns>
+        public async Task<(MediaTypeHeaderValue contentType,
+                string filename, byte[] content)> GetTermsOfServiceAsync(
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var tosUrl = Directory?.Meta?.TermsOfService;
+            if (tosUrl == null)
+                return (null, null, null);
+            
+            using (var resp = await _http.GetAsync(tosUrl, cancel))
+            {
+                var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
+                if (string.IsNullOrEmpty(filename))
+                    filename = new Uri(tosUrl).AbsolutePath;
+                return (resp.Content.Headers.ContentType,
+                        Path.GetFileName(filename),
+                        await resp.Content.ReadAsByteArrayAsync());
+            }
+        }            
+
+        /// <summary>
         /// Retrieves a fresh nonce to be used in subsequent communication
         /// between the client and target ACME CA.  The client might
         /// sometimes need to get a new nonce, e.g., on its first request
@@ -568,6 +594,38 @@ namespace ACMESharp.Protocol
             // }
 
             // return newOrder;
+        }
+
+        /// <summary>
+        /// Convenience routine to retrieve the raw Certificate bytes (PEM encoded)
+        /// associated with a finalized ACME Order.
+        /// </summary>
+        public async Task<byte[]> GetOrderCertificateAsync(
+            OrderDetails order,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            using (var resp = await GetAsync(order.Payload.Certificate, cancel))
+            {
+                return await resp.Content.ReadAsByteArrayAsync();
+            }
+        }
+
+        /// <summary>
+        /// Generic fetch routine to retrieve raw bytes from a URL associated
+        /// with an ACME endpoint.
+        /// </summary>
+        /// <param name="relativeUrl">The URL to fetch which may be relative to the ACME
+        ///         endpoint associated with this client instance</param>
+        /// <param name="cancel">Optional cancellation token</param>
+        /// <returns>A tuple containing the content type and the raw content bytes</returns>
+        public async Task<HttpResponseMessage> GetAsync(
+            string relativeUrl,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var url = new Uri(_http.BaseAddress, relativeUrl);
+            var resp = await _http.GetAsync(url);
+            resp.EnsureSuccessStatusCode();
+            return resp;
         }
 
         /// <summary>
