@@ -36,7 +36,12 @@ namespace ACMESharp.Crypto
 
         public string GenerateKeys(int curveSize)
         {
-            return GenerateAlgorithm(curveSize).ToXmlString(true);;
+            return GenerateKeys(GenerateAlgorithm(curveSize));
+        }
+
+        public string GenerateKeys(ECDsa ec)
+        {
+            return ec.ToXmlString(true);
         }
     }
 }
