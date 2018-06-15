@@ -48,7 +48,7 @@ namespace ACMESharp.IntegrationTests
         public static Random Rng { get; } = new Random();
 
         protected  static readonly IEnumerable<string> _contacts =
-                new[] { "mailto:foo@example.com" };
+                new[] { "mailto:acme-test-foo@mailinator.com" };
         
         protected  const string TestDnsSubdomain = "integtests.acme2.zyborg.io";
 

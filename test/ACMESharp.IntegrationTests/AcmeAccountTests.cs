@@ -32,11 +32,11 @@ namespace ACMESharp.IntegrationTests
         ITestOutputHelper Output { get; }
 
         public static readonly IEnumerable<string> _contactsInit =
-                new[] { "mailto:foo@example.com" };
+                new[] { "mailto:acme-test-foo@mailinator.com" };
         public static readonly IEnumerable<string> _contactsUpdate =
-                new[] { "mailto:bar@example.com", "mailto:baz@example.com" };
+                new[] { "mailto:acme-test-bar@mailinator.com", "mailto:acme-test-baz@mailinator.com" };
         public static readonly IEnumerable<string> _contactsFinal =
-                new[] { "mailto:foo@example.com", "mailto:bar@example.com", "mailto:baz@example.com" };
+                new[] { "mailto:acme-test-foo@mailinator.com", "mailto:acme-test-bar@mailinator.com", "mailto:acme-test-baz@mailinator.com" };
 
 
         [Fact]
