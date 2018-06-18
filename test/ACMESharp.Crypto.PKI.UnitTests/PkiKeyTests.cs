@@ -31,8 +31,8 @@ namespace ACMESharp.Crypto.PKI.UnitTests
             Assert.IsTrue(rsaKeys.PrivateKey.IsPrivate);
             Assert.AreEqual(PkiAsymmetricAlgorithm.Rsa, rsaKeys.PrivateKey.Algorithm);
 
-            var pubOut = Path.Combine(_testTemp, $"rsa-pub-key-{bits}.pem");
-            var prvOut = Path.Combine(_testTemp, $"rsa-prv-key-{bits}.pem");
+            var pubOut = Path.Combine(_testTemp, $"keypair-rsa-pub{bits}.pem");
+            var prvOut = Path.Combine(_testTemp, $"keypair-rsa-prv{bits}.pem");
 
             File.WriteAllBytes(pubOut, rsaKeys.PublicKey.Export(PkiEncodingFormat.Pem));
             File.WriteAllBytes(prvOut, rsaKeys.PrivateKey.Export(PkiEncodingFormat.Pem));
