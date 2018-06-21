@@ -74,14 +74,25 @@ namespace PKISharp.SimplePKI
             //    https://github.com/bcgit/bc-csharp/blob/master/crypto/test/src/crypto/test/ECTest.cs#L331
             //    https://www.codeproject.com/Tips/1150485/Csharp-Elliptical-Curve-Cryptography-with-Bouncy-C
 
-            var ecNistParams = NistNamedCurves.GetByName("P-" + bits);
-            var ecDomainParams = new ECDomainParameters(ecNistParams.Curve,
-                    ecNistParams.G, ecNistParams.N, ecNistParams.H, ecNistParams.GetSeed());
-            var ecParams = new ECKeyGenerationParameters(ecDomainParams, new SecureRandom());
+            // This produced the following error against Let's Encrypt CA:
+            //    ACMESharp.Protocol.AcmeProtocolException : Error parsing certificate request: asn1: structure error: tags don't match (6 vs {class:0 tag:16 length:247 isCompound:true}) {optional:false explicit:false application:false defaultValue:<nil> tag:<nil> stringType:0 timeType:0 set:false omitEmpty:false} ObjectIdentifier @3
+
+            // var ecNistParams = NistNamedCurves.GetByName("P-" + bits);
+            // var ecDomainParams = new ECDomainParameters(ecNistParams.Curve,
+            //         ecNistParams.G, ecNistParams.N, ecNistParams.H, ecNistParams.GetSeed());
+            // var ecParams = new ECKeyGenerationParameters(ecDomainParams, new SecureRandom());
+
+            // So according to [this](https://github.com/golang/go/issues/18634#issuecomment-272527314)
+            // it seems we were passing in arbitrary curve details instead of a named curve OID as we do here:
+
+            var ecCurveOid = NistNamedCurves.GetOid("P-" + bits);;
+            var ecParams = new ECKeyGenerationParameters(ecCurveOid, new SecureRandom());
             var ecKpGen = GeneratorUtilities.GetKeyPairGenerator("ECDSA");
             ecKpGen.Init(ecParams);
             var nativeKeyPair = ecKpGen.GenerateKeyPair();
 
+            var x = new Org.BouncyCastle.Crypto.Generators.ECKeyPairGenerator();
+            x.Init(ecParams);
             return new PkiKeyPair(nativeKeyPair, PkiAsymmetricAlgorithm.Ecdsa);
         }
 
