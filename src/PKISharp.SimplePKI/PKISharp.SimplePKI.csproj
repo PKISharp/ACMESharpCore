@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!--
+   - NuGet Pack
+   -    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
+   -->
+  <PropertyGroup>
+      <PackageId>SimplePKI</PackageId>
+      <Description>Simple collection of PKI certificate management primitives for .NET Standard</Description>
+      <Copyright>Copyright (C) Eugene Bekker.</Copyright>
+      <PackageLicenseUrl>https://github.com/PKISharp/ACMESharpCore/blob/master/LICENSE</PackageLicenseUrl>
+      <PackageProjectUrl>https://github.com/PKISharp/ACMESharpCore/</PackageProjectUrl>
+      <PackageIconUrl>https://raw.githubusercontent.com/PKISharp/ACMESharpCore/master/docs/acmesharp-logo-color.png</PackageIconUrl>
+      <PackageTags>pki;ssl;tls;security;certificates;letsencrypt;acme;acmesharp</PackageTags>
+      <RepositoryUrl>https://github.com/PKISharp/ACMESharpCore.git</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildNumber Condition="'$(BuildNumber)' == ''">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
+    <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
+    <VersionPrefix>1.0.0.$(BuildNumber)</VersionPrefix>
+    <VersionSuffix>rc1</VersionSuffix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.2" />
+  </ItemGroup>
+
+</Project>

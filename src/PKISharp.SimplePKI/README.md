@@ -1,4 +1,4 @@
-# README - ACMESharp.Crypto.PKI
+# README - PKISharp.Crypto.SimplePKI
 
 In order to use the ACMESharp library to properly interact with an ACME CA in producing signed
 certificates it is necessary to perform various PKI certificate management operations on the

@@ -1,4 +1,4 @@
-namespace ACMESharp.Crypto.PKI
+namespace PKISharp.SimplePKI
 {
     public enum PkiHashAlgorithm
     {

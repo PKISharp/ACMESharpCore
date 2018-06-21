@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ACMESharp.Crypto.PKI\ACMESharp.Crypto.PKI.csproj" />
+    <ProjectReference Include="..\..\src\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
   </ItemGroup>
 
 </Project>
