@@ -15,7 +15,7 @@
       <Copyright>Copyright (C) Eugene Bekker.</Copyright>
       <PackageLicenseUrl>https://github.com/PKISharp/ACMESharpCore/blob/master/LICENSE</PackageLicenseUrl>
       <PackageProjectUrl>https://github.com/PKISharp/ACMESharpCore/</PackageProjectUrl>
-      <PackageIconUrl>https://raw.githubusercontent.com/PKISharp/ACMESharpCore/master/docs/acmesharp-logo-color.png</PackageIconUrl>
+      <PackageIconUrl>https://raw.githubusercontent.com/PKISharp/ACMESharpCore/master/docs/pkisharp-logo-color.png</PackageIconUrl>
       <PackageTags>pki;ssl;tls;security;certificates;letsencrypt;acme;acmesharp</PackageTags>
       <RepositoryUrl>https://github.com/PKISharp/ACMESharpCore.git</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
