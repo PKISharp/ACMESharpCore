@@ -2,7 +2,8 @@
 
 An ACME client library for .NET Standard (Let's Encrypt)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/bvf3hiyantc3m8tv?svg=true)](https://ci.appveyor.com/project/ebekker/acmesharpcore)
+[![Build status](https://ci.appveyor.com/api/projects/status/bvf3hiyantc3m8tv?svg=true)](https://ci.appveyor.com/project/ebekker/acmesharpcore) ![NuGet Pre Release](https://img.shields.io/nuget/vpre/ACMESharpCore.svg)
+
 
 This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library to .NET Standard 2.0.
 
@@ -16,10 +17,10 @@ If you are interested in using Let's Encrypt, or any other ACME-compliant CA in 
 
 The goals for this project:
 
-* Migrate the ACMESharp client library to .NET Standard 2.0
-* Remove legacy cruft
-* Clean up the namespace structure and code org
-* Adjust coding standards to better conform with industry standards
-* Clearly separate and maintain independently the client library and the PS module
-* Complete any missing features from the ACME spec
-* Prepare for, and implement move to ACME 2.0 spec
+* [x] Migrate the ACMESharp client library to .NET Standard 2.0
+* [x] Remove legacy cruft
+* [x] Clean up the namespace structure and code org
+* [x] Adjust coding standards to better conform with industry standards
+* [x] Complete any missing features from the ACME spec
+* [x] Prepare for, and implement move to ACME 2.0 spec
+* [ ] Clearly separate and maintain independently the client library and the PS module
