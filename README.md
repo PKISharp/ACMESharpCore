@@ -8,7 +8,7 @@ This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client l
 
 #### Stable Packages
 
-| | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharpcore%22) |
+| | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22) |
 |-|-|
 | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore) | ACMESharpCore client library
 | [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI) | SimplePKI library
