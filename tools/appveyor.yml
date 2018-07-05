@@ -1,0 +1,235 @@
+version: 2.0.0.{build}
+image:
+- Ubuntu
+- Visual Studio 2017 Preview
+init:
+- ps: >-
+    $blockRdpMatch = 1 ## Testing Match At: 1=Init 2=BuildFinish
+
+    $blockRdpDomain = 'blockrdp.acmesharpcore-ci.acmesharp.bkkr.us'
+
+
+    if ($isWindows) {
+        ## Check if we should Enable RDP access
+        $avEnableRdpUrl = 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'
+        $blockRdpValue = [int]$((Resolve-DnsName $blockRdpDomain -Type TXT).Text)
+        $blockRdpHere = $blockRdpValue -band $blockRdpMatch
+        if ($blockRdpHere) {
+            ## As per:  https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+            $blockRdp = $true
+            iex ((new-object net.webclient).DownloadString($avEnableRdpUrl))
+        }
+    }
+
+
+    if ($isLinux) {
+        ## Check if we should Enable SSH access
+        $avEnableSshUrl = 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh'
+        $blockRdpValue = & host -t TXT blockrdp.acmesharpcore-ci.acmesharp.bkkr.us
+        $blockRdpHere = $blockRdpValue -match "text `"$($blockRdpMatch)`""
+        if ($blockRdpHere) {
+            ## As per:  https://www.appveyor.com/docs/how-to/ssh-to-build-worker/
+            $blockRdp = $true
+            $env:APPVEYOR_SSH_BLOCK = 'true'
+            & curl -sflL $avEnableSshUrl | bash -e -
+        }
+    }
+dotnet_csproj:
+  patch: true
+  file: src\**\*.csproj
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+environment:
+  TEST_BUCKET_NAME:
+    secure: 2rVbJdgp7JgtmEa+2bdv8zUFf0TGxqjI5B5oejD5/FE=
+  TEST_HOSTED_ZONE_ID:
+    secure: 2aja5YtYTgEv/6nBBSb3LA==
+  TEST_AWS_ACCESS_KEY:
+    secure: HAZAhHPI+UxcVRsYgD0+nLP2JXxbLcD7QwBdXz4D5lM=
+  TEST_AWS_SECRET_KEY:
+    secure: SFUn+5KMSOZJunA0RgHcztIE1O3mSv2gVgSBJnBwWV/miBevC9/CB+GWpSJ2XBjn
+  APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPJJVcpLfBT4lFif8kmECewt1hV90Lei33NJrXNIzgrITK9bgHl2Po7pUIXQB3jma77N4WentfroM50+0Iy93WKX4sxHotlfMrNbAb8DgcBD+NvJu9UQ+cAw04rg/DTU2cjcc79pb6+shhe15GBMGB6MUoBT73AQwhKLcJ2yrUiAgXeLTfQC4QwSOFgzdzmtUKFktDFpxoFfgSJPmEu4tMibwXPK15BDXcV1AGRXVruRvq94/49WNfpAMTmvM2cmT4Ntq5buYJvaq/3w2fqvU+YIMXCOBAayzMbcSHO/iJouWnf2hmqnoHkVel5f3QRxpPnMfedtaEjjQAnac6eCjl
+install:
+- ps: >-
+    if ($isWindows) {
+        ## We only need this if we want to install a version of dotnet that's not already installed
+        #.\tools\chocoInstallDotNetCore21Rc1.ps1
+
+        ## We need a current version of OpenSSL so that we can run the ECDSA tests
+        Write-Information "Installing current version of OpenSSL"
+        choco install -y openssl.light
+    }
+
+    else {
+        ## We *assume* we're running the right version of Ubuntu
+        $ubuntuVersionTarget = "16.04"
+        $ubuntuVersionActual = & lsb_release -a
+        if ($ubuntuVersionActual -match "Release:\s$($ubuntuVersionTarget)") {
+            Write-Information "Confirmed we're running Ubuntu $($ubuntuVersionTarget)"
+        }
+        else {
+            Write-Warning "We're NOT running the expected version of Ubuntu $(ubuntuVersionTarget)"
+            Write-Warning "Actual Version:`n$ubuntuVersionActual"
+        }
+
+        ## From dot.net recommended instructions for Ubuntu 16.04:
+        ##    https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-2.1.300
+
+        ## Register Microsoft key and feed
+        & wget -q packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb
+        & sudo dpkg -i packages-microsoft-prod.deb
+
+        ## Install .NET SDK
+        & sudo apt-get install apt-transport-https
+        & sudo apt-get update
+        & sudo apt-get install -y dotnet-sdk-2.1
+
+        Write-Information "Upgrading *ALL* local packages..."
+        & sudo apt-get upgrade -y
+
+        ## Unfortunately Ubuntu 16.04 does NOT offer OpenSSL 1.1 as a
+        ## standard package so we need to install it oursevles, as per:
+        ##    https://stackoverflow.com/a/44789238/5428506
+        pushd ..
+        wget https://www.openssl.org/source/openssl-1.1.0g.tar.gz
+        tar xzvf openssl-1.1.0g.tar.gz
+        cd openssl-1.1.0g
+        ./config "-Wl,--enable-new-dtags,-rpath,'$($env:LIBRPATH)'"
+        make
+        sudo make install
+        ## Refresh library cache after install
+        sudo mv /etc/ld.so.cache /etc/ld.so.cache.OLD
+        sudo ldconfig
+        popd
+    }
+
+
+    $dotnetVersWant = [version]('2.1.300')
+
+    $dotnetVersCurr = [version](dotnet --version)
+
+    if ($dotnetVersCurr -lt $dotnetVersWant) {
+        throw "Wrong Version of .NET Core! ($dotnetVersCurr < $dotnetVersWant)"
+    }
+
+
+    $opensslVersMatch = "^OpenSSL 1.1"
+
+    $opensslVersValue = & openssl version
+
+    if (-not ($opensslVersValue -match $opensslVersMatch)) {
+        if (Test-Path "C:\Program Files\OpenSSL\bin\openssl.exe") {
+            Write-Warning "Default version of OpenSSL is wrong, but newer version exists at 'C:\Program Files\OpenSSL\bin\openssl.exe' -- CALL WITH EXACT PATH!
+        }
+        else {
+            Write-Warning ""Wrong Version of OpenSSL! ($opensslVersValue != /$opensslVersMatch/) -- TRYING TO CONTINUE"
+            #throw "Wrong Version of OpenSSL! ($opensslVersValue != /$opensslVersMatch/)"
+        }
+    }
+build_script:
+- pwsh: >-
+    $configRoot      = "./test/ACMESharp.IntegrationTests/config"
+
+    $configOutRoot   = [System.IO.Path]::Combine($configRoot, "_IGNORE")
+
+    $configTemplates = [System.IO.Path]::Combine($configRoot, "template-*")
+
+    $configValues    = [System.Environment]::GetEnvironmentVariables()
+
+    if (-not (Test-Path -PathType Container $configOutRoot)) {
+        mkdir $configOutRoot
+    }
+
+    foreach ($f in (dir $configTemplates)) {
+        $fOut = $f.FullName -replace '[\\/]template-','/_IGNORE/'
+        $fBody = [System.IO.File]::ReadAllText($f.FullName)
+        foreach ($k in $configValues.Keys) {
+            $fBody = $fBody -replace "@@$k@@",$configValues[$k]
+        }
+        [System.IO.File]::WriteAllText("$($fOut)", $fBody)
+    }
+
+
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+    if ($isLinux) {
+        & sudo pwsh -C "Install-Module AWSPowerShell.NetCore -Force"
+    }
+
+    else {
+        Install-Module AWSPowerShell.NetCore -Force
+    }
+
+    Import-Module AWSPowerShell.NetCore -Force
+
+    Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
+
+
+    dotnet msbuild /t:clean
+
+    dotnet msbuild /t:restore
+
+    dotnet msbuild /t:build
+
+    dotnet msbuild /t:publish
+
+    dotnet pack src/ACMESharp
+
+    dotnet pack src/ACMESharp.DotNetCore
+
+    dotnet pack src/PKISharp.SimplePKI
+test_script:
+- ps: >-
+    dotnet test .\test\ACMESharp.UnitTests
+
+    dotnet test .\test\ACMESharp.IntegrationTests
+
+    dotnet test .\test\PKISharp.SimplePKI.UnitTests
+artifacts:
+- path: src\ACMESharp\**\*.nupkg
+  name: ACMESharp-NuGet
+- path: src\ACMESharp.DotNetCore\**\*.nupkg
+  name: ACMESharp.DotNetCore-NuGet
+- path: src\PKISharp.SimplePKI\**\*.nupkg
+  name: PKISharp.SimplePKI-NuGet
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/acmesharp/api/v2/package
+  api_key:
+    secure: H0fHSvIykfEOOaJ37jfPbL+LdbsQs+OsXPvXPdKaoamLcl1TgBuW6iYQRCkMrUd4
+  artifact: ACMESharp-NuGet,ACMESharp.DotNetCore-NuGet,PKISharp.SimplePKI-NuGet
+on_finish:
+- ps: >-
+    $blockRdpMatch = 2 ## Testing Match At: 1=Init 2=BuildFinish
+
+    $blockRdpDomain = 'blockrdp.acmesharpcore-ci.acmesharp.bkkr.us'
+
+
+    if ($isWindows) {
+        ## Check if we should Enable RDP access
+        $avEnableRdpUrl = 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'
+        $blockRdpValue = [int]$((Resolve-DnsName $blockRdpDomain -Type TXT).Text)
+        $blockRdpHere = $blockRdpValue -band $blockRdpMatch
+        if ($blockRdpHere) {
+            ## As per:  https://www.appveyor.com/docs/how-to/rdp-to-build-worker/
+            $blockRdp = $true
+            iex ((new-object net.webclient).DownloadString($avEnableRdpUrl))
+        }
+    }
+
+
+    if ($isLinux) {
+        ## Check if we should Enable SSH access
+        $avEnableSshUrl = 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh'
+        $blockRdpValue = & host -t TXT blockrdp.acmesharpcore-ci.acmesharp.bkkr.us
+        $blockRdpHere = $blockRdpValue -match "text `"$($blockRdpMatch)`""
+        if ($blockRdpHere) {
+            ## As per:  https://www.appveyor.com/docs/how-to/ssh-to-build-worker/
+            $blockRdp = $true
+            $env:APPVEYOR_SSH_BLOCK = 'true'
+            & curl -sflL $avEnableSshUrl | bash -e -
+        }
+    }
