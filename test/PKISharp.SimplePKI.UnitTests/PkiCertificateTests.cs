@@ -55,13 +55,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, cert.Export(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, cert.Export(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -111,13 +111,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, subjCert.Export(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, subjCert.Export(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -162,13 +162,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pfxWithKey, cert.Export(PkiArchiveFormat.Pkcs12,
                     keys.PrivateKey));
 
-            using (var proc = Process.Start("openssl", $"pkcs12 -info -in {pfxSansKey} -passin pass:"))
+            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxSansKey} -passin pass:"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
+            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -228,13 +228,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pfxWithKey, subjCert.Export(PkiArchiveFormat.Pkcs12,
                     subjKeys.PrivateKey, new[] { isurCert }));
 
-            using (var proc = Process.Start("openssl", $"pkcs12 -info -in {pfxSansKey} -passin pass:"))
+            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxSansKey} -passin pass:"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
+            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -289,14 +289,14 @@ namespace PKISharp.SimplePKI.UnitTests
                     keys.PrivateKey));
 
             // Check Cert
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -in {pemSansKey}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -in {pemSansKey}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
             // Check Cert
-            using (var proc = Process.Start("openssl", $"x509 -text -noout -in {pemWithKey}"))
+            using (var proc = OpenSsl.Start($"x509 -text -noout -in {pemWithKey}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -305,7 +305,7 @@ namespace PKISharp.SimplePKI.UnitTests
             var opensslCmd = "rsa";
             if (algor == PkiAsymmetricAlgorithm.Ecdsa)
                 opensslCmd = "ec";
-            using (var proc = Process.Start("openssl", $"{opensslCmd} -in {pemWithKey} -check"))
+            using (var proc = OpenSsl.Start($"{opensslCmd} -in {pemWithKey} -check"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);

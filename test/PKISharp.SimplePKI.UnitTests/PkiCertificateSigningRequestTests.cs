@@ -43,13 +43,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, csr.ExportSigningRequest(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, csr.ExportSigningRequest(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -88,13 +88,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, csr.ExportSigningRequest(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, csr.ExportSigningRequest(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -126,13 +126,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, csr.ExportSigningRequest(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, csr.ExportSigningRequest(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -171,13 +171,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pemOut, csr.ExportSigningRequest(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, csr.ExportSigningRequest(PkiEncodingFormat.Der));
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -in {pemOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -in {pemOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"req -text -noout -verify -inform DER -in {derOut}"))
+            using (var proc = OpenSsl.Start($"req -text -noout -verify -inform DER -in {derOut}"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
