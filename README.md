@@ -7,7 +7,18 @@ An ACME client library for .NET Standard (Let's Encrypt)
 
 This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library to .NET Standard 2.0.
 
+#### Stable Packages
+
+| | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22) |
+|-|-|
+| [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore) | ACMESharpCore client library
+| [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI) | SimplePKI library
+
 A first version of the client library has been completed with a number of useful features, check out the [library-specific README](/src/ACMESharp) for details as they develop.
+
+A couple of useful examples have been [put together](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples) to demonstrate how to use the client library to implement a [CLI tool](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples/ACMECLI) and automated certificate installation for [ASP.NET Core](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples/ACMEKestrel) applications.  More are coming...
+
+----
 
  Please Note: |
 --------------|
