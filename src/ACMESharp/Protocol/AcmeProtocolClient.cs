@@ -38,11 +38,11 @@ namespace ACMESharp.Protocol
 
         private bool _disposeHttpClient;
         private HttpClient _http;
-        private IJwsTool _signer;
+
         private ILogger _log;
 
         public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
-                AccountDetails acct = null, IJwsTool signer = null,
+                AccountDetails acct = null, JwsTool signer = null,
                 bool disposeHttpClient = false,
                 ILogger logger = null)
         {
@@ -51,7 +51,7 @@ namespace ACMESharp.Protocol
         }
 
         public AcmeProtocolClient(Uri baseUri, ServiceDirectory dir = null,
-                AccountDetails acct = null, IJwsTool signer = null,
+                AccountDetails acct = null, JwsTool signer = null,
                 ILogger logger = null)
         {
             var http = new HttpClient
@@ -63,21 +63,14 @@ namespace ACMESharp.Protocol
         }
 
         private void Init(HttpClient http, ServiceDirectory dir,
-                AccountDetails acct, IJwsTool signer,
+                AccountDetails acct, JwsTool signer,
                 ILogger logger)
         {
             _http = http;
             Directory = dir ?? new ServiceDirectory();
 
             Account = acct;
-
-            // We default to ES256 signer
-            if (signer == null)
-            {
-                signer = new Crypto.JOSE.Impl.ESJwsTool();
-                signer.Init();
-            }
-            Signer = signer;
+            Signer = signer ?? throw new ArgumentNullException(nameof(signer));
 
             _log = logger ?? NullLogger.Instance;
             _log.LogInformation("ACME client initialized");
@@ -92,7 +85,7 @@ namespace ACMESharp.Protocol
         /// with a new set of keys will be constructed of type ES256
         /// (Elliptic Curve using the P-256 curve and a SHA256 hash).
         /// </remarks>
-        public IJwsTool Signer { get; private set; }
+        public JwsTool Signer { get; private set; }
 
         public ServiceDirectory Directory { get; set; }
 
@@ -297,7 +290,7 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
         /// </remarks>
-        public async Task<AccountDetails> ChangeAccountKeyAsync(IJwsTool newSigner,
+        public async Task<AccountDetails> ChangeAccountKeyAsync(JwsTool newSigner,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.KeyChange);
@@ -845,7 +838,7 @@ namespace ACMESharp.Protocol
         /// and the current or input <see cref="Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
-            IJwsTool signer = null,
+            JwsTool signer = null,
             bool includePublicKey = false,
             bool excludeNonce = false)
         {

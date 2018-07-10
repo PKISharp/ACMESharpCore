@@ -67,8 +67,8 @@ namespace ACMESharp.IntegrationTests
             };
 
             var acct = LoadObject<AccountDetails>("acct.json");
-            var keys = LoadObject<string>("acct-keys.json");
-            if (acct == null || string.IsNullOrEmpty(keys))
+            var keys = LoadObject<Crypto.JOSE.JwsExport>("acct-keys.json");
+            if (acct == null || keys == null)
             {
                 Log.LogInformation("Durable Account data does not exist -- CREATING");
 
@@ -87,8 +87,8 @@ namespace ACMESharp.IntegrationTests
             {
                 Log.LogInformation("Found existing persisted Account data -- LOADING");
 
-                Clients.Acme = new AcmeProtocolClient(Clients.Http, acct: acct);
-                Clients.Acme.Signer.Import(keys);
+                var signer = new Crypto.JOSE.JwsTool(keys);
+                Clients.Acme = new AcmeProtocolClient(Clients.Http, acct: acct, signer: signer);
                 SetTestContext(); // To update the ACME client's Before/After hooks
                 await InitDirectoryAndNonce();
 
