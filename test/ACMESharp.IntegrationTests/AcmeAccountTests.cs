@@ -48,7 +48,7 @@ namespace ACMESharp.IntegrationTests
             {
                 BaseAddress = Clients.BaseAddress
             };
-            Clients.Acme = new AcmeProtocolClient(Clients.Http);
+            Clients.Acme = new AcmeProtocolClient(Clients.Http, new Crypto.JOSE.JwsTool("EC256"));
         }
 
         [Fact]

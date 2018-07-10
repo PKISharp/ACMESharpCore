@@ -41,18 +41,18 @@ namespace ACMESharp.Protocol
 
         private ILogger _log;
 
-        public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
-                AccountDetails acct = null, JwsTool signer = null,
-                bool disposeHttpClient = false,
-                ILogger logger = null)
+        public AcmeProtocolClient(HttpClient http, JwsTool signer,
+            ServiceDirectory dir = null, AccountDetails acct = null,
+            bool disposeHttpClient = false,
+            ILogger logger = null)
         {
             Init(http, dir, acct, signer, logger);
             _disposeHttpClient = disposeHttpClient;
         }
 
-        public AcmeProtocolClient(Uri baseUri, ServiceDirectory dir = null,
-                AccountDetails acct = null, JwsTool signer = null,
-                ILogger logger = null)
+        public AcmeProtocolClient(Uri baseUri, JwsTool signer,
+            ServiceDirectory dir = null, AccountDetails acct = null,
+            ILogger logger = null)
         {
             var http = new HttpClient
             {

@@ -72,7 +72,7 @@ namespace ACMESharp.IntegrationTests
             {
                 Log.LogInformation("Durable Account data does not exist -- CREATING");
 
-                Clients.Acme = new AcmeProtocolClient(Clients.Http);
+                Clients.Acme = new AcmeProtocolClient(Clients.Http, new Crypto.JOSE.JwsTool("ES256"));
                 SetTestContext(); // To update the ACME client's Before/After hooks
                 await InitDirectoryAndNonce();
                 acct = await Clients.Acme.CreateAccountAsync(_contacts, true);
@@ -88,7 +88,7 @@ namespace ACMESharp.IntegrationTests
                 Log.LogInformation("Found existing persisted Account data -- LOADING");
 
                 var signer = new Crypto.JOSE.JwsTool(keys);
-                Clients.Acme = new AcmeProtocolClient(Clients.Http, acct: acct, signer: signer);
+                Clients.Acme = new AcmeProtocolClient(Clients.Http, signer: signer, acct: acct);
                 SetTestContext(); // To update the ACME client's Before/After hooks
                 await InitDirectoryAndNonce();
 
