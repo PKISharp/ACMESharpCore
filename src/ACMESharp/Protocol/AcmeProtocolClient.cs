@@ -41,7 +41,7 @@ namespace ACMESharp.Protocol
 
         private ILogger _log;
 
-        public AcmeProtocolClient(HttpClient http, JwsTool signer,
+        public AcmeProtocolClient(HttpClient http, JWSAlgorithm signer,
             ServiceDirectory dir = null, AccountDetails acct = null,
             bool disposeHttpClient = false,
             ILogger logger = null)
@@ -50,7 +50,7 @@ namespace ACMESharp.Protocol
             _disposeHttpClient = disposeHttpClient;
         }
 
-        public AcmeProtocolClient(Uri baseUri, JwsTool signer,
+        public AcmeProtocolClient(Uri baseUri, JWSAlgorithm signer,
             ServiceDirectory dir = null, AccountDetails acct = null,
             ILogger logger = null)
         {
@@ -63,7 +63,7 @@ namespace ACMESharp.Protocol
         }
 
         private void Init(HttpClient http, ServiceDirectory dir,
-                AccountDetails acct, JwsTool signer,
+                AccountDetails acct, JWSAlgorithm signer,
                 ILogger logger)
         {
             _http = http;
@@ -85,7 +85,7 @@ namespace ACMESharp.Protocol
         /// with a new set of keys will be constructed of type ES256
         /// (Elliptic Curve using the P-256 curve and a SHA256 hash).
         /// </remarks>
-        public JwsTool Signer { get; private set; }
+        public JWSAlgorithm Signer { get; private set; }
 
         public ServiceDirectory Directory { get; set; }
 
@@ -290,14 +290,14 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
         /// </remarks>
-        public async Task<AccountDetails> ChangeAccountKeyAsync(JwsTool newSigner,
+        public async Task<AccountDetails> ChangeAccountKeyAsync(JWSAlgorithm newSigner,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.KeyChange);
             var message = new KeyChangeRequest
             {
                 Account = Account.Kid,
-                NewKey = newSigner.ExportJwk(),
+                NewKey = newSigner.ExportPublicJwk(),
             };
             var innerPayload = ComputeAcmeSigned(message, requUrl.ToString(),
                     signer: newSigner, includePublicKey: true, excludeNonce: true);
@@ -838,7 +838,7 @@ namespace ACMESharp.Protocol
         /// and the current or input <see cref="Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
-            JwsTool signer = null,
+            JWSAlgorithm signer = null,
             bool includePublicKey = false,
             bool excludeNonce = false)
         {
@@ -854,7 +854,7 @@ namespace ACMESharp.Protocol
                 protectedHeader["nonce"] = NextNonce;
 
             if (includePublicKey)
-                protectedHeader["jwk"] = signer.ExportJwk();
+                protectedHeader["jwk"] = signer.ExportPublicJwk();
             else
                 protectedHeader["kid"] = Account.Kid;
 
