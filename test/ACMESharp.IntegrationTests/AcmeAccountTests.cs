@@ -48,7 +48,7 @@ namespace ACMESharp.IntegrationTests
             {
                 BaseAddress = Clients.BaseAddress
             };
-            Clients.Acme = new AcmeProtocolClient(Clients.Http);
+            Clients.Acme = new AcmeProtocolClient(Clients.Http, new Crypto.JOSE.JWSAlgorithm("EC256"));
         }
 
         [Fact]
@@ -141,8 +141,7 @@ namespace ACMESharp.IntegrationTests
         {
             var testCtx = SetTestContext();
 
-            var newKey = new Crypto.JOSE.Impl.RSJwsTool();
-            newKey.Init();
+            var newKey = new Crypto.JOSE.JWSAlgorithm("RS384");
 
             var acct = await Clients.Acme.ChangeAccountKeyAsync(newKey);
             testCtx.SaveObject("acct-keychanged.json", acct);

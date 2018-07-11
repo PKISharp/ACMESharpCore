@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -8,17 +8,18 @@ namespace ACMESharp.Crypto.JOSE.Impl
     /// JWS Signing tool implements RS-family of algorithms as per
     /// http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms-00.html#SigAlgTable
     /// </summary>
-    public class RSJwsTool : IJwsTool
+    internal class RSJwsSigner : IJwsSigner
     {
         private HashAlgorithm _sha;
         private RSACryptoServiceProvider _rsa;
+
         private object _jwk;
 
         /// <summary>
         /// Specifies the size in bits of the SHA-2 hash function to use.
         /// Supported values are 256, 384 and 512.
         /// </summary>
-        public int HashSize { get; set; } = 256;
+        private int HashSize { get; set; }
 
         /// <summary>
         /// Specifies the size in bits of the RSA key to use.
@@ -29,8 +30,10 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
         public string JwsAlg => $"RS{HashSize}";
 
-        public void Init()
+        public RSJwsSigner(int hashSize)
         {
+            HashSize = hashSize;
+
             switch (HashSize)
             {
                 case 256:
@@ -60,7 +63,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _sha = null;
         }
 
-        public string Export()
+        public string ExportPrivateJwk()
         {
             return _rsa.ToXmlString(true);
         }
@@ -69,28 +72,10 @@ namespace ACMESharp.Crypto.JOSE.Impl
         {
             _rsa.FromXmlString(exported);
         }
+        
 
-        // public void Save(Stream stream)
-        // {
-        //     using (var w = new StreamWriter(stream))
-        //     {
-        //         w.Write(_rsa.ToXmlString(true));
-        //     }
-        // }
-
-        // public void Load(Stream stream)
-        // {
-        //     using (var r = new StreamReader(stream))
-        //     {
-        //         _rsa.FromXmlString(r.ReadToEnd());
-        //     }
-        // }
-
-        public object ExportJwk(bool canonical = false)
+        public object ExportPublicJwk()
         {
-            // Note, we only produce a canonical form of the JWK
-            // for export therefore we ignore the canonical param
-
             if (_jwk == null)
             {
                 var keyParams = _rsa.ExportParameters(false);

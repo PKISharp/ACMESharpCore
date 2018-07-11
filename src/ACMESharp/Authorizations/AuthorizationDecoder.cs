@@ -14,7 +14,7 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8
         /// </remarks>
         public static IChallengeValidationDetails DecodeChallengeValidation(
-                Authorization authz, string challengeType, IJwsTool signer)
+                Authorization authz, string challengeType, JWSAlgorithm signer)
         {
             var challenge = authz.Challenges.Where(x => x.Type == challengeType)
                     .FirstOrDefault();
@@ -42,7 +42,7 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.4
         /// </remarks>
         public static Dns01ChallengeValidationDetails ResolveChallengeForDns01(
-                Authorization authz, Challenge challenge, IJwsTool signer)
+                Authorization authz, Challenge challenge, JWSAlgorithm signer)
         {
             var keyAuthzDigested = JwsHelper.ComputeKeyAuthorizationDigest(
                     signer, challenge.Token);
@@ -62,7 +62,7 @@ namespace ACMESharp.Authorizations
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-8.3
         /// </remarks>
         public static Http01ChallengeValidationDetails ResolveChallengeForHttp01(
-                Authorization authz, Challenge challenge, IJwsTool signer)
+                Authorization authz, Challenge challenge, JWSAlgorithm signer)
         {
             var keyAuthz = JwsHelper.ComputeKeyAuthorization(
                     signer, challenge.Token);
