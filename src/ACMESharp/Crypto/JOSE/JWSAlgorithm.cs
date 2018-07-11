@@ -58,6 +58,12 @@ namespace ACMESharp.Crypto.JOSE
             return _jwsTool.ExportPublicJwk();
         }
 
+        public byte[] Sign(string raw)
+        {
+            // For Base64 Strings, UTF8 and ASCII will yield the same results, so we can safely use UTF8
+            return Sign(System.Text.Encoding.UTF8.GetBytes(raw));
+        }
+
         public byte[] Sign(byte[] raw)
         {
             return _jwsTool.Sign(raw);
