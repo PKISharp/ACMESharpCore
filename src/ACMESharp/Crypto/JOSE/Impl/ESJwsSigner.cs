@@ -9,48 +9,49 @@ namespace ACMESharp.Crypto.JOSE.Impl
     /// JWS Signing tool implements ES-family of algorithms as per
     /// http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms-00.html#SigAlgTable
     /// </summary>
-    public class ESJwsTool : IJwsTool
+    internal class ESJwsSigner : IJwsSigner
     {
         private HashAlgorithmName _shaName;
         private ECDsa _dsa;
+
         private object _jwk;
 
         /// <summary>
         /// Specifies the size in bits of the SHA-2 hash function to use.
         /// Supported values are 256, 384 and 512.
         /// </summary>
-        public int HashSize { get; set; } = 256;
+        private int HashSize { get; set; }
 
         /// <summary>
         /// Specifies the elliptic curve to use.
         /// </summary>
         /// <returns></returns>
-        public ECCurve Curve { get; private set; }
+        private ECCurve Curve { get;  set; }
+
         /// <summary>
         /// As per:  https://tools.ietf.org/html/rfc7518#section-6.2.1.1
         /// </summary>
-        public string CurveName { get; private set; }
+        public string CurveName => $"P-{HashSize}";
 
         public string JwsAlg => $"ES{HashSize}";
 
-        public void Init()
+        public ESJwsSigner(int hashSize)
         {
+            HashSize = hashSize;
+
             switch (HashSize)
             {
                 case 256:
                     _shaName = HashAlgorithmName.SHA256;
                     Curve = ECCurve.NamedCurves.nistP256;
-                    CurveName = "P-256";
                     break;
                 case 384:
                     _shaName = HashAlgorithmName.SHA384;
                     Curve = ECCurve.NamedCurves.nistP384;
-                    CurveName = "P-384";
                     break;
                 case 512:
                     _shaName = HashAlgorithmName.SHA512;
                     Curve = ECCurve.NamedCurves.nistP521;
-                    CurveName = "P-521";
                     break;
                 default:
                     throw new System.InvalidOperationException("illegal SHA2 hash size");
@@ -65,12 +66,11 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _dsa = null;
         }
 
-        public string Export()
+        public string ExportPrivateJwk()
         {
             var ecParams = _dsa.ExportParameters(true);
             var details = new ExportDetails
             {
-                HashSize = HashSize,
                 D = Convert.ToBase64String(ecParams.D),
                 X = Convert.ToBase64String(ecParams.Q.X),
                 Y = Convert.ToBase64String(ecParams.Q.Y),
@@ -83,8 +83,6 @@ namespace ACMESharp.Crypto.JOSE.Impl
             // TODO: this is inefficient and corner cases exist that will break this -- FIX THIS!!!
 
             var details = JsonConvert.DeserializeObject<ExportDetails>(exported);
-            HashSize = details.HashSize;
-            Init();
 
             var ecParams = _dsa.ExportParameters(true);
             ecParams.D = Convert.FromBase64String(details.D);
@@ -93,29 +91,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _dsa.ImportParameters(ecParams);
 
         }
-
-        // public void Save(Stream stream)
-        // {
-        //     using (var w = new StreamWriter(stream))
-        //     {
-        //         w.Write(_dsa.ToXmlString(true));
-        //     }
-        // }
-
-        // public void Load(Stream stream)
-        // {
-        //     using (var r = new StreamReader(stream))
-        //     {
-        //         _dsa.FromXmlString(r.ReadToEnd());
-        //     }
-        // }
-
-
-        public object ExportJwk(bool canonical = false)
+        
+        public object ExportPublicJwk()
         {
-            // Note, we only produce a canonical form of the JWK
-            // for export therefore we ignore the canonical param
-
             if (_jwk == null)
             {
                 var keyParams = _dsa.ExportParameters(false);
@@ -133,16 +111,14 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
             return _jwk;
         }
-
+        
         public byte[] Sign(byte[] raw)
         {
             return _dsa.SignData(raw, _shaName);
         }
-
+        
         class ExportDetails
         {
-            public int HashSize { get; set; }
-
             public string D { get; set; }
 
             public string X { get; set; }

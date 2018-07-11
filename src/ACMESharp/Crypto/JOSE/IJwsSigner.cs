@@ -7,18 +7,16 @@ namespace ACMESharp.Crypto.JOSE
     /// Defines the interface for a tool that provides the required
     /// JOSE Web Signature (JWS) functions as used by the ACME protocol.
     /// </summary>
-    public interface IJwsTool : IDisposable
+    public interface IJwsSigner : IDisposable
     {
         string JwsAlg
         { get; }
 
-        void Init();
+        string ExportPrivateJwk();
 
-        string Export();
+        void Import(string privateJwk);
 
-        void Import(string exported);
-
-        object ExportJwk(bool canonical = false);
+        object ExportPublicJwk();
 
         byte[] Sign(byte[] raw);
     }
