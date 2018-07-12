@@ -52,6 +52,10 @@ namespace ACMECLI
                 ShortName = "", Description = "One or more DNS names to include in the cert; the first is primary subject name, subsequent are subject alternative names (can be repeated)")]
         public IEnumerable<string> Dns { get; }
 
+        [Option(CommandOptionType.MultipleValue,
+                ShortName = "", Description = "One or more DNS name servers to be used to resolve host entries, such as during testing (can be repeated)")]
+        public IEnumerable<string> NameServer { get; }
+
         [Option(ShortName = "", Description = "Flag indicates to refresh the state of pending ACME Order")]
         public bool RefreshOrder { get; }
 
@@ -149,6 +153,11 @@ namespace ACMECLI
             {
                 Console.WriteLine("Loaded existing Service Directory");
                 Console.WriteLine();
+            }
+
+            if (NameServer != null)
+            {
+                DnsUtil.DnsServers = NameServer.ToArray();
             }
 
             AccountDetails account = default;
@@ -455,6 +464,12 @@ namespace ACMECLI
                     order = await _acme.FinalizeOrderAsync(order.Payload.Finalize, certCsr);
                     SaveStateFrom(order, Constants.AcmeOrderDetailsFileFmt, orderId);
                 }
+                else
+                {
+                    // Since we haven't been asked to Finalize and we were most recently
+                    // still in PENDING state, we should end at this point to give it time
+                    return;
+                }
             }
             
             if (order.Payload.Status == Constants.ValidStatus)
@@ -538,7 +553,7 @@ namespace ACMECLI
             Challenge chlng, IChallengeValidationDetails cd)
         {
             var dnsCd = (Dns01ChallengeValidationDetails)cd;
-            var dnsCdValue = $"\"{dnsCd.DnsRecordValue}\"";
+            var dnsCdValue = dnsCd.DnsRecordValue;
             Console.WriteLine($"  Challenge of Type: [{dnsCd.ChallengeType}]");
             Console.WriteLine($"    To handle this Challenge, create a DNS record with these details:");
             Console.WriteLine($"        DNS Record Name.....: {dnsCd.DnsRecordName}");
@@ -557,14 +572,15 @@ namespace ACMECLI
                 while (true)
                 {
                     string err = null;
-                    var dnsValues = await DnsUtil.LookupRecordAsync(dnsCd.DnsRecordType, dnsCd.DnsRecordName);
+                    var dnsValues = (await DnsUtil.LookupRecordAsync(dnsCd.DnsRecordType, dnsCd.DnsRecordName)).Select(x => x.Trim('"'));
                     if (dnsValues == null)
                     {
                         err = "Could not resolve *any* DNS entries for Challenge record name";
                     }
                     else if (!dnsValues.Contains(dnsCdValue))
                     {
-                        err = "DNS entry does not match expected value for Challenge record name";
+                        var dnsValuesFlattened = string.Join(",", dnsValues);
+                        err = $"DNS entry does not match expected value for Challenge record name ({dnsCdValue} not in {dnsValuesFlattened})";
                     }
                     else
                     {
