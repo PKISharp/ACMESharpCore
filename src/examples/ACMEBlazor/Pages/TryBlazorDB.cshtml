@@ -1,0 +1,62 @@
+@page "/tryblazordb"
+
+@inject Context Context
+
+<h1>Try BlazorDB</h1>
+
+<p><textarea rows="5" cols="80" readonly="readonly" bind="@_accountList"></textarea></p>
+
+@*<p>Current count: @currentCount</p>*@
+
+<button class="btn btn-primary" onclick="@ListAccounts">List Accounts</button>
+<button class="btn btn-primary" onclick="@CreateAccount">Create Account</button>
+<button class="btn btn-primary" onclick="@CreateAccount">Create Account</button>
+
+@functions
+{
+    //int currentCount = 0;
+
+    string _accountList;
+
+    void ListAccounts()
+    {
+        var l = "";
+        foreach (var acct in Context.Accounts)
+        {
+            l += $"{acct.Id}:{acct.Details.Kid}:{string.Join(",", acct.Details.Payload.Contact)}\r\n";
+        }
+        _accountList = l;
+    }
+
+    void CreateAccount()
+    {
+        var acct = new BlazorAccount
+        {
+            Details = new AccountDetails
+            {
+                Kid = Guid.NewGuid().ToString(), //"https://acme-staging-v02.api.letsencrypt.org/acme/acct/6440557",
+                TosLink = "https://www.google.com/",
+                Payload = new ACMESharp.Protocol.Resources.Account
+                {
+                    Id = "6440557",
+                    Contact = new[]
+                {
+                    "mailto:john.doe@mailinator.com",
+                    "mailto:jane.doe@mailinator.com",
+                },
+                    Status = "StillGoing!",
+                    Key = new
+                    {
+                        kty = "EC",
+                        crv = "P-256",
+                        x = "4yLZoZQdYHrypdiZudPDL649wBDmR4YjG2DHxX7MZEU",
+                        y = "rUvtY-AnB4eihRyFaqwwbDGM6ZNtVjFuepPweFuDp3c",
+                    },
+                },
+            },
+        };
+
+        Context.Accounts.Add(acct);
+        Context.SaveChanges();
+    }
+}

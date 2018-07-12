@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,6 +12,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="BlazorDB" Version="0.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
@@ -25,6 +26,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ACMESharp\ACMESharp.csproj" />
     <ProjectReference Include="..\..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\TryBlazorDB.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>

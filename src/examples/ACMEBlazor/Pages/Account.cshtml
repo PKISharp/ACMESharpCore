@@ -1,7 +1,11 @@
 @page "/account"
+
 @using Newtonsoft.Json;
 @using PKISharp.SimplePKI;
+@using ACMEBlazor.Services;
+
 @inject HttpClient http
+@inject IRepository repo
 
 <h1>ACME Account</h1>
 

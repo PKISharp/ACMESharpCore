@@ -1,4 +1,6 @@
+using ACMEBlazor.Services;
 using ACMESharp.Protocol;
+using BlazorDB;
 using Microsoft.AspNetCore.Blazor.Browser.Rendering;
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,12 @@ namespace ACMEBlazor
             var serviceProvider = new BrowserServiceProvider(services =>
             {
                 //services.AddSingleton(new AcmeProtocolClient(new Uri(LetsEncryptV2StagingEndpoint)));
+                services.AddSingleton<IRepository>(new Repository());
+                services.AddBlazorDB(options =>
+                {
+                    options.LogDebug = true;
+                    options.Assembly = typeof(Program).Assembly;
+                });
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
