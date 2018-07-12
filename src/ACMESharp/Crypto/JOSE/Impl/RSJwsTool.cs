@@ -112,5 +112,10 @@ namespace ACMESharp.Crypto.JOSE.Impl
         {
             return _rsa.SignData(raw, _sha);
         }
+
+        public bool Verify(byte[] raw, byte[] sig)
+        {
+            return _rsa.VerifyData(raw, _sha, sig);
+        }
     }
 }
