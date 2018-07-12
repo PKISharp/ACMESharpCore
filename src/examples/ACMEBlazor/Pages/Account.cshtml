@@ -1,0 +1,80 @@
+@page "/account"
+@using Newtonsoft.Json;
+@using PKISharp.SimplePKI;
+@inject HttpClient http
+
+<h1>ACME Account</h1>
+
+<p>TOS URL: @_tosUrl</p>
+<p>
+    <button class="btn btn-primary" onclick="@(async () => await GetTermsOfService())">Get TOS</button>
+</p>
+
+<div>
+    <p>Contacts: <textarea cols="80" rows="5" bind="@_contacts"></textarea></p>
+    <p>Agree ToS: <input type="checkbox" bind="@_agreeTos" /></p>
+    <p>Private Key: <textarea cols="80" rows="5" readonly="readonly" bind="@_pkey"></textarea></p>
+    <p>
+        <button class="btn btn-primary" onclick="@(async () => await CreateAccount())">Create Account</button>
+    </p>
+</div>
+@functions {
+    string _tosUrl;
+    string _pkey;
+    string _contacts;
+    bool _agreeTos;
+
+    async Task GetTermsOfService()
+    {
+        _tosUrl = "Pending...";
+
+        var signer = new ACMESharp.Crypto.JOSE.Impl.RSJwsTool();
+
+        var acmeUrl = new Uri(Program.LetsEncryptV2StagingEndpoint);
+        http.BaseAddress = acmeUrl;
+
+        _tosUrl = "getting from: " + acmeUrl;
+
+        using (var acme = new AcmeProtocolClient(http, signer: signer))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            Console.WriteLine("Got Directory: " + dir);
+            _tosUrl = "TOS: " + dir.Meta?.TermsOfService;
+        }
+    }
+
+    async Task CreateAccount()
+    {
+        //var signer = new ACMESharp.Crypto.JOSE.Impl.RSJwsTool();
+        var signer = new PkiJwsTool(256);
+        signer.Init();
+        var acmeUrl = new Uri(Program.LetsEncryptV2StagingEndpoint);
+        http.BaseAddress = acmeUrl;
+
+        var ecKeys = PkiKeyPair.GenerateEcdsaKeyPair(256);
+        var ecPrvKey = ecKeys.PrivateKey.Export(PkiEncodingFormat.Pem);
+        var ecPubKey = ecKeys.PublicKey.Export(PkiEncodingFormat.Pem);
+
+        _pkey = "getting from: " + acmeUrl
+            + "\r\necPrv: " + Convert.ToBase64String(ecPrvKey)
+            + "\r\necPub: " + Convert.ToBase64String(ecPubKey)
+            ;
+
+
+        using (var acme = new AcmeProtocolClient(http, signer: signer))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            acme.Directory = dir;
+
+            await acme.GetNonceAsync();
+
+            var lineSeps = "\r\n".ToCharArray();
+            var c = _contacts.Split(lineSeps, StringSplitOptions.RemoveEmptyEntries).Select(x => $"mailto:{x.Trim()}");
+            var acct = await acme.CreateAccountAsync(c, _agreeTos);
+            var acctStr = JsonConvert.SerializeObject(acct, Formatting.Indented);
+
+            Console.WriteLine("Got Account: " + acctStr);
+            _pkey = acctStr;
+        }
+    }
+}

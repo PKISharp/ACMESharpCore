@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMECLI", "ACMECLI\ACMECLI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMEKestrel", "ACMEKestrel\ACMEKestrel.csproj", "{D4C1D60E-F4F4-4378-959E-3DC072E4B660}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKISharp.SimplePKI", "..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{C68522D5-864D-4EF8-915A-87DA1E36F665}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{D4C1D60E-F4F4-4378-959E-3DC072E4B660}.Release|x64.Build.0 = Release|Any CPU
 		{D4C1D60E-F4F4-4378-959E-3DC072E4B660}.Release|x86.ActiveCfg = Release|Any CPU
 		{D4C1D60E-F4F4-4378-959E-3DC072E4B660}.Release|x86.Build.0 = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|x64.Build.0 = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Debug|x86.Build.0 = Debug|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|x64.ActiveCfg = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|x64.Build.0 = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|x86.ActiveCfg = Release|Any CPU
+		{C68522D5-864D-4EF8-915A-87DA1E36F665}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
