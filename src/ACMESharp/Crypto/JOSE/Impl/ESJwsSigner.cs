@@ -1,6 +1,7 @@
 using System;
-using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE.Impl
@@ -9,114 +10,108 @@ namespace ACMESharp.Crypto.JOSE.Impl
     /// JWS Signing tool implements ES-family of algorithms as per
     /// http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms-00.html#SigAlgTable
     /// </summary>
-    internal class ESJwsSigner : IJwsSigner
+    internal class ESJwsSigner : JwsAlgorithm
     {
-        private HashAlgorithmName _shaName;
-        private ECDsa _dsa;
+        private HashAlgorithmName _hashName;
+        private ECDsa _algorithm;
 
-        private object _jwk;
-
-        /// <summary>
-        /// Specifies the size in bits of the SHA-2 hash function to use.
-        /// Supported values are 256, 384 and 512.
-        /// </summary>
-        private int HashSize { get; set; }
-
-        /// <summary>
-        /// Specifies the elliptic curve to use.
-        /// </summary>
-        /// <returns></returns>
-        private ECCurve Curve { get;  set; }
+        private static int[] ValidHashSizes = new[] { 256, 374, 512 };
 
         /// <summary>
         /// As per:  https://tools.ietf.org/html/rfc7518#section-6.2.1.1
         /// </summary>
-        public string CurveName => $"P-{HashSize}";
-
-        public string JwsAlg => $"ES{HashSize}";
-
-        public ESJwsSigner(int hashSize)
+        private string CurveName { get; }
+        
+        public ESJwsSigner(string algorithmIdentifier)
         {
-            HashSize = hashSize;
+            if (!IsValidIdentifier(algorithmIdentifier))
+                throw new ArgumentException("Algorithm name is not valid for this JwsSigner", nameof(algorithmIdentifier));
 
-            switch (HashSize)
+            var hashSize = ParseAlgorithmIdentifier(algorithmIdentifier);
+
+            AlgorithmIdentifier = algorithmIdentifier;
+            JwsAlg = $"ES{hashSize}";
+            CurveName = $"P-{hashSize}";
+
+            ECCurve curve;
+            switch (hashSize)
             {
                 case 256:
-                    _shaName = HashAlgorithmName.SHA256;
-                    Curve = ECCurve.NamedCurves.nistP256;
+                    _hashName = HashAlgorithmName.SHA256;
+                    curve = ECCurve.NamedCurves.nistP256;
                     break;
                 case 384:
-                    _shaName = HashAlgorithmName.SHA384;
-                    Curve = ECCurve.NamedCurves.nistP384;
+                    _hashName = HashAlgorithmName.SHA384;
+                    curve = ECCurve.NamedCurves.nistP384;
                     break;
                 case 512:
-                    _shaName = HashAlgorithmName.SHA512;
-                    Curve = ECCurve.NamedCurves.nistP521;
+                    _hashName = HashAlgorithmName.SHA512;
+                    curve = ECCurve.NamedCurves.nistP521;
                     break;
                 default:
-                    throw new System.InvalidOperationException("illegal SHA2 hash size");
+                    //Should never appear.
+                    throw new InvalidOperationException("illegal SHA2 hash size");
             }
 
-            _dsa = ECDsa.Create(Curve);
+            _algorithm = ECDsa.Create(curve);
         }
 
-        public void Dispose()
+        protected override byte[] SignInternal(byte[] input)
         {
-            _dsa?.Dispose();
-            _dsa = null;
+            return _algorithm.SignData(input, _hashName);
         }
 
-        public string ExportAlgorithm()
+        public override object ExportPublicJwk()
         {
-            var ecParams = _dsa.ExportParameters(true);
+            var keyParams = _algorithm.ExportParameters(false);
+            return new
+            {
+                // As per RFC 7638 Section 3, these are the *required* elements of the
+                // JWK and are sorted in lexicographic order to produce a canonical form
+
+                crv = CurveName,
+                kty = "EC", // https://tools.ietf.org/html/rfc7518#section-6.2
+                x = CryptoHelper.Base64.UrlEncode(keyParams.Q.X),
+                y = CryptoHelper.Base64.UrlEncode(keyParams.Q.Y),
+            };
+        }
+
+
+        protected override string ExportInternal()
+        {
+            var ecParams = _algorithm.ExportParameters(true);
             var details = new ExportDetails
             {
                 D = Convert.ToBase64String(ecParams.D),
                 X = Convert.ToBase64String(ecParams.Q.X),
                 Y = Convert.ToBase64String(ecParams.Q.Y),
             };
+
             return JsonConvert.SerializeObject(details);
         }
 
-        public void Import(string exported)
+        protected override void ImportInternal(string exported)
         {
             // TODO: this is inefficient and corner cases exist that will break this -- FIX THIS!!!
-
             var details = JsonConvert.DeserializeObject<ExportDetails>(exported);
 
-            var ecParams = _dsa.ExportParameters(true);
+            var ecParams = _algorithm.ExportParameters(true);
             ecParams.D = Convert.FromBase64String(details.D);
             ecParams.Q.X = Convert.FromBase64String(details.X);
             ecParams.Q.Y = Convert.FromBase64String(details.Y);
-            _dsa.ImportParameters(ecParams);
-
+            _algorithm.ImportParameters(ecParams);
         }
-        
-        public object ExportPublicJwk()
+
+        protected override bool IsValidIdentifier(string algorithmIdentifier) => IsValidName(algorithmIdentifier);
+
+
+        public override void Dispose()
         {
-            if (_jwk == null)
-            {
-                var keyParams = _dsa.ExportParameters(false);
-                _jwk = new
-                {
-                    // As per RFC 7638 Section 3, these are the *required* elements of the
-                    // JWK and are sorted in lexicographic order to produce a canonical form
-
-                    crv = CurveName,
-                    kty = "EC", // https://tools.ietf.org/html/rfc7518#section-6.2
-                    x = CryptoHelper.Base64.UrlEncode(keyParams.Q.X),
-                    y = CryptoHelper.Base64.UrlEncode(keyParams.Q.Y),
-                };
-            }
-
-            return _jwk;
+            _algorithm?.Dispose();
+            _algorithm = null;
         }
-        
-        public byte[] Sign(byte[] raw)
-        {
-            return _dsa.SignData(raw, _shaName);
-        }
-        
+
+
         class ExportDetails
         {
             public string D { get; set; }
@@ -124,6 +119,36 @@ namespace ACMESharp.Crypto.JOSE.Impl
             public string X { get; set; }
 
             public string Y { get; set; }
+        }
+
+        private static Regex ValidNameRegex = new Regex("^ES(?'hashSize'\\d{3})$", RegexOptions.Compiled);
+
+        public static bool IsValidName(string algorithmName)
+        {
+            try
+            {
+                ParseAlgorithmIdentifier(algorithmName);
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+        
+        private static int ParseAlgorithmIdentifier(string algorithmIdentifier)
+        {
+            var match = ValidNameRegex.Match(algorithmIdentifier);
+            if (!match.Success)
+                throw new ArgumentException($"Could not parse algorithm identifier. It needs to match the following Regex: \"{ValidNameRegex}\"", nameof(algorithmIdentifier));
+
+            var hashSize = int.Parse(match.Groups["hashSize"].Value);
+
+            if (!ValidHashSizes.Contains(hashSize))
+                throw new ArgumentOutOfRangeException($"HashSize needs to be one of {string.Join(", ", ValidHashSizes)}", nameof(hashSize));
+            
+            return hashSize;
         }
     }
 }

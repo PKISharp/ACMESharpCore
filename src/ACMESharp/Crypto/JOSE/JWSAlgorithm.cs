@@ -1,72 +1,146 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using ACMESharp.Crypto.JOSE.Impl;
 
 namespace ACMESharp.Crypto.JOSE
 {
-    public class JwsAlgorithm
+    public class JwsAlgorithmFactory
     {
-        private IJwsSigner _jwsTool;
-
-        public JwsAlgorithm(string jwsAlgorithm)
+        public class JwsAlgorithmCreator
         {
-            if (!int.TryParse(jwsAlgorithm.Substring(2), out int size))
-                throw new ArgumentException("Could not parse Key or Hash size", nameof(jwsAlgorithm));
-
-            if (jwsAlgorithm.StartsWith("ES"))
+            public Predicate<string> AlgorithmNamePredicate { get; }
+            public Func<string, JwsAlgorithm> CreatorFunction { get; }
+            
+            public JwsAlgorithmCreator(Predicate<string> algorithmNamePredicate, Func<string, JwsAlgorithm> creatorFunction)
             {
-                var tool = new Impl.ESJwsSigner(size);
+                AlgorithmNamePredicate = algorithmNamePredicate 
+                    ?? throw new ArgumentNullException(nameof(algorithmNamePredicate));
 
-                _jwsTool = tool;
+                CreatorFunction = creatorFunction 
+                    ?? throw new ArgumentNullException(nameof(creatorFunction));
             }
-
-            if (jwsAlgorithm.StartsWith("RS"))
-            {
-                var tool = new Impl.RSJwsSigner(size);
-
-                _jwsTool = tool;
-            }
-
-            if (_jwsTool == null)
-                throw new InvalidOperationException("Unknown JwsAlgorithm");
         }
 
-        public JwsAlgorithm(JwsAlgorithmExport exported)
-            :this(exported.Algorithm)
-        {
-            _jwsTool.Import(exported.Export);
-        }
+        public List<JwsAlgorithmCreator> Creators { get; private set; }
 
-        public string JwsAlg => _jwsTool.JwsAlg;
+        public JwsAlgorithmFactory()
+        {
+            Creators = new List<JwsAlgorithmCreator>();
+
+            AddJwsAlgorithm(ESJwsSigner.IsValidName, alg => new ESJwsSigner(alg));
+            AddJwsAlgorithm(RSJwsSigner.IsValidName, alg => new RSJwsSigner(alg));
+        }
         
-        public void Dispose()
+        public void AddJwsAlgorithm(Predicate<string> algorithmNameMatch, Func<string, JwsAlgorithm> creatorFunction)
         {
-            _jwsTool.Dispose();
+            Creators.Add(new JwsAlgorithmCreator(algorithmNameMatch, creatorFunction));
         }
+
+        public JwsAlgorithm Create(string algorithmImplementationName)
+        {
+            var creator = Creators
+                .Where(c => c.AlgorithmNamePredicate(algorithmImplementationName))
+                .Select(c => c.CreatorFunction)
+                .Single();
+
+            return creator(algorithmImplementationName);
+        }
+
+        public JwsAlgorithm Create(JwsAlgorithmExport jwsAlgorithmExport)
+        {
+            var jwsAlgorithm = Create(jwsAlgorithmExport);
+            jwsAlgorithm.Import(jwsAlgorithmExport);
+
+            return jwsAlgorithm;
+        }
+    }
+
+    public abstract class JwsAlgorithm : IDisposable
+    {
+        /// <summary>
+        /// Returns the Algorithm Identifier used by ACMESharp.
+        /// </summary>
+        protected string AlgorithmIdentifier { get; set; }
+
+        /// <summary>
+        /// Verifies, that the current instance is able to handel the ACMESharp Algorithm Identifier
+        /// </summary>
+        /// <param name="algorithmIdentifier">The algorithm identifier to validate.</param>
+        /// <returns>True, if the instance is able to handle the identifier, otherwise false.</returns>
+        protected abstract bool IsValidIdentifier(string algorithmIdentifier);
+
+        /// <summary>
+        /// Does the actual signing of the input.
+        /// </summary>
+        /// <param name="input">The input bytes to be signed.</param>
+        /// <returns>The JWS signature.</returns>
+        protected abstract byte[] SignInternal(byte[] input);
+
+        /// <summary>
+        /// Exports the public JWK in canoncial form as defined in RFC.
+        /// </summary>
+        /// <returns>An object containing the canical form of the public JWK</returns>
+        public abstract object ExportPublicJwk();
+
+        /// <summary>
+        /// Exports everything neccessary, to restore the algorithms keys and other needed values.
+        /// This serializes the export to string.
+        /// </summary>
+        /// <returns>String serialized export of algorithm values, like public/private keys.</returns>
+        protected abstract string ExportInternal();
+
+        /// <summary>
+        /// Imports the algorithm settings from its string serialized form.
+        /// </summary>
+        /// <param name="exported">The string serialized form generated via ExportInternal()</param>
+        protected abstract void ImportInternal(string exported);
+        
+        /// <summary>
+        /// The JWS-conform name of the algorithm.
+        /// </summary>
+        public string JwsAlg { get; protected set; }
+        
 
         public JwsAlgorithmExport Export()
         {
             var export = new JwsAlgorithmExport
             {
-                Algorithm = _jwsTool.JwsAlg,
-                Export = _jwsTool.ExportAlgorithm()
+                AlgorithmIdentifier = AlgorithmIdentifier,
+                Export = ExportInternal()
             };
             
             return export;
         }
 
-        public object ExportPublicJwk()
+        public void Import(JwsAlgorithmExport exported)
         {
-            return _jwsTool.ExportPublicJwk();
+            if (!IsValidIdentifier(exported.AlgorithmIdentifier))
+                throw new InvalidOperationException("The AlgorithmIdentifier is not valid for this jwsAlgorithm");
+
+            ImportInternal(exported.Export);
+        }
+        
+        /// <summary>
+        /// Gets the bytes of the inputs UTF8 representation and JWS-Signs it.
+        /// </summary>
+        /// <param name="inputText">The text to be signed</param>
+        /// <returns>The JWS signature as byte-array</returns>
+        public byte[] Sign(string inputText)
+        {
+            return SignInternal(System.Text.Encoding.UTF8.GetBytes(inputText));
         }
 
-        public byte[] Sign(string raw)
+        /// <summary>
+        /// JWS-Signs the input.
+        /// </summary>
+        /// <param name="input">The byte array to be signed</param>
+        /// <returns>The JWS signature as byte array</returns>
+        public byte[] Sign(byte[] input)
         {
-            // For Base64 Strings, UTF8 and ASCII will yield the same results, so we can safely use UTF8
-            return Sign(System.Text.Encoding.UTF8.GetBytes(raw));
+            return SignInternal(input);
         }
 
-        public byte[] Sign(byte[] raw)
-        {
-            return _jwsTool.Sign(raw);
-        }
+        public abstract void Dispose();
     }
 }

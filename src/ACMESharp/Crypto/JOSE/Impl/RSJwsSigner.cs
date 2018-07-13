@@ -1,6 +1,7 @@
 using System;
-using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -8,94 +9,101 @@ namespace ACMESharp.Crypto.JOSE.Impl
     /// JWS Signing tool implements RS-family of algorithms as per
     /// http://self-issued.info/docs/draft-ietf-jose-json-web-algorithms-00.html#SigAlgTable
     /// </summary>
-    internal class RSJwsSigner : IJwsSigner
+    internal class RSJwsSigner : JwsAlgorithm
     {
-        private HashAlgorithm _sha;
-        private RSACryptoServiceProvider _rsa;
+        private HashAlgorithm _hashAlgorithm;
+        private RSACryptoServiceProvider _algorithm;
 
-        private object _jwk;
-
-        /// <summary>
-        /// Specifies the size in bits of the SHA-2 hash function to use.
-        /// Supported values are 256, 384 and 512.
-        /// </summary>
-        private int HashSize { get; set; }
-
-        /// <summary>
-        /// Specifies the size in bits of the RSA key to use.
-        /// Supports values in the range 2048 - 4096 inclusive.
-        /// </summary>
-        /// <returns></returns>
-        public int KeySize { get; set; } = 2048;
-
-        public string JwsAlg => $"RS{HashSize}";
-
-        public RSJwsSigner(int hashSize)
-        {
-            HashSize = hashSize;
-
-            switch (HashSize)
-            {
-                case 256:
-                    _sha = SHA256.Create();
-                    break;
-                case 384:
-                    _sha = SHA384.Create();
-                    break;
-                case 512:
-                    _sha = SHA512.Create();
-                    break;
-                default:
-                    throw new System.InvalidOperationException("illegal SHA2 hash size");
-            }
-
-            if (KeySize < 2048 || KeySize > 4096)
-                throw new InvalidOperationException("illegal RSA key bit length");
-
-            _rsa = new RSACryptoServiceProvider(KeySize);
-        }
-
-        public void Dispose()
-        {
-            _rsa?.Dispose();
-            _rsa = null;
-            _sha?.Dispose();
-            _sha = null;
-        }
-
-        public string ExportAlgorithm()
-        {
-            return _rsa.ToXmlString(true);
-        }
-
-        public void Import(string exported)
-        {
-            _rsa.FromXmlString(exported);
-        }
+        private static int[] ValidHashSizes = new[] { 256, 374, 512 };
         
-
-        public object ExportPublicJwk()
+        public RSJwsSigner(string algorithmIdentifier)
         {
-            if (_jwk == null)
-            {
-                var keyParams = _rsa.ExportParameters(false);
-                _jwk = new
-                {
-                    // As per RFC 7638 Section 3, these are the *required* elements of the
-                    // JWK and are sorted in lexicographic order to produce a canonical form
+            if (!IsValidIdentifier(algorithmIdentifier))
+                throw new ArgumentException("Algorithm identifier is not valid for this JwsSigner", nameof(algorithmIdentifier));
 
-                    e = CryptoHelper.Base64.UrlEncode(keyParams.Exponent),
-                    kty = "RSA", // https://tools.ietf.org/html/rfc7518#section-6.3
-                    n = CryptoHelper.Base64.UrlEncode(keyParams.Modulus),
-                };
-            }
+            var sizes = ParseAlgorithmIdentifier(algorithmIdentifier);
 
-            return _jwk;
+            AlgorithmIdentifier = algorithmIdentifier;
+            JwsAlg = $"RS{sizes.hashSize}";
+
+            _hashAlgorithm = HashAlgorithm.Create($"SHA{sizes.hashSize}");
+            _algorithm = new RSACryptoServiceProvider(sizes.keySize);
         }
 
-        public byte[] Sign(byte[] raw)
+        protected override byte[] SignInternal(byte[] input)
         {
-            return _rsa.SignData(raw, _sha);
+            return _algorithm.SignData(input, _hashAlgorithm);
+        }
+
+        public override object ExportPublicJwk()
+        {
+            var keyParams = _algorithm.ExportParameters(false);
+            return new
+            {
+                // As per RFC 7638 Section 3, these are the *required* elements of the
+                // JWK and are sorted in lexicographic order to produce a canonical form
+
+                e = CryptoHelper.Base64.UrlEncode(keyParams.Exponent),
+                kty = "RSA", // https://tools.ietf.org/html/rfc7518#section-6.3
+                n = CryptoHelper.Base64.UrlEncode(keyParams.Modulus),
+            };
+        }
+
+
+        protected override string ExportInternal()
+        {
+            return _algorithm.ToXmlString(true);
+        }
+
+        protected override void ImportInternal(string exported)
+        {
+            _algorithm.FromXmlString(exported);
+        }
+
+        protected override bool IsValidIdentifier(string algorithmIdentifier) => IsValidName(algorithmIdentifier);
+
+
+        public override void Dispose()
+        {
+            _algorithm?.Dispose();
+            _algorithm = null;
+
+            _hashAlgorithm?.Dispose();
+            _hashAlgorithm = null;
+        }
+
+        private static Regex ValidNameRegex = new Regex("^RS(?'hashSize'\\d{3})-(?'keySize'\\d{4})$", RegexOptions.Compiled);
+
+        public static bool IsValidName(string algorithmName)
+        {
+            try
+            {
+                ParseAlgorithmIdentifier(algorithmName);
+
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                return false;
+            }
+        }
+
+        private static (int hashSize, int keySize) ParseAlgorithmIdentifier(string algorithmIdentifier)
+        {
+            var match = ValidNameRegex.Match(algorithmIdentifier);
+            if (!match.Success)
+                throw new ArgumentException($"Could not parse algorithm identifier. It needs to match the following Regex: \"{ValidNameRegex}\"", nameof(algorithmIdentifier));
+
+            var hashSize = int.Parse(match.Groups["hashSize"].Value);
+            var keySize = int.Parse(match.Groups["keySize"].Value);
+
+            if (!ValidHashSizes.Contains(hashSize))
+                throw new ArgumentOutOfRangeException($"HashSize needs to be one of {string.Join(", ", ValidHashSizes)}", nameof(hashSize));
+
+            if(keySize >= 2048 && keySize <= 4096)
+                throw new ArgumentOutOfRangeException($"KeySize needs to be between 2048 and 4096", nameof(keySize));
+
+            return (hashSize, keySize);
         }
     }
 }
