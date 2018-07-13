@@ -32,7 +32,7 @@ namespace ACMESharp.Crypto.JOSE
         public JwsAlgorithm(JwsAlgorithmExport exported)
             :this(exported.Algorithm)
         {
-            _jwsTool.Import(exported.PrivateKey);
+            _jwsTool.Import(exported.Export);
         }
 
         public string JwsAlg => _jwsTool.JwsAlg;
@@ -47,7 +47,7 @@ namespace ACMESharp.Crypto.JOSE
             var export = new JwsAlgorithmExport
             {
                 Algorithm = _jwsTool.JwsAlg,
-                PrivateKey = _jwsTool.ExportPrivateJwk()
+                Export = _jwsTool.ExportAlgorithm()
             };
             
             return export;

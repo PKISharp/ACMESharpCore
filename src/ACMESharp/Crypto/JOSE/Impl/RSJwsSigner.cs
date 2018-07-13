@@ -63,7 +63,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _sha = null;
         }
 
-        public string ExportPrivateJwk()
+        public string ExportAlgorithm()
         {
             return _rsa.ToXmlString(true);
         }

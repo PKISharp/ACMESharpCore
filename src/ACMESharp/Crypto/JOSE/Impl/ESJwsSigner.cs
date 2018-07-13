@@ -66,7 +66,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _dsa = null;
         }
 
-        public string ExportPrivateJwk()
+        public string ExportAlgorithm()
         {
             var ecParams = _dsa.ExportParameters(true);
             var details = new ExportDetails

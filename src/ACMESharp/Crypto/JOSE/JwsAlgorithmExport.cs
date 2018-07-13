@@ -5,6 +5,6 @@ namespace ACMESharp.Crypto.JOSE
     {
         public string Algorithm { get; set; }
 
-        public string PrivateKey { get; set; }
+        public string Export { get; set; }
     }
 }

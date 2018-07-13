@@ -12,7 +12,7 @@ namespace ACMESharp.Crypto.JOSE
         string JwsAlg
         { get; }
 
-        string ExportPrivateJwk();
+        string ExportAlgorithm();
 
         void Import(string privateJwk);
 
