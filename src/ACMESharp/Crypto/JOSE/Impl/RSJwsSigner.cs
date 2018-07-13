@@ -100,8 +100,8 @@ namespace ACMESharp.Crypto.JOSE.Impl
             if (!ValidHashSizes.Contains(hashSize))
                 throw new ArgumentOutOfRangeException($"HashSize needs to be one of {string.Join(", ", ValidHashSizes)}", nameof(hashSize));
 
-            if(keySize >= 2048 && keySize <= 4096)
-                throw new ArgumentOutOfRangeException($"KeySize needs to be between 2048 and 4096", nameof(keySize));
+            if(keySize < 2048 && keySize > 4096 && keySize % 8 == 0)
+                throw new ArgumentOutOfRangeException($"KeySize needs to be between 2048 and 4096 and divisable by 8", nameof(keySize));
 
             return (hashSize, keySize);
         }

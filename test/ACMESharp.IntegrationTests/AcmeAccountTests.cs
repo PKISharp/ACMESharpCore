@@ -141,7 +141,7 @@ namespace ACMESharp.IntegrationTests
         {
             var testCtx = SetTestContext();
 
-            var newKey = new Crypto.JOSE.JwsAlgorithmFactory().Create("RS384");
+            var newKey = new Crypto.JOSE.JwsAlgorithmFactory().Create("RS384-2048");
 
             var acct = await Clients.Acme.ChangeAccountKeyAsync(newKey);
             testCtx.SaveObject("acct-keychanged.json", acct);
