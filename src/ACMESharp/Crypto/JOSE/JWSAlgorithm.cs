@@ -2,11 +2,11 @@ using System;
 
 namespace ACMESharp.Crypto.JOSE
 {
-    public class JWSAlgorithm
+    public class JwsAlgorithm
     {
         private IJwsSigner _jwsTool;
 
-        public JWSAlgorithm(string jwsAlgorithm)
+        public JwsAlgorithm(string jwsAlgorithm)
         {
             if (!int.TryParse(jwsAlgorithm.Substring(2), out int size))
                 throw new ArgumentException("Could not parse Key or Hash size", nameof(jwsAlgorithm));
@@ -29,7 +29,7 @@ namespace ACMESharp.Crypto.JOSE
                 throw new InvalidOperationException("Unknown JwsAlgorithm");
         }
 
-        public JWSAlgorithm(JwsAlgorithmExport exported)
+        public JwsAlgorithm(JwsAlgorithmExport exported)
             :this(exported.Algorithm)
         {
             _jwsTool.Import(exported.PrivateKey);

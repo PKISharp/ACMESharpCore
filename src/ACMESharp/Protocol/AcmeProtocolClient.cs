@@ -41,7 +41,7 @@ namespace ACMESharp.Protocol
 
         private ILogger _log;
 
-        public AcmeProtocolClient(HttpClient http, JWSAlgorithm signer,
+        public AcmeProtocolClient(HttpClient http, JwsAlgorithm signer,
             ServiceDirectory dir = null, AccountDetails acct = null,
             bool disposeHttpClient = false,
             ILogger logger = null)
@@ -50,7 +50,7 @@ namespace ACMESharp.Protocol
             _disposeHttpClient = disposeHttpClient;
         }
 
-        public AcmeProtocolClient(Uri baseUri, JWSAlgorithm signer,
+        public AcmeProtocolClient(Uri baseUri, JwsAlgorithm signer,
             ServiceDirectory dir = null, AccountDetails acct = null,
             ILogger logger = null)
         {
@@ -63,7 +63,7 @@ namespace ACMESharp.Protocol
         }
 
         private void Init(HttpClient http, ServiceDirectory dir,
-                AccountDetails acct, JWSAlgorithm signer,
+                AccountDetails acct, JwsAlgorithm signer,
                 ILogger logger)
         {
             _http = http;
@@ -85,7 +85,7 @@ namespace ACMESharp.Protocol
         /// with a new set of keys will be constructed of type ES256
         /// (Elliptic Curve using the P-256 curve and a SHA256 hash).
         /// </remarks>
-        public JWSAlgorithm Signer { get; private set; }
+        public JwsAlgorithm Signer { get; private set; }
 
         public ServiceDirectory Directory { get; set; }
 
@@ -290,7 +290,7 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
         /// </remarks>
-        public async Task<AccountDetails> ChangeAccountKeyAsync(JWSAlgorithm newSigner,
+        public async Task<AccountDetails> ChangeAccountKeyAsync(JwsAlgorithm newSigner,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Directory.KeyChange);
@@ -838,7 +838,7 @@ namespace ACMESharp.Protocol
         /// and the current or input <see cref="Signer"/>.
         /// </summary>
         protected string ComputeAcmeSigned(object message, string requUrl,
-            JWSAlgorithm signer = null,
+            JwsAlgorithm signer = null,
             bool includePublicKey = false,
             bool excludeNonce = false)
         {

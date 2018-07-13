@@ -99,7 +99,7 @@ namespace ACMESharp.Crypto.JOSE
         /// as per <see href="https://tools.ietf.org/html/rfc7638">RFC 7638</see>,
         /// JSON Web Key (JWK) Thumbprint.
         /// </summary>
-        public static byte[] ComputeThumbprint(JWSAlgorithm signer, HashAlgorithm algor)
+        public static byte[] ComputeThumbprint(JwsAlgorithm signer, HashAlgorithm algor)
         {
             // As per RFC 7638 Section 3, we export the JWK in a canonical form
             // and then produce a JSON object with no whitespace or line breaks
@@ -118,7 +118,7 @@ namespace ACMESharp.Crypto.JOSE
         /// <see href="https://tools.ietf.org/html/draft-ietf-acme-acme-01#section-7.1"
         /// >ACME specification, section 7.1</see>.
         /// </summary>
-        public static string ComputeKeyAuthorization(JWSAlgorithm signer, string token)
+        public static string ComputeKeyAuthorization(JwsAlgorithm signer, string token)
         {
             using (var sha = SHA256.Create())
             {
@@ -132,7 +132,7 @@ namespace ACMESharp.Crypto.JOSE
         /// >ACME Key Authorization</see> as required by some of the ACME Challenge
         /// responses.
         /// </summary>
-        public static string ComputeKeyAuthorizationDigest(JWSAlgorithm signer, string token)
+        public static string ComputeKeyAuthorizationDigest(JwsAlgorithm signer, string token)
         {
             using (var sha = SHA256.Create())
             {
