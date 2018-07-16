@@ -49,7 +49,7 @@ namespace ACMESharp.Crypto.JOSE
 
         public JwsAlgorithm Create(JwsAlgorithmExport jwsAlgorithmExport)
         {
-            var jwsAlgorithm = Create(jwsAlgorithmExport);
+            var jwsAlgorithm = Create(jwsAlgorithmExport.AlgorithmIdentifier);
             jwsAlgorithm.Import(jwsAlgorithmExport);
 
             return jwsAlgorithm;
