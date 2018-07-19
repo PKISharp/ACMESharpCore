@@ -18,26 +18,20 @@ namespace PKISharp.SimplePKI
     {
         private PkiKey _PublicKey;
         private PkiKey _PrivateKey;
-
         private Func<PkiKey, byte[], byte[]> _signer;
         private Func<PkiKey, byte[], byte[], bool> _verifier;
-
         private Func<PkiKeyPair, bool, object> _jwkExporter;
 
-        internal PkiKeyPair(AsymmetricCipherKeyPair nativeKeyPair,
-            PkiAsymmetricAlgorithm algorithm = PkiAsymmetricAlgorithm.Unknown,
-            Func<PkiKey, byte[], byte[]> signer = null,
-            Func<PkiKey, byte[], byte[], bool> verifier = null,
-            Func<PkiKeyPair, bool, object> jwkExporter = null)
+        internal PkiKeyPair(AsymmetricCipherKeyPair nativeKeyPair, PkiKeyPairParams kpParams)
         {
             NativeKeyPair = nativeKeyPair;
-            Algorithm = algorithm;
-            _signer = signer;
-            _verifier = verifier;
-            _jwkExporter = jwkExporter;
+            Parameters = kpParams;
+            Init();
         }
 
-        public PkiAsymmetricAlgorithm Algorithm { get; }
+        public PkiKeyPairParams Parameters { get; }
+
+        public PkiAsymmetricAlgorithm Algorithm => Parameters.Algorithm;
 
         public PkiKey PublicKey
         {
@@ -61,6 +55,46 @@ namespace PKISharp.SimplePKI
 
         internal AsymmetricCipherKeyPair NativeKeyPair { get; set; }
 
+        private void Init()
+        {
+            switch (Algorithm)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    // SHA + ECDSA algor selection based on:
+                    //    https://github.com/bcgit/bc-csharp/blob/master/crypto/src/security/SignerUtilities.cs
+                    var sigAlgor = $"SHA{Parameters.HashBits}WITHRSA";
+                    _signer = (pkey, data) => Sign(sigAlgor, pkey, data);
+                    _verifier = (pkey, data, sig) => Verify(sigAlgor, pkey, data, sig);
+                    _jwkExporter = (keys, prv) => ExportRsJwk(keys, prv);
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    // SHA + ECDSA algor selection based on:
+                    //    https://github.com/bcgit/bc-csharp/blob/master/crypto/src/security/SignerUtilities.cs
+                    // Transcode Length:
+                    //    * lengths are specified as in:
+                    //       https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-24#section-3.4
+                    //    * see explanation in the docs for "TranscodeSignatureToConcat" for what this is all about
+                    var hashBits = Parameters.HashBits;
+                    var transcodeLength = 0;
+                    if (hashBits == -1)
+                    {
+                        switch (Parameters.Bits)
+                        {
+                            case 521: hashBits = 512; transcodeLength = 132; break;
+                            case 384: hashBits = 384; transcodeLength = 96; break;
+                            default : hashBits = 256; transcodeLength = 64; break;
+                        }
+                    }
+                    sigAlgor = $"SHA{hashBits}WITHECDSA";
+                    _signer = (prv, data) => Sign(sigAlgor, prv, data, transcodeLength);
+                    _verifier = (pub, data, sig) => Verify(sigAlgor, pub, data, sig);
+                    _jwkExporter = (keys, prv) => ExportEcJwk(Parameters.Bits, keys, prv);
+                    break;
+                default:
+                    throw new NotSupportedException("Unsupported Algorithm");
+            }
+        }
+
         /// <summary>
         /// Generates an RSA key pair for the argument bit length.
         /// Some typical bit lengths include 1024, 2048 and 4096.
@@ -78,13 +112,8 @@ namespace PKISharp.SimplePKI
             rsaKpGen.Init(rsaParams);
             var nativeKeyPair = rsaKpGen.GenerateKeyPair();
 
-            // SHA + ECDSA algor selection based on:
-            //    https://github.com/bcgit/bc-csharp/blob/master/crypto/src/security/SignerUtilities.cs
-            var sigAlgor = $"SHA{hashBits}WITHRSA";
-            return new PkiKeyPair(nativeKeyPair, PkiAsymmetricAlgorithm.Rsa,
-                    (pkey, data) => Sign(sigAlgor, pkey, data),
-                    (pkey, data, sig) => Verify(sigAlgor, pkey, data, sig),
-                    (keys, prv) => ExportRsJwk(keys, prv));
+            return new PkiKeyPair(nativeKeyPair,
+                    new PkiKeyPairRsaParams(bits) { HashBits = hashBits });
         }
 
         public static PkiKeyPair GenerateEcdsaKeyPair(int bits, int hashBits = -1)
@@ -110,30 +139,8 @@ namespace PKISharp.SimplePKI
             ecKpGen.Init(ecParams);
             var nativeKeyPair = ecKpGen.GenerateKeyPair();
 
-            var kpg = new Org.BouncyCastle.Crypto.Generators.ECKeyPairGenerator();
-            kpg.Init(ecParams);
-
-            // SHA + ECDSA algor selection based on:
-            //    https://github.com/bcgit/bc-csharp/blob/master/crypto/src/security/SignerUtilities.cs
-            // Transcode Length:
-            //    * lengths are specified as in:
-            //       https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-24#section-3.4
-            //    * see explanation in the docs for "TranscodeSignatureToConcat" for what this is all about
-            var transcodeLength = 0;
-            if (hashBits == -1)
-            {
-                switch (bits)
-                {
-                    case 521: hashBits = 512; transcodeLength = 132; break;
-                    case 384: hashBits = 384; transcodeLength = 96; break;
-                    default : hashBits = 256; transcodeLength = 64; break;
-                }
-            }
-            var sigAlgor = $"SHA{hashBits}WITHECDSA";
-            return new PkiKeyPair(nativeKeyPair, PkiAsymmetricAlgorithm.Ecdsa,
-                    (prv, data) => Sign(sigAlgor, prv, data, transcodeLength),
-                    (pub, data, sig) => Verify(sigAlgor, pub, data, sig),
-                    (keys, prv) => ExportEcJwk(bits, keys, prv));
+            return new PkiKeyPair(nativeKeyPair,
+                    new PkiKeyPairEcdsaParams(bits) { HashBits = hashBits });
         }
 
         /// <summary>
@@ -355,6 +362,8 @@ namespace PKISharp.SimplePKI
         }
 
         [XmlType(nameof(PkiKeyPair))]
+        [XmlInclude(typeof(PkiKeyPairRsaParams))]
+        [XmlInclude(typeof(PkiKeyPairEcdsaParams))]
         public class RecoverableSerialForm
         {
             public RecoverableSerialForm()
@@ -365,23 +374,61 @@ namespace PKISharp.SimplePKI
                 _algorithm = keyPair.Algorithm;
                 _privateKey = keyPair.PrivateKey.Export(PkiEncodingFormat.Der);
                 _publicKey = keyPair.PublicKey.Export(PkiEncodingFormat.Der);
+                _kpParams = keyPair.Parameters;
             }
 
-            public int _ver = 1;
+            public int _ver = 2;
             public PkiAsymmetricAlgorithm _algorithm;
             public byte[] _privateKey;
             public byte[] _publicKey;
-
+            public PkiKeyPairParams _kpParams;
             public PkiKeyPair Recover()
             {
                 var pubKey = PublicKeyFactory.CreateKey(_publicKey);
                 var prvKey = PrivateKeyFactory.CreateKey(_privateKey);
 
-                return new PkiKeyPair(null, _algorithm)
+                return new PkiKeyPair(null, _kpParams)
                 {
                     _PrivateKey = new PkiKey(prvKey, _algorithm),
                     _PublicKey = new PkiKey(pubKey, _algorithm),
                 };
+            }
+        }
+
+        public class PkiKeyPairParams
+        {
+            internal PkiKeyPairParams()
+            { }
+
+            public PkiAsymmetricAlgorithm Algorithm { get; set; } = PkiAsymmetricAlgorithm.Unknown;
+
+            public int Bits { get; set; }
+
+            public int HashBits { get; set; }
+        }
+
+        public class PkiKeyPairRsaParams : PkiKeyPairParams
+        {
+            internal PkiKeyPairRsaParams()
+            { }
+
+            public PkiKeyPairRsaParams(int bits)
+            {
+                Algorithm = PkiAsymmetricAlgorithm.Rsa;
+                Bits = bits;
+                HashBits = 256;
+            }
+        }
+
+        public class PkiKeyPairEcdsaParams : PkiKeyPairParams
+        {
+            internal PkiKeyPairEcdsaParams()
+            { }
+
+            public PkiKeyPairEcdsaParams(int bits)
+            {
+                Algorithm = PkiAsymmetricAlgorithm.Ecdsa;
+                Bits = bits;
             }
         }
     }
