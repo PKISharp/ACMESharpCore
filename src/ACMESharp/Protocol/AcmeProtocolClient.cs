@@ -264,13 +264,16 @@ namespace ACMESharp.Protocol
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.3
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.4
         /// </remarks>
-        public async Task<AccountDetails> UpdateAccountAsync(IEnumerable<string> contacts,
+        public async Task<AccountDetails> UpdateAccountAsync(
+            IEnumerable<string> contacts = null,
+            object externalAccountBinding = null,
             CancellationToken cancel = default(CancellationToken))
         {
             var requUrl = new Uri(_http.BaseAddress, Account.Kid);
             var message = new UpdateAccountRequest
             {
                 Contact = contacts,
+                ExternalAccountBinding = externalAccountBinding,
             };
             var resp = await SendAcmeAsync(
                     requUrl,
