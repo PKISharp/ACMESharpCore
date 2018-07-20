@@ -63,41 +63,13 @@ namespace ACMEForms
             this.ordersTabPage = new System.Windows.Forms.TabPage();
             this.ordersPanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.notBeforeLabel = new System.Windows.Forms.Label();
-            this.notBeforeDateTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.notAfterLabel = new System.Windows.Forms.Label();
             this.notAfterDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.notAfterLabel = new System.Windows.Forms.Label();
+            this.notBeforeDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.notBeforeLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.orderButtonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.createOrderButton = new System.Windows.Forms.Button();
-            this.refreshOrderButton = new System.Windows.Forms.Button();
-            this.dnsIdentifiersTextBox = new System.Windows.Forms.TextBox();
-            this.dnsIdentifiersLabel = new System.Windows.Forms.Label();
-            this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.mainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.clearOrderButton = new System.Windows.Forms.Button();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.authorizationsListBox = new System.Windows.Forms.ListBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.authzExpiresTextBox = new System.Windows.Forms.TextBox();
-            this.authzExpiresLabel = new System.Windows.Forms.Label();
-            this.authzStatusTextBox = new System.Windows.Forms.TextBox();
-            this.authzStatusLabel = new System.Windows.Forms.Label();
-            this.authzUrlTextBox = new System.Windows.Forms.TextBox();
-            this.authzUrlLabel = new System.Windows.Forms.Label();
-            this.isWildcardCheckBox = new System.Windows.Forms.CheckBox();
-            this.identifierTypeTextBox = new System.Windows.Forms.TextBox();
-            this.identifierTypeLabel = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.challengesTabControl = new System.Windows.Forms.TabControl();
-            this.dnsChallengeTabPage = new System.Windows.Forms.TabPage();
-            this.httpChallengeTabPage = new System.Windows.Forms.TabPage();
-            this.miscChallengesTabPage = new System.Windows.Forms.TabPage();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label10 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.orderExpiresTextBox = new System.Windows.Forms.TextBox();
             this.firstOrderUrlLabel = new System.Windows.Forms.Label();
@@ -117,38 +89,68 @@ namespace ACMEForms
             this.orderStatusLabel = new System.Windows.Forms.Label();
             this.finalizeUrlTextBox = new System.Windows.Forms.TextBox();
             this.certificateUrlTextBox = new System.Windows.Forms.TextBox();
-            this.challengeDetailsPanel = new System.Windows.Forms.Panel();
-            this.challengeTypeTextBox = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.challengeErrorTextBox = new System.Windows.Forms.TextBox();
-            this.challengeTypeLabel = new System.Windows.Forms.Label();
-            this.challengeStatusLabel = new System.Windows.Forms.Label();
-            this.challengeErrorLabel = new System.Windows.Forms.Label();
-            this.challengeTokenTextBox = new System.Windows.Forms.TextBox();
-            this.challengeTokenLabel = new System.Windows.Forms.Label();
-            this.challengeUrlTextBox = new System.Windows.Forms.TextBox();
-            this.challengeUrlLabel = new System.Windows.Forms.Label();
-            this.challengeValidatedTextBox = new System.Windows.Forms.TextBox();
-            this.challengeValidatedLabel = new System.Windows.Forms.Label();
-            this.validationRecordsTextBox = new System.Windows.Forms.TextBox();
-            this.validationRecordsLabel = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.challengesTabControl = new System.Windows.Forms.TabControl();
+            this.dnsChallengeTabPage = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.dnsRecordNameTextBox = new System.Windows.Forms.TextBox();
-            this.dnsRecordNameLabel = new System.Windows.Forms.Label();
-            this.dnsRecordTypeTextBox = new System.Windows.Forms.TextBox();
-            this.dnsRecordTypeLabel = new System.Windows.Forms.Label();
             this.dnsRecordValueTextBox = new System.Windows.Forms.TextBox();
             this.dnsRecordValueLabel = new System.Windows.Forms.Label();
-            this.httpResourceUrlTextBox = new System.Windows.Forms.TextBox();
-            this.httpResourceUrlLabel = new System.Windows.Forms.Label();
-            this.httpResourcePathTextBox = new System.Windows.Forms.TextBox();
-            this.httpResourcePathLabel = new System.Windows.Forms.Label();
-            this.httpResourceContentTypeTextBox = new System.Windows.Forms.TextBox();
-            this.httpResourceContentTypeLabel = new System.Windows.Forms.Label();
+            this.dnsRecordTypeTextBox = new System.Windows.Forms.TextBox();
+            this.dnsRecordTypeLabel = new System.Windows.Forms.Label();
+            this.dnsRecordNameTextBox = new System.Windows.Forms.TextBox();
+            this.dnsRecordNameLabel = new System.Windows.Forms.Label();
+            this.httpChallengeTabPage = new System.Windows.Forms.TabPage();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.httpResourceValueTextBox = new System.Windows.Forms.TextBox();
             this.httpResourceValueLabel = new System.Windows.Forms.Label();
+            this.httpResourceContentTypeTextBox = new System.Windows.Forms.TextBox();
+            this.httpResourceContentTypeLabel = new System.Windows.Forms.Label();
+            this.httpResourcePathTextBox = new System.Windows.Forms.TextBox();
+            this.httpResourcePathLabel = new System.Windows.Forms.Label();
+            this.httpResourceUrlTextBox = new System.Windows.Forms.TextBox();
+            this.httpResourceUrlLabel = new System.Windows.Forms.Label();
+            this.miscChallengesTabPage = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.miscChallengeTypesListBox = new System.Windows.Forms.ListBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.authzExpiresTextBox = new System.Windows.Forms.TextBox();
+            this.authzExpiresLabel = new System.Windows.Forms.Label();
+            this.authzStatusTextBox = new System.Windows.Forms.TextBox();
+            this.authzStatusLabel = new System.Windows.Forms.Label();
+            this.authzUrlTextBox = new System.Windows.Forms.TextBox();
+            this.authzUrlLabel = new System.Windows.Forms.Label();
+            this.isWildcardCheckBox = new System.Windows.Forms.CheckBox();
+            this.identifierTypeTextBox = new System.Windows.Forms.TextBox();
+            this.identifierTypeLabel = new System.Windows.Forms.Label();
+            this.authorizationsListBox = new System.Windows.Forms.ListBox();
+            this.challengeDetailsPanel = new System.Windows.Forms.Panel();
+            this.validationRecordsTextBox = new System.Windows.Forms.TextBox();
+            this.validationRecordsLabel = new System.Windows.Forms.Label();
+            this.challengeValidatedTextBox = new System.Windows.Forms.TextBox();
+            this.challengeValidatedLabel = new System.Windows.Forms.Label();
+            this.challengeUrlTextBox = new System.Windows.Forms.TextBox();
+            this.challengeUrlLabel = new System.Windows.Forms.Label();
+            this.challengeTokenTextBox = new System.Windows.Forms.TextBox();
+            this.challengeTokenLabel = new System.Windows.Forms.Label();
+            this.challengeErrorTextBox = new System.Windows.Forms.TextBox();
+            this.challengeErrorLabel = new System.Windows.Forms.Label();
+            this.challengeStatusTextBox = new System.Windows.Forms.TextBox();
+            this.challengeStatusLabel = new System.Windows.Forms.Label();
+            this.challengeTypeTextBox = new System.Windows.Forms.TextBox();
+            this.challengeTypeLabel = new System.Windows.Forms.Label();
+            this.orderButtonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.createOrderButton = new System.Windows.Forms.Button();
+            this.refreshOrderButton = new System.Windows.Forms.Button();
+            this.clearOrderButton = new System.Windows.Forms.Button();
+            this.dnsIdentifiersTextBox = new System.Windows.Forms.TextBox();
+            this.dnsIdentifiersLabel = new System.Windows.Forms.Label();
+            this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.mainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.accountPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.orderPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.tabControl1.SuspendLayout();
             this.accountTabPage.SuspendLayout();
             this.accountPanel.SuspendLayout();
@@ -160,22 +162,22 @@ namespace ACMEForms
             this.ordersPanel.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.orderButtonsFlowLayoutPanel.SuspendLayout();
-            this.mainStatusStrip.SuspendLayout();
             this.tabControl3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.challengesTabControl.SuspendLayout();
             this.dnsChallengeTabPage.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.httpChallengeTabPage.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.miscChallengesTabPage.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.challengeDetailsPanel.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.orderButtonsFlowLayoutPanel.SuspendLayout();
+            this.mainStatusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -304,6 +306,7 @@ namespace ACMEForms
             this.tableLayoutPanel1.Controls.Add(this.tosLinkLabel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.ordersTextBox, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.initialIpTextBox, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.accountPropertyGrid, 1, 8);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 30);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 9;
@@ -596,26 +599,15 @@ namespace ACMEForms
             this.tableLayoutPanel3.Size = new System.Drawing.Size(934, 44);
             this.tableLayoutPanel3.TabIndex = 10;
             // 
-            // notBeforeLabel
+            // notAfterDateTimePicker
             // 
-            this.notBeforeLabel.AutoSize = true;
-            this.notBeforeLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.notBeforeLabel.Location = new System.Drawing.Point(3, 0);
-            this.notBeforeLabel.Name = "notBeforeLabel";
-            this.notBeforeLabel.Size = new System.Drawing.Size(174, 44);
-            this.notBeforeLabel.TabIndex = 0;
-            this.notBeforeLabel.Text = "Not Before:";
-            this.notBeforeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // notBeforeDateTimePicker
-            // 
-            this.notBeforeDateTimePicker.Checked = false;
-            this.notBeforeDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.notBeforeDateTimePicker.Location = new System.Drawing.Point(183, 3);
-            this.notBeforeDateTimePicker.Name = "notBeforeDateTimePicker";
-            this.notBeforeDateTimePicker.ShowCheckBox = true;
-            this.notBeforeDateTimePicker.Size = new System.Drawing.Size(281, 31);
-            this.notBeforeDateTimePicker.TabIndex = 2;
+            this.notAfterDateTimePicker.Checked = false;
+            this.notAfterDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.notAfterDateTimePicker.Location = new System.Drawing.Point(650, 3);
+            this.notAfterDateTimePicker.Name = "notAfterDateTimePicker";
+            this.notAfterDateTimePicker.ShowCheckBox = true;
+            this.notAfterDateTimePicker.Size = new System.Drawing.Size(281, 31);
+            this.notAfterDateTimePicker.TabIndex = 3;
             // 
             // notAfterLabel
             // 
@@ -628,15 +620,26 @@ namespace ACMEForms
             this.notAfterLabel.Text = "Not After:";
             this.notAfterLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // notAfterDateTimePicker
+            // notBeforeDateTimePicker
             // 
-            this.notAfterDateTimePicker.Checked = false;
-            this.notAfterDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.notAfterDateTimePicker.Location = new System.Drawing.Point(650, 3);
-            this.notAfterDateTimePicker.Name = "notAfterDateTimePicker";
-            this.notAfterDateTimePicker.ShowCheckBox = true;
-            this.notAfterDateTimePicker.Size = new System.Drawing.Size(281, 31);
-            this.notAfterDateTimePicker.TabIndex = 3;
+            this.notBeforeDateTimePicker.Checked = false;
+            this.notBeforeDateTimePicker.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.notBeforeDateTimePicker.Location = new System.Drawing.Point(183, 3);
+            this.notBeforeDateTimePicker.Name = "notBeforeDateTimePicker";
+            this.notBeforeDateTimePicker.ShowCheckBox = true;
+            this.notBeforeDateTimePicker.Size = new System.Drawing.Size(281, 31);
+            this.notBeforeDateTimePicker.TabIndex = 2;
+            // 
+            // notBeforeLabel
+            // 
+            this.notBeforeLabel.AutoSize = true;
+            this.notBeforeLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.notBeforeLabel.Location = new System.Drawing.Point(3, 0);
+            this.notBeforeLabel.Name = "notBeforeLabel";
+            this.notBeforeLabel.Size = new System.Drawing.Size(174, 44);
+            this.notBeforeLabel.TabIndex = 0;
+            this.notBeforeLabel.Text = "Not Before:";
+            this.notBeforeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // groupBox1
             // 
@@ -650,86 +653,6 @@ namespace ACMEForms
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Order Details";
-            // 
-            // orderButtonsFlowLayoutPanel
-            // 
-            this.orderButtonsFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.orderButtonsFlowLayoutPanel.Controls.Add(this.createOrderButton);
-            this.orderButtonsFlowLayoutPanel.Controls.Add(this.refreshOrderButton);
-            this.orderButtonsFlowLayoutPanel.Controls.Add(this.clearOrderButton);
-            this.orderButtonsFlowLayoutPanel.Location = new System.Drawing.Point(207, 198);
-            this.orderButtonsFlowLayoutPanel.Name = "orderButtonsFlowLayoutPanel";
-            this.orderButtonsFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(10);
-            this.orderButtonsFlowLayoutPanel.Size = new System.Drawing.Size(936, 90);
-            this.orderButtonsFlowLayoutPanel.TabIndex = 3;
-            // 
-            // createOrderButton
-            // 
-            this.createOrderButton.Location = new System.Drawing.Point(13, 13);
-            this.createOrderButton.Name = "createOrderButton";
-            this.createOrderButton.Size = new System.Drawing.Size(232, 60);
-            this.createOrderButton.TabIndex = 6;
-            this.createOrderButton.Text = "Create Order";
-            this.createOrderButton.UseVisualStyleBackColor = true;
-            this.createOrderButton.Click += new System.EventHandler(this.createOrderButton_Click);
-            // 
-            // refreshOrderButton
-            // 
-            this.refreshOrderButton.Location = new System.Drawing.Point(251, 13);
-            this.refreshOrderButton.Name = "refreshOrderButton";
-            this.refreshOrderButton.Size = new System.Drawing.Size(232, 60);
-            this.refreshOrderButton.TabIndex = 7;
-            this.refreshOrderButton.Text = "Referesh Order";
-            this.refreshOrderButton.UseVisualStyleBackColor = true;
-            this.refreshOrderButton.Click += new System.EventHandler(this.refreshOrderButton_Click);
-            // 
-            // dnsIdentifiersTextBox
-            // 
-            this.dnsIdentifiersTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dnsIdentifiersTextBox.Location = new System.Drawing.Point(207, 3);
-            this.dnsIdentifiersTextBox.Multiline = true;
-            this.dnsIdentifiersTextBox.Name = "dnsIdentifiersTextBox";
-            this.dnsIdentifiersTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.dnsIdentifiersTextBox.Size = new System.Drawing.Size(936, 93);
-            this.dnsIdentifiersTextBox.TabIndex = 2;
-            // 
-            // dnsIdentifiersLabel
-            // 
-            this.dnsIdentifiersLabel.Location = new System.Drawing.Point(3, 6);
-            this.dnsIdentifiersLabel.Name = "dnsIdentifiersLabel";
-            this.dnsIdentifiersLabel.Size = new System.Drawing.Size(198, 90);
-            this.dnsIdentifiersLabel.TabIndex = 1;
-            this.dnsIdentifiersLabel.Text = "DNS Identifiers:";
-            this.dnsIdentifiersLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // mainStatusStrip
-            // 
-            this.mainStatusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
-            this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mainStatusLabel});
-            this.mainStatusStrip.Location = new System.Drawing.Point(0, 1639);
-            this.mainStatusStrip.Name = "mainStatusStrip";
-            this.mainStatusStrip.Size = new System.Drawing.Size(1179, 37);
-            this.mainStatusStrip.TabIndex = 15;
-            this.mainStatusStrip.Text = "statusStrip1";
-            // 
-            // mainStatusLabel
-            // 
-            this.mainStatusLabel.Name = "mainStatusLabel";
-            this.mainStatusLabel.Size = new System.Drawing.Size(76, 32);
-            this.mainStatusLabel.Text = "Hello.";
-            // 
-            // clearOrderButton
-            // 
-            this.clearOrderButton.Location = new System.Drawing.Point(489, 13);
-            this.clearOrderButton.Name = "clearOrderButton";
-            this.clearOrderButton.Size = new System.Drawing.Size(232, 60);
-            this.clearOrderButton.TabIndex = 8;
-            this.clearOrderButton.Text = "Clear Order";
-            this.clearOrderButton.UseVisualStyleBackColor = true;
-            this.clearOrderButton.Click += new System.EventHandler(this.clearOrderButton_Click);
             // 
             // tabControl3
             // 
@@ -754,236 +677,6 @@ namespace ACMEForms
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "General";
             this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.tableLayoutPanel4);
-            this.tabPage5.Location = new System.Drawing.Point(8, 39);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(901, 1206);
-            this.tabPage5.TabIndex = 1;
-            this.tabPage5.Text = "Authorizations";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.challengesTabControl, 1, 4);
-            this.tableLayoutPanel4.Controls.Add(this.label7, 0, 4);
-            this.tableLayoutPanel4.Controls.Add(this.panel1, 1, 2);
-            this.tableLayoutPanel4.Controls.Add(this.authorizationsListBox, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.challengeDetailsPanel, 1, 5);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 6;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(895, 1200);
-            this.tableLayoutPanel4.TabIndex = 0;
-            // 
-            // authorizationsListBox
-            // 
-            this.authorizationsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.authorizationsListBox.FormattingEnabled = true;
-            this.authorizationsListBox.ItemHeight = 25;
-            this.authorizationsListBox.Location = new System.Drawing.Point(190, 3);
-            this.authorizationsListBox.Name = "authorizationsListBox";
-            this.authorizationsListBox.Size = new System.Drawing.Size(702, 94);
-            this.authorizationsListBox.TabIndex = 17;
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.authzExpiresTextBox);
-            this.panel1.Controls.Add(this.authzExpiresLabel);
-            this.panel1.Controls.Add(this.authzStatusTextBox);
-            this.panel1.Controls.Add(this.authzStatusLabel);
-            this.panel1.Controls.Add(this.authzUrlTextBox);
-            this.panel1.Controls.Add(this.authzUrlLabel);
-            this.panel1.Controls.Add(this.isWildcardCheckBox);
-            this.panel1.Controls.Add(this.identifierTypeTextBox);
-            this.panel1.Controls.Add(this.identifierTypeLabel);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(190, 103);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(702, 168);
-            this.panel1.TabIndex = 20;
-            // 
-            // authzExpiresTextBox
-            // 
-            this.authzExpiresTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.authzExpiresTextBox.Location = new System.Drawing.Point(210, 114);
-            this.authzExpiresTextBox.Name = "authzExpiresTextBox";
-            this.authzExpiresTextBox.ReadOnly = true;
-            this.authzExpiresTextBox.Size = new System.Drawing.Size(484, 31);
-            this.authzExpiresTextBox.TabIndex = 2;
-            // 
-            // authzExpiresLabel
-            // 
-            this.authzExpiresLabel.AutoSize = true;
-            this.authzExpiresLabel.Location = new System.Drawing.Point(114, 117);
-            this.authzExpiresLabel.Name = "authzExpiresLabel";
-            this.authzExpiresLabel.Size = new System.Drawing.Size(90, 25);
-            this.authzExpiresLabel.TabIndex = 12;
-            this.authzExpiresLabel.Text = "Expires:";
-            this.authzExpiresLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // authzStatusTextBox
-            // 
-            this.authzStatusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.authzStatusTextBox.Location = new System.Drawing.Point(210, 77);
-            this.authzStatusTextBox.Name = "authzStatusTextBox";
-            this.authzStatusTextBox.ReadOnly = true;
-            this.authzStatusTextBox.Size = new System.Drawing.Size(484, 31);
-            this.authzStatusTextBox.TabIndex = 1;
-            // 
-            // authzStatusLabel
-            // 
-            this.authzStatusLabel.AutoSize = true;
-            this.authzStatusLabel.Location = new System.Drawing.Point(125, 80);
-            this.authzStatusLabel.Name = "authzStatusLabel";
-            this.authzStatusLabel.Size = new System.Drawing.Size(79, 25);
-            this.authzStatusLabel.TabIndex = 11;
-            this.authzStatusLabel.Text = "Status:";
-            this.authzStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // authzUrlTextBox
-            // 
-            this.authzUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.authzUrlTextBox.Location = new System.Drawing.Point(210, 40);
-            this.authzUrlTextBox.Name = "authzUrlTextBox";
-            this.authzUrlTextBox.ReadOnly = true;
-            this.authzUrlTextBox.Size = new System.Drawing.Size(484, 31);
-            this.authzUrlTextBox.TabIndex = 1;
-            // 
-            // authzUrlLabel
-            // 
-            this.authzUrlLabel.AutoSize = true;
-            this.authzUrlLabel.Location = new System.Drawing.Point(12, 43);
-            this.authzUrlLabel.Name = "authzUrlLabel";
-            this.authzUrlLabel.Size = new System.Drawing.Size(192, 25);
-            this.authzUrlLabel.TabIndex = 11;
-            this.authzUrlLabel.Text = "Authorization URL:";
-            this.authzUrlLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // isWildcardCheckBox
-            // 
-            this.isWildcardCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.isWildcardCheckBox.AutoSize = true;
-            this.isWildcardCheckBox.Enabled = false;
-            this.isWildcardCheckBox.Location = new System.Drawing.Point(541, 5);
-            this.isWildcardCheckBox.Name = "isWildcardCheckBox";
-            this.isWildcardCheckBox.Size = new System.Drawing.Size(150, 29);
-            this.isWildcardCheckBox.TabIndex = 3;
-            this.isWildcardCheckBox.Text = "Is Wildcard";
-            this.isWildcardCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // identifierTypeTextBox
-            // 
-            this.identifierTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.identifierTypeTextBox.Location = new System.Drawing.Point(210, 3);
-            this.identifierTypeTextBox.Name = "identifierTypeTextBox";
-            this.identifierTypeTextBox.ReadOnly = true;
-            this.identifierTypeTextBox.Size = new System.Drawing.Size(309, 31);
-            this.identifierTypeTextBox.TabIndex = 0;
-            // 
-            // identifierTypeLabel
-            // 
-            this.identifierTypeLabel.AutoSize = true;
-            this.identifierTypeLabel.Location = new System.Drawing.Point(50, 9);
-            this.identifierTypeLabel.Name = "identifierTypeLabel";
-            this.identifierTypeLabel.Size = new System.Drawing.Size(154, 25);
-            this.identifierTypeLabel.TabIndex = 9;
-            this.identifierTypeLabel.Text = "Identifier Type:";
-            this.identifierTypeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label7
-            // 
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 294);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(181, 300);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Challenges:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // challengesTabControl
-            // 
-            this.challengesTabControl.Controls.Add(this.dnsChallengeTabPage);
-            this.challengesTabControl.Controls.Add(this.httpChallengeTabPage);
-            this.challengesTabControl.Controls.Add(this.miscChallengesTabPage);
-            this.challengesTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.challengesTabControl.Location = new System.Drawing.Point(190, 297);
-            this.challengesTabControl.Name = "challengesTabControl";
-            this.challengesTabControl.SelectedIndex = 0;
-            this.challengesTabControl.Size = new System.Drawing.Size(702, 294);
-            this.challengesTabControl.TabIndex = 25;
-            this.challengesTabControl.SelectedIndexChanged += new System.EventHandler(this.challengesTabControl_SelectedIndexChanged);
-            // 
-            // dnsChallengeTabPage
-            // 
-            this.dnsChallengeTabPage.Controls.Add(this.panel3);
-            this.dnsChallengeTabPage.Location = new System.Drawing.Point(8, 39);
-            this.dnsChallengeTabPage.Name = "dnsChallengeTabPage";
-            this.dnsChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.dnsChallengeTabPage.Size = new System.Drawing.Size(686, 247);
-            this.dnsChallengeTabPage.TabIndex = 0;
-            this.dnsChallengeTabPage.Text = "DNS Challenge";
-            this.dnsChallengeTabPage.UseVisualStyleBackColor = true;
-            // 
-            // httpChallengeTabPage
-            // 
-            this.httpChallengeTabPage.Controls.Add(this.panel4);
-            this.httpChallengeTabPage.Location = new System.Drawing.Point(8, 39);
-            this.httpChallengeTabPage.Name = "httpChallengeTabPage";
-            this.httpChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.httpChallengeTabPage.Size = new System.Drawing.Size(686, 247);
-            this.httpChallengeTabPage.TabIndex = 1;
-            this.httpChallengeTabPage.Text = "HTTP Challenge";
-            this.httpChallengeTabPage.UseVisualStyleBackColor = true;
-            // 
-            // miscChallengesTabPage
-            // 
-            this.miscChallengesTabPage.Controls.Add(this.panel2);
-            this.miscChallengesTabPage.Location = new System.Drawing.Point(8, 39);
-            this.miscChallengesTabPage.Name = "miscChallengesTabPage";
-            this.miscChallengesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.miscChallengesTabPage.Size = new System.Drawing.Size(686, 247);
-            this.miscChallengesTabPage.TabIndex = 2;
-            this.miscChallengesTabPage.Text = "Misc Challenges";
-            this.miscChallengesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.miscChallengeTypesListBox);
-            this.panel2.Controls.Add(this.label10);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(680, 241);
-            this.panel2.TabIndex = 0;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label10.Location = new System.Drawing.Point(0, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(309, 25);
-            this.label10.TabIndex = 1;
-            this.label10.Text = "Unsupported Challenge Types:";
             // 
             // tableLayoutPanel2
             // 
@@ -1011,6 +704,7 @@ namespace ACMEForms
             this.tableLayoutPanel2.Controls.Add(this.orderStatusLabel, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.finalizeUrlTextBox, 1, 5);
             this.tableLayoutPanel2.Controls.Add(this.certificateUrlTextBox, 1, 6);
+            this.tableLayoutPanel2.Controls.Add(this.orderPropertyGrid, 0, 12);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 17;
@@ -1215,6 +909,416 @@ namespace ACMEForms
             this.certificateUrlTextBox.Size = new System.Drawing.Size(696, 31);
             this.certificateUrlTextBox.TabIndex = 8;
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.tableLayoutPanel4);
+            this.tabPage5.Location = new System.Drawing.Point(8, 39);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(901, 1206);
+            this.tabPage5.TabIndex = 1;
+            this.tabPage5.Text = "Authorizations";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.challengesTabControl, 1, 4);
+            this.tableLayoutPanel4.Controls.Add(this.label7, 0, 4);
+            this.tableLayoutPanel4.Controls.Add(this.panel1, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this.authorizationsListBox, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.challengeDetailsPanel, 1, 5);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 6;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(895, 1200);
+            this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // challengesTabControl
+            // 
+            this.challengesTabControl.Controls.Add(this.dnsChallengeTabPage);
+            this.challengesTabControl.Controls.Add(this.httpChallengeTabPage);
+            this.challengesTabControl.Controls.Add(this.miscChallengesTabPage);
+            this.challengesTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.challengesTabControl.Location = new System.Drawing.Point(190, 297);
+            this.challengesTabControl.Name = "challengesTabControl";
+            this.challengesTabControl.SelectedIndex = 0;
+            this.challengesTabControl.Size = new System.Drawing.Size(702, 294);
+            this.challengesTabControl.TabIndex = 25;
+            this.challengesTabControl.SelectedIndexChanged += new System.EventHandler(this.challengesTabControl_SelectedIndexChanged);
+            // 
+            // dnsChallengeTabPage
+            // 
+            this.dnsChallengeTabPage.Controls.Add(this.panel3);
+            this.dnsChallengeTabPage.Location = new System.Drawing.Point(8, 39);
+            this.dnsChallengeTabPage.Name = "dnsChallengeTabPage";
+            this.dnsChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.dnsChallengeTabPage.Size = new System.Drawing.Size(686, 247);
+            this.dnsChallengeTabPage.TabIndex = 0;
+            this.dnsChallengeTabPage.Text = "DNS Challenge";
+            this.dnsChallengeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.dnsRecordValueTextBox);
+            this.panel3.Controls.Add(this.dnsRecordValueLabel);
+            this.panel3.Controls.Add(this.dnsRecordTypeTextBox);
+            this.panel3.Controls.Add(this.dnsRecordTypeLabel);
+            this.panel3.Controls.Add(this.dnsRecordNameTextBox);
+            this.panel3.Controls.Add(this.dnsRecordNameLabel);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(680, 241);
+            this.panel3.TabIndex = 0;
+            // 
+            // dnsRecordValueTextBox
+            // 
+            this.dnsRecordValueTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dnsRecordValueTextBox.Location = new System.Drawing.Point(193, 77);
+            this.dnsRecordValueTextBox.Name = "dnsRecordValueTextBox";
+            this.dnsRecordValueTextBox.ReadOnly = true;
+            this.dnsRecordValueTextBox.Size = new System.Drawing.Size(484, 31);
+            this.dnsRecordValueTextBox.TabIndex = 8;
+            // 
+            // dnsRecordValueLabel
+            // 
+            this.dnsRecordValueLabel.AutoSize = true;
+            this.dnsRecordValueLabel.Location = new System.Drawing.Point(3, 80);
+            this.dnsRecordValueLabel.Name = "dnsRecordValueLabel";
+            this.dnsRecordValueLabel.Size = new System.Drawing.Size(148, 25);
+            this.dnsRecordValueLabel.TabIndex = 9;
+            this.dnsRecordValueLabel.Text = "Record Value:";
+            // 
+            // dnsRecordTypeTextBox
+            // 
+            this.dnsRecordTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dnsRecordTypeTextBox.Location = new System.Drawing.Point(193, 40);
+            this.dnsRecordTypeTextBox.Name = "dnsRecordTypeTextBox";
+            this.dnsRecordTypeTextBox.ReadOnly = true;
+            this.dnsRecordTypeTextBox.Size = new System.Drawing.Size(484, 31);
+            this.dnsRecordTypeTextBox.TabIndex = 6;
+            // 
+            // dnsRecordTypeLabel
+            // 
+            this.dnsRecordTypeLabel.AutoSize = true;
+            this.dnsRecordTypeLabel.Location = new System.Drawing.Point(3, 43);
+            this.dnsRecordTypeLabel.Name = "dnsRecordTypeLabel";
+            this.dnsRecordTypeLabel.Size = new System.Drawing.Size(141, 25);
+            this.dnsRecordTypeLabel.TabIndex = 7;
+            this.dnsRecordTypeLabel.Text = "Record Type:";
+            // 
+            // dnsRecordNameTextBox
+            // 
+            this.dnsRecordNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dnsRecordNameTextBox.Location = new System.Drawing.Point(193, 3);
+            this.dnsRecordNameTextBox.Name = "dnsRecordNameTextBox";
+            this.dnsRecordNameTextBox.ReadOnly = true;
+            this.dnsRecordNameTextBox.Size = new System.Drawing.Size(484, 31);
+            this.dnsRecordNameTextBox.TabIndex = 4;
+            // 
+            // dnsRecordNameLabel
+            // 
+            this.dnsRecordNameLabel.AutoSize = true;
+            this.dnsRecordNameLabel.Location = new System.Drawing.Point(3, 6);
+            this.dnsRecordNameLabel.Name = "dnsRecordNameLabel";
+            this.dnsRecordNameLabel.Size = new System.Drawing.Size(149, 25);
+            this.dnsRecordNameLabel.TabIndex = 5;
+            this.dnsRecordNameLabel.Text = "Record Name:";
+            // 
+            // httpChallengeTabPage
+            // 
+            this.httpChallengeTabPage.Controls.Add(this.panel4);
+            this.httpChallengeTabPage.Location = new System.Drawing.Point(8, 39);
+            this.httpChallengeTabPage.Name = "httpChallengeTabPage";
+            this.httpChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.httpChallengeTabPage.Size = new System.Drawing.Size(686, 247);
+            this.httpChallengeTabPage.TabIndex = 1;
+            this.httpChallengeTabPage.Text = "HTTP Challenge";
+            this.httpChallengeTabPage.UseVisualStyleBackColor = true;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.httpResourceValueTextBox);
+            this.panel4.Controls.Add(this.httpResourceValueLabel);
+            this.panel4.Controls.Add(this.httpResourceContentTypeTextBox);
+            this.panel4.Controls.Add(this.httpResourceContentTypeLabel);
+            this.panel4.Controls.Add(this.httpResourcePathTextBox);
+            this.panel4.Controls.Add(this.httpResourcePathLabel);
+            this.panel4.Controls.Add(this.httpResourceUrlTextBox);
+            this.panel4.Controls.Add(this.httpResourceUrlLabel);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(3, 3);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(680, 241);
+            this.panel4.TabIndex = 0;
+            // 
+            // httpResourceValueTextBox
+            // 
+            this.httpResourceValueTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.httpResourceValueTextBox.Location = new System.Drawing.Point(196, 114);
+            this.httpResourceValueTextBox.Multiline = true;
+            this.httpResourceValueTextBox.Name = "httpResourceValueTextBox";
+            this.httpResourceValueTextBox.ReadOnly = true;
+            this.httpResourceValueTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.httpResourceValueTextBox.Size = new System.Drawing.Size(484, 112);
+            this.httpResourceValueTextBox.TabIndex = 12;
+            this.httpResourceValueTextBox.WordWrap = false;
+            // 
+            // httpResourceValueLabel
+            // 
+            this.httpResourceValueLabel.AutoSize = true;
+            this.httpResourceValueLabel.Location = new System.Drawing.Point(6, 117);
+            this.httpResourceValueLabel.Name = "httpResourceValueLabel";
+            this.httpResourceValueLabel.Size = new System.Drawing.Size(171, 25);
+            this.httpResourceValueLabel.TabIndex = 13;
+            this.httpResourceValueLabel.Text = "Resource Value:";
+            // 
+            // httpResourceContentTypeTextBox
+            // 
+            this.httpResourceContentTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.httpResourceContentTypeTextBox.Location = new System.Drawing.Point(196, 77);
+            this.httpResourceContentTypeTextBox.Name = "httpResourceContentTypeTextBox";
+            this.httpResourceContentTypeTextBox.ReadOnly = true;
+            this.httpResourceContentTypeTextBox.Size = new System.Drawing.Size(484, 31);
+            this.httpResourceContentTypeTextBox.TabIndex = 10;
+            // 
+            // httpResourceContentTypeLabel
+            // 
+            this.httpResourceContentTypeLabel.AutoSize = true;
+            this.httpResourceContentTypeLabel.Location = new System.Drawing.Point(6, 80);
+            this.httpResourceContentTypeLabel.Name = "httpResourceContentTypeLabel";
+            this.httpResourceContentTypeLabel.Size = new System.Drawing.Size(185, 25);
+            this.httpResourceContentTypeLabel.TabIndex = 11;
+            this.httpResourceContentTypeLabel.Text = "Res Content-type:";
+            // 
+            // httpResourcePathTextBox
+            // 
+            this.httpResourcePathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.httpResourcePathTextBox.Location = new System.Drawing.Point(196, 40);
+            this.httpResourcePathTextBox.Name = "httpResourcePathTextBox";
+            this.httpResourcePathTextBox.ReadOnly = true;
+            this.httpResourcePathTextBox.Size = new System.Drawing.Size(484, 31);
+            this.httpResourcePathTextBox.TabIndex = 8;
+            // 
+            // httpResourcePathLabel
+            // 
+            this.httpResourcePathLabel.AutoSize = true;
+            this.httpResourcePathLabel.Location = new System.Drawing.Point(6, 43);
+            this.httpResourcePathLabel.Name = "httpResourcePathLabel";
+            this.httpResourcePathLabel.Size = new System.Drawing.Size(160, 25);
+            this.httpResourcePathLabel.TabIndex = 9;
+            this.httpResourcePathLabel.Text = "Resource Path:";
+            // 
+            // httpResourceUrlTextBox
+            // 
+            this.httpResourceUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.httpResourceUrlTextBox.Location = new System.Drawing.Point(196, 3);
+            this.httpResourceUrlTextBox.Name = "httpResourceUrlTextBox";
+            this.httpResourceUrlTextBox.ReadOnly = true;
+            this.httpResourceUrlTextBox.Size = new System.Drawing.Size(484, 31);
+            this.httpResourceUrlTextBox.TabIndex = 6;
+            // 
+            // httpResourceUrlLabel
+            // 
+            this.httpResourceUrlLabel.AutoSize = true;
+            this.httpResourceUrlLabel.Location = new System.Drawing.Point(6, 6);
+            this.httpResourceUrlLabel.Name = "httpResourceUrlLabel";
+            this.httpResourceUrlLabel.Size = new System.Drawing.Size(158, 25);
+            this.httpResourceUrlLabel.TabIndex = 7;
+            this.httpResourceUrlLabel.Text = "Resource URL:";
+            // 
+            // miscChallengesTabPage
+            // 
+            this.miscChallengesTabPage.Controls.Add(this.panel2);
+            this.miscChallengesTabPage.Location = new System.Drawing.Point(8, 39);
+            this.miscChallengesTabPage.Name = "miscChallengesTabPage";
+            this.miscChallengesTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.miscChallengesTabPage.Size = new System.Drawing.Size(686, 247);
+            this.miscChallengesTabPage.TabIndex = 2;
+            this.miscChallengesTabPage.Text = "Misc Challenges";
+            this.miscChallengesTabPage.UseVisualStyleBackColor = true;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.miscChallengeTypesListBox);
+            this.panel2.Controls.Add(this.label10);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(680, 241);
+            this.panel2.TabIndex = 0;
+            // 
+            // miscChallengeTypesListBox
+            // 
+            this.miscChallengeTypesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.miscChallengeTypesListBox.FormattingEnabled = true;
+            this.miscChallengeTypesListBox.ItemHeight = 25;
+            this.miscChallengeTypesListBox.Location = new System.Drawing.Point(6, 28);
+            this.miscChallengeTypesListBox.Name = "miscChallengeTypesListBox";
+            this.miscChallengeTypesListBox.Size = new System.Drawing.Size(671, 204);
+            this.miscChallengeTypesListBox.TabIndex = 2;
+            this.miscChallengeTypesListBox.SelectedIndexChanged += new System.EventHandler(this.miscChallengeTypesListBox_SelectedIndexChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label10.Location = new System.Drawing.Point(0, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(309, 25);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Unsupported Challenge Types:";
+            // 
+            // label7
+            // 
+            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label7.Location = new System.Drawing.Point(3, 294);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(181, 300);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Challenges:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.authzExpiresTextBox);
+            this.panel1.Controls.Add(this.authzExpiresLabel);
+            this.panel1.Controls.Add(this.authzStatusTextBox);
+            this.panel1.Controls.Add(this.authzStatusLabel);
+            this.panel1.Controls.Add(this.authzUrlTextBox);
+            this.panel1.Controls.Add(this.authzUrlLabel);
+            this.panel1.Controls.Add(this.isWildcardCheckBox);
+            this.panel1.Controls.Add(this.identifierTypeTextBox);
+            this.panel1.Controls.Add(this.identifierTypeLabel);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(190, 103);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(702, 168);
+            this.panel1.TabIndex = 20;
+            // 
+            // authzExpiresTextBox
+            // 
+            this.authzExpiresTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.authzExpiresTextBox.Location = new System.Drawing.Point(210, 114);
+            this.authzExpiresTextBox.Name = "authzExpiresTextBox";
+            this.authzExpiresTextBox.ReadOnly = true;
+            this.authzExpiresTextBox.Size = new System.Drawing.Size(484, 31);
+            this.authzExpiresTextBox.TabIndex = 2;
+            // 
+            // authzExpiresLabel
+            // 
+            this.authzExpiresLabel.AutoSize = true;
+            this.authzExpiresLabel.Location = new System.Drawing.Point(114, 117);
+            this.authzExpiresLabel.Name = "authzExpiresLabel";
+            this.authzExpiresLabel.Size = new System.Drawing.Size(90, 25);
+            this.authzExpiresLabel.TabIndex = 12;
+            this.authzExpiresLabel.Text = "Expires:";
+            this.authzExpiresLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // authzStatusTextBox
+            // 
+            this.authzStatusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.authzStatusTextBox.Location = new System.Drawing.Point(210, 77);
+            this.authzStatusTextBox.Name = "authzStatusTextBox";
+            this.authzStatusTextBox.ReadOnly = true;
+            this.authzStatusTextBox.Size = new System.Drawing.Size(484, 31);
+            this.authzStatusTextBox.TabIndex = 1;
+            // 
+            // authzStatusLabel
+            // 
+            this.authzStatusLabel.AutoSize = true;
+            this.authzStatusLabel.Location = new System.Drawing.Point(125, 80);
+            this.authzStatusLabel.Name = "authzStatusLabel";
+            this.authzStatusLabel.Size = new System.Drawing.Size(79, 25);
+            this.authzStatusLabel.TabIndex = 11;
+            this.authzStatusLabel.Text = "Status:";
+            this.authzStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // authzUrlTextBox
+            // 
+            this.authzUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.authzUrlTextBox.Location = new System.Drawing.Point(210, 40);
+            this.authzUrlTextBox.Name = "authzUrlTextBox";
+            this.authzUrlTextBox.ReadOnly = true;
+            this.authzUrlTextBox.Size = new System.Drawing.Size(484, 31);
+            this.authzUrlTextBox.TabIndex = 1;
+            // 
+            // authzUrlLabel
+            // 
+            this.authzUrlLabel.AutoSize = true;
+            this.authzUrlLabel.Location = new System.Drawing.Point(12, 43);
+            this.authzUrlLabel.Name = "authzUrlLabel";
+            this.authzUrlLabel.Size = new System.Drawing.Size(192, 25);
+            this.authzUrlLabel.TabIndex = 11;
+            this.authzUrlLabel.Text = "Authorization URL:";
+            this.authzUrlLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // isWildcardCheckBox
+            // 
+            this.isWildcardCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.isWildcardCheckBox.AutoSize = true;
+            this.isWildcardCheckBox.Enabled = false;
+            this.isWildcardCheckBox.Location = new System.Drawing.Point(541, 5);
+            this.isWildcardCheckBox.Name = "isWildcardCheckBox";
+            this.isWildcardCheckBox.Size = new System.Drawing.Size(150, 29);
+            this.isWildcardCheckBox.TabIndex = 3;
+            this.isWildcardCheckBox.Text = "Is Wildcard";
+            this.isWildcardCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // identifierTypeTextBox
+            // 
+            this.identifierTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.identifierTypeTextBox.Location = new System.Drawing.Point(210, 3);
+            this.identifierTypeTextBox.Name = "identifierTypeTextBox";
+            this.identifierTypeTextBox.ReadOnly = true;
+            this.identifierTypeTextBox.Size = new System.Drawing.Size(309, 31);
+            this.identifierTypeTextBox.TabIndex = 0;
+            // 
+            // identifierTypeLabel
+            // 
+            this.identifierTypeLabel.AutoSize = true;
+            this.identifierTypeLabel.Location = new System.Drawing.Point(50, 9);
+            this.identifierTypeLabel.Name = "identifierTypeLabel";
+            this.identifierTypeLabel.Size = new System.Drawing.Size(154, 25);
+            this.identifierTypeLabel.TabIndex = 9;
+            this.identifierTypeLabel.Text = "Identifier Type:";
+            this.identifierTypeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // authorizationsListBox
+            // 
+            this.authorizationsListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.authorizationsListBox.FormattingEnabled = true;
+            this.authorizationsListBox.ItemHeight = 25;
+            this.authorizationsListBox.Location = new System.Drawing.Point(190, 3);
+            this.authorizationsListBox.Name = "authorizationsListBox";
+            this.authorizationsListBox.Size = new System.Drawing.Size(702, 94);
+            this.authorizationsListBox.TabIndex = 17;
+            this.authorizationsListBox.SelectedIndexChanged += new System.EventHandler(this.authorizationsListBox_SelectedIndexChanged);
+            // 
             // challengeDetailsPanel
             // 
             this.challengeDetailsPanel.Controls.Add(this.validationRecordsTextBox);
@@ -1227,7 +1331,7 @@ namespace ACMEForms
             this.challengeDetailsPanel.Controls.Add(this.challengeTokenLabel);
             this.challengeDetailsPanel.Controls.Add(this.challengeErrorTextBox);
             this.challengeDetailsPanel.Controls.Add(this.challengeErrorLabel);
-            this.challengeDetailsPanel.Controls.Add(this.textBox2);
+            this.challengeDetailsPanel.Controls.Add(this.challengeStatusTextBox);
             this.challengeDetailsPanel.Controls.Add(this.challengeStatusLabel);
             this.challengeDetailsPanel.Controls.Add(this.challengeTypeTextBox);
             this.challengeDetailsPanel.Controls.Add(this.challengeTypeLabel);
@@ -1236,122 +1340,6 @@ namespace ACMEForms
             this.challengeDetailsPanel.Name = "challengeDetailsPanel";
             this.challengeDetailsPanel.Size = new System.Drawing.Size(702, 600);
             this.challengeDetailsPanel.TabIndex = 26;
-            // 
-            // challengeTypeTextBox
-            // 
-            this.challengeTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.challengeTypeTextBox.Location = new System.Drawing.Point(210, 3);
-            this.challengeTypeTextBox.Name = "challengeTypeTextBox";
-            this.challengeTypeTextBox.ReadOnly = true;
-            this.challengeTypeTextBox.Size = new System.Drawing.Size(484, 31);
-            this.challengeTypeTextBox.TabIndex = 0;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(210, 40);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(484, 31);
-            this.textBox2.TabIndex = 1;
-            // 
-            // challengeErrorTextBox
-            // 
-            this.challengeErrorTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.challengeErrorTextBox.Location = new System.Drawing.Point(210, 77);
-            this.challengeErrorTextBox.Multiline = true;
-            this.challengeErrorTextBox.Name = "challengeErrorTextBox";
-            this.challengeErrorTextBox.ReadOnly = true;
-            this.challengeErrorTextBox.Size = new System.Drawing.Size(484, 101);
-            this.challengeErrorTextBox.TabIndex = 2;
-            this.challengeErrorTextBox.WordWrap = false;
-            // 
-            // challengeTypeLabel
-            // 
-            this.challengeTypeLabel.AutoSize = true;
-            this.challengeTypeLabel.Location = new System.Drawing.Point(12, 6);
-            this.challengeTypeLabel.Name = "challengeTypeLabel";
-            this.challengeTypeLabel.Size = new System.Drawing.Size(66, 25);
-            this.challengeTypeLabel.TabIndex = 3;
-            this.challengeTypeLabel.Text = "Type:";
-            // 
-            // challengeStatusLabel
-            // 
-            this.challengeStatusLabel.AutoSize = true;
-            this.challengeStatusLabel.Location = new System.Drawing.Point(12, 43);
-            this.challengeStatusLabel.Name = "challengeStatusLabel";
-            this.challengeStatusLabel.Size = new System.Drawing.Size(79, 25);
-            this.challengeStatusLabel.TabIndex = 4;
-            this.challengeStatusLabel.Text = "Status:";
-            // 
-            // challengeErrorLabel
-            // 
-            this.challengeErrorLabel.AutoSize = true;
-            this.challengeErrorLabel.Location = new System.Drawing.Point(12, 80);
-            this.challengeErrorLabel.Name = "challengeErrorLabel";
-            this.challengeErrorLabel.Size = new System.Drawing.Size(65, 25);
-            this.challengeErrorLabel.TabIndex = 5;
-            this.challengeErrorLabel.Text = "Error:";
-            // 
-            // challengeTokenTextBox
-            // 
-            this.challengeTokenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.challengeTokenTextBox.Location = new System.Drawing.Point(210, 184);
-            this.challengeTokenTextBox.Name = "challengeTokenTextBox";
-            this.challengeTokenTextBox.ReadOnly = true;
-            this.challengeTokenTextBox.Size = new System.Drawing.Size(484, 31);
-            this.challengeTokenTextBox.TabIndex = 6;
-            // 
-            // challengeTokenLabel
-            // 
-            this.challengeTokenLabel.AutoSize = true;
-            this.challengeTokenLabel.Location = new System.Drawing.Point(12, 187);
-            this.challengeTokenLabel.Name = "challengeTokenLabel";
-            this.challengeTokenLabel.Size = new System.Drawing.Size(78, 25);
-            this.challengeTokenLabel.TabIndex = 7;
-            this.challengeTokenLabel.Text = "Token:";
-            // 
-            // challengeUrlTextBox
-            // 
-            this.challengeUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.challengeUrlTextBox.Location = new System.Drawing.Point(210, 221);
-            this.challengeUrlTextBox.Name = "challengeUrlTextBox";
-            this.challengeUrlTextBox.ReadOnly = true;
-            this.challengeUrlTextBox.Size = new System.Drawing.Size(484, 31);
-            this.challengeUrlTextBox.TabIndex = 8;
-            // 
-            // challengeUrlLabel
-            // 
-            this.challengeUrlLabel.AutoSize = true;
-            this.challengeUrlLabel.Location = new System.Drawing.Point(12, 224);
-            this.challengeUrlLabel.Name = "challengeUrlLabel";
-            this.challengeUrlLabel.Size = new System.Drawing.Size(163, 25);
-            this.challengeUrlLabel.TabIndex = 9;
-            this.challengeUrlLabel.Text = "Challenge URL:";
-            // 
-            // challengeValidatedTextBox
-            // 
-            this.challengeValidatedTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.challengeValidatedTextBox.Location = new System.Drawing.Point(210, 258);
-            this.challengeValidatedTextBox.Name = "challengeValidatedTextBox";
-            this.challengeValidatedTextBox.ReadOnly = true;
-            this.challengeValidatedTextBox.Size = new System.Drawing.Size(484, 31);
-            this.challengeValidatedTextBox.TabIndex = 10;
-            // 
-            // challengeValidatedLabel
-            // 
-            this.challengeValidatedLabel.AutoSize = true;
-            this.challengeValidatedLabel.Location = new System.Drawing.Point(12, 261);
-            this.challengeValidatedLabel.Name = "challengeValidatedLabel";
-            this.challengeValidatedLabel.Size = new System.Drawing.Size(159, 25);
-            this.challengeValidatedLabel.TabIndex = 11;
-            this.challengeValidatedLabel.Text = "Validated Date:";
             // 
             // validationRecordsTextBox
             // 
@@ -1374,183 +1362,223 @@ namespace ACMEForms
             this.validationRecordsLabel.TabIndex = 13;
             this.validationRecordsLabel.Text = "Validation Records:";
             // 
-            // panel3
+            // challengeValidatedTextBox
             // 
-            this.panel3.Controls.Add(this.dnsRecordValueTextBox);
-            this.panel3.Controls.Add(this.dnsRecordValueLabel);
-            this.panel3.Controls.Add(this.dnsRecordTypeTextBox);
-            this.panel3.Controls.Add(this.dnsRecordTypeLabel);
-            this.panel3.Controls.Add(this.dnsRecordNameTextBox);
-            this.panel3.Controls.Add(this.dnsRecordNameLabel);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(3, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(680, 241);
-            this.panel3.TabIndex = 0;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.httpResourceValueTextBox);
-            this.panel4.Controls.Add(this.httpResourceValueLabel);
-            this.panel4.Controls.Add(this.httpResourceContentTypeTextBox);
-            this.panel4.Controls.Add(this.httpResourceContentTypeLabel);
-            this.panel4.Controls.Add(this.httpResourcePathTextBox);
-            this.panel4.Controls.Add(this.httpResourcePathLabel);
-            this.panel4.Controls.Add(this.httpResourceUrlTextBox);
-            this.panel4.Controls.Add(this.httpResourceUrlLabel);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(3, 3);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(680, 241);
-            this.panel4.TabIndex = 0;
-            // 
-            // dnsRecordNameTextBox
-            // 
-            this.dnsRecordNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeValidatedTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dnsRecordNameTextBox.Location = new System.Drawing.Point(193, 3);
-            this.dnsRecordNameTextBox.Name = "dnsRecordNameTextBox";
-            this.dnsRecordNameTextBox.ReadOnly = true;
-            this.dnsRecordNameTextBox.Size = new System.Drawing.Size(484, 31);
-            this.dnsRecordNameTextBox.TabIndex = 4;
+            this.challengeValidatedTextBox.Location = new System.Drawing.Point(210, 258);
+            this.challengeValidatedTextBox.Name = "challengeValidatedTextBox";
+            this.challengeValidatedTextBox.ReadOnly = true;
+            this.challengeValidatedTextBox.Size = new System.Drawing.Size(484, 31);
+            this.challengeValidatedTextBox.TabIndex = 10;
             // 
-            // dnsRecordNameLabel
+            // challengeValidatedLabel
             // 
-            this.dnsRecordNameLabel.AutoSize = true;
-            this.dnsRecordNameLabel.Location = new System.Drawing.Point(3, 6);
-            this.dnsRecordNameLabel.Name = "dnsRecordNameLabel";
-            this.dnsRecordNameLabel.Size = new System.Drawing.Size(149, 25);
-            this.dnsRecordNameLabel.TabIndex = 5;
-            this.dnsRecordNameLabel.Text = "Record Name:";
+            this.challengeValidatedLabel.AutoSize = true;
+            this.challengeValidatedLabel.Location = new System.Drawing.Point(12, 261);
+            this.challengeValidatedLabel.Name = "challengeValidatedLabel";
+            this.challengeValidatedLabel.Size = new System.Drawing.Size(159, 25);
+            this.challengeValidatedLabel.TabIndex = 11;
+            this.challengeValidatedLabel.Text = "Validated Date:";
             // 
-            // dnsRecordTypeTextBox
+            // challengeUrlTextBox
             // 
-            this.dnsRecordTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dnsRecordTypeTextBox.Location = new System.Drawing.Point(193, 40);
-            this.dnsRecordTypeTextBox.Name = "dnsRecordTypeTextBox";
-            this.dnsRecordTypeTextBox.ReadOnly = true;
-            this.dnsRecordTypeTextBox.Size = new System.Drawing.Size(484, 31);
-            this.dnsRecordTypeTextBox.TabIndex = 6;
+            this.challengeUrlTextBox.Location = new System.Drawing.Point(210, 221);
+            this.challengeUrlTextBox.Name = "challengeUrlTextBox";
+            this.challengeUrlTextBox.ReadOnly = true;
+            this.challengeUrlTextBox.Size = new System.Drawing.Size(484, 31);
+            this.challengeUrlTextBox.TabIndex = 8;
             // 
-            // dnsRecordTypeLabel
+            // challengeUrlLabel
             // 
-            this.dnsRecordTypeLabel.AutoSize = true;
-            this.dnsRecordTypeLabel.Location = new System.Drawing.Point(3, 43);
-            this.dnsRecordTypeLabel.Name = "dnsRecordTypeLabel";
-            this.dnsRecordTypeLabel.Size = new System.Drawing.Size(141, 25);
-            this.dnsRecordTypeLabel.TabIndex = 7;
-            this.dnsRecordTypeLabel.Text = "Record Type:";
+            this.challengeUrlLabel.AutoSize = true;
+            this.challengeUrlLabel.Location = new System.Drawing.Point(12, 224);
+            this.challengeUrlLabel.Name = "challengeUrlLabel";
+            this.challengeUrlLabel.Size = new System.Drawing.Size(163, 25);
+            this.challengeUrlLabel.TabIndex = 9;
+            this.challengeUrlLabel.Text = "Challenge URL:";
             // 
-            // dnsRecordValueTextBox
+            // challengeTokenTextBox
             // 
-            this.dnsRecordValueTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeTokenTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dnsRecordValueTextBox.Location = new System.Drawing.Point(193, 77);
-            this.dnsRecordValueTextBox.Name = "dnsRecordValueTextBox";
-            this.dnsRecordValueTextBox.ReadOnly = true;
-            this.dnsRecordValueTextBox.Size = new System.Drawing.Size(484, 31);
-            this.dnsRecordValueTextBox.TabIndex = 8;
+            this.challengeTokenTextBox.Location = new System.Drawing.Point(210, 184);
+            this.challengeTokenTextBox.Name = "challengeTokenTextBox";
+            this.challengeTokenTextBox.ReadOnly = true;
+            this.challengeTokenTextBox.Size = new System.Drawing.Size(484, 31);
+            this.challengeTokenTextBox.TabIndex = 6;
             // 
-            // dnsRecordValueLabel
+            // challengeTokenLabel
             // 
-            this.dnsRecordValueLabel.AutoSize = true;
-            this.dnsRecordValueLabel.Location = new System.Drawing.Point(3, 80);
-            this.dnsRecordValueLabel.Name = "dnsRecordValueLabel";
-            this.dnsRecordValueLabel.Size = new System.Drawing.Size(148, 25);
-            this.dnsRecordValueLabel.TabIndex = 9;
-            this.dnsRecordValueLabel.Text = "Record Value:";
+            this.challengeTokenLabel.AutoSize = true;
+            this.challengeTokenLabel.Location = new System.Drawing.Point(12, 187);
+            this.challengeTokenLabel.Name = "challengeTokenLabel";
+            this.challengeTokenLabel.Size = new System.Drawing.Size(78, 25);
+            this.challengeTokenLabel.TabIndex = 7;
+            this.challengeTokenLabel.Text = "Token:";
             // 
-            // httpResourceUrlTextBox
+            // challengeErrorTextBox
             // 
-            this.httpResourceUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeErrorTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourceUrlTextBox.Location = new System.Drawing.Point(196, 3);
-            this.httpResourceUrlTextBox.Name = "httpResourceUrlTextBox";
-            this.httpResourceUrlTextBox.ReadOnly = true;
-            this.httpResourceUrlTextBox.Size = new System.Drawing.Size(484, 31);
-            this.httpResourceUrlTextBox.TabIndex = 6;
+            this.challengeErrorTextBox.Location = new System.Drawing.Point(210, 77);
+            this.challengeErrorTextBox.Multiline = true;
+            this.challengeErrorTextBox.Name = "challengeErrorTextBox";
+            this.challengeErrorTextBox.ReadOnly = true;
+            this.challengeErrorTextBox.Size = new System.Drawing.Size(484, 101);
+            this.challengeErrorTextBox.TabIndex = 2;
+            this.challengeErrorTextBox.WordWrap = false;
             // 
-            // httpResourceUrlLabel
+            // challengeErrorLabel
             // 
-            this.httpResourceUrlLabel.AutoSize = true;
-            this.httpResourceUrlLabel.Location = new System.Drawing.Point(6, 6);
-            this.httpResourceUrlLabel.Name = "httpResourceUrlLabel";
-            this.httpResourceUrlLabel.Size = new System.Drawing.Size(158, 25);
-            this.httpResourceUrlLabel.TabIndex = 7;
-            this.httpResourceUrlLabel.Text = "Resource URL:";
+            this.challengeErrorLabel.AutoSize = true;
+            this.challengeErrorLabel.Location = new System.Drawing.Point(12, 80);
+            this.challengeErrorLabel.Name = "challengeErrorLabel";
+            this.challengeErrorLabel.Size = new System.Drawing.Size(65, 25);
+            this.challengeErrorLabel.TabIndex = 5;
+            this.challengeErrorLabel.Text = "Error:";
             // 
-            // httpResourcePathTextBox
+            // challengeStatusTextBox
             // 
-            this.httpResourcePathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeStatusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourcePathTextBox.Location = new System.Drawing.Point(196, 40);
-            this.httpResourcePathTextBox.Name = "httpResourcePathTextBox";
-            this.httpResourcePathTextBox.ReadOnly = true;
-            this.httpResourcePathTextBox.Size = new System.Drawing.Size(484, 31);
-            this.httpResourcePathTextBox.TabIndex = 8;
+            this.challengeStatusTextBox.Location = new System.Drawing.Point(210, 40);
+            this.challengeStatusTextBox.Name = "challengeStatusTextBox";
+            this.challengeStatusTextBox.ReadOnly = true;
+            this.challengeStatusTextBox.Size = new System.Drawing.Size(484, 31);
+            this.challengeStatusTextBox.TabIndex = 1;
             // 
-            // httpResourcePathLabel
+            // challengeStatusLabel
             // 
-            this.httpResourcePathLabel.AutoSize = true;
-            this.httpResourcePathLabel.Location = new System.Drawing.Point(6, 43);
-            this.httpResourcePathLabel.Name = "httpResourcePathLabel";
-            this.httpResourcePathLabel.Size = new System.Drawing.Size(160, 25);
-            this.httpResourcePathLabel.TabIndex = 9;
-            this.httpResourcePathLabel.Text = "Resource Path:";
+            this.challengeStatusLabel.AutoSize = true;
+            this.challengeStatusLabel.Location = new System.Drawing.Point(12, 43);
+            this.challengeStatusLabel.Name = "challengeStatusLabel";
+            this.challengeStatusLabel.Size = new System.Drawing.Size(79, 25);
+            this.challengeStatusLabel.TabIndex = 4;
+            this.challengeStatusLabel.Text = "Status:";
             // 
-            // httpResourceContentTypeTextBox
+            // challengeTypeTextBox
             // 
-            this.httpResourceContentTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.challengeTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourceContentTypeTextBox.Location = new System.Drawing.Point(196, 77);
-            this.httpResourceContentTypeTextBox.Name = "httpResourceContentTypeTextBox";
-            this.httpResourceContentTypeTextBox.ReadOnly = true;
-            this.httpResourceContentTypeTextBox.Size = new System.Drawing.Size(484, 31);
-            this.httpResourceContentTypeTextBox.TabIndex = 10;
+            this.challengeTypeTextBox.Location = new System.Drawing.Point(210, 3);
+            this.challengeTypeTextBox.Name = "challengeTypeTextBox";
+            this.challengeTypeTextBox.ReadOnly = true;
+            this.challengeTypeTextBox.Size = new System.Drawing.Size(484, 31);
+            this.challengeTypeTextBox.TabIndex = 0;
             // 
-            // httpResourceContentTypeLabel
+            // challengeTypeLabel
             // 
-            this.httpResourceContentTypeLabel.AutoSize = true;
-            this.httpResourceContentTypeLabel.Location = new System.Drawing.Point(6, 80);
-            this.httpResourceContentTypeLabel.Name = "httpResourceContentTypeLabel";
-            this.httpResourceContentTypeLabel.Size = new System.Drawing.Size(185, 25);
-            this.httpResourceContentTypeLabel.TabIndex = 11;
-            this.httpResourceContentTypeLabel.Text = "Res Content-type:";
+            this.challengeTypeLabel.AutoSize = true;
+            this.challengeTypeLabel.Location = new System.Drawing.Point(12, 6);
+            this.challengeTypeLabel.Name = "challengeTypeLabel";
+            this.challengeTypeLabel.Size = new System.Drawing.Size(66, 25);
+            this.challengeTypeLabel.TabIndex = 3;
+            this.challengeTypeLabel.Text = "Type:";
             // 
-            // httpResourceValueTextBox
+            // orderButtonsFlowLayoutPanel
             // 
-            this.httpResourceValueTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.orderButtonsFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourceValueTextBox.Location = new System.Drawing.Point(196, 114);
-            this.httpResourceValueTextBox.Multiline = true;
-            this.httpResourceValueTextBox.Name = "httpResourceValueTextBox";
-            this.httpResourceValueTextBox.ReadOnly = true;
-            this.httpResourceValueTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.httpResourceValueTextBox.Size = new System.Drawing.Size(484, 124);
-            this.httpResourceValueTextBox.TabIndex = 12;
-            this.httpResourceValueTextBox.WordWrap = false;
+            this.orderButtonsFlowLayoutPanel.Controls.Add(this.createOrderButton);
+            this.orderButtonsFlowLayoutPanel.Controls.Add(this.refreshOrderButton);
+            this.orderButtonsFlowLayoutPanel.Controls.Add(this.clearOrderButton);
+            this.orderButtonsFlowLayoutPanel.Location = new System.Drawing.Point(207, 198);
+            this.orderButtonsFlowLayoutPanel.Name = "orderButtonsFlowLayoutPanel";
+            this.orderButtonsFlowLayoutPanel.Padding = new System.Windows.Forms.Padding(10);
+            this.orderButtonsFlowLayoutPanel.Size = new System.Drawing.Size(936, 90);
+            this.orderButtonsFlowLayoutPanel.TabIndex = 3;
             // 
-            // httpResourceValueLabel
+            // createOrderButton
             // 
-            this.httpResourceValueLabel.AutoSize = true;
-            this.httpResourceValueLabel.Location = new System.Drawing.Point(6, 117);
-            this.httpResourceValueLabel.Name = "httpResourceValueLabel";
-            this.httpResourceValueLabel.Size = new System.Drawing.Size(171, 25);
-            this.httpResourceValueLabel.TabIndex = 13;
-            this.httpResourceValueLabel.Text = "Resource Value:";
+            this.createOrderButton.Location = new System.Drawing.Point(13, 13);
+            this.createOrderButton.Name = "createOrderButton";
+            this.createOrderButton.Size = new System.Drawing.Size(232, 60);
+            this.createOrderButton.TabIndex = 6;
+            this.createOrderButton.Text = "Create Order";
+            this.createOrderButton.UseVisualStyleBackColor = true;
+            this.createOrderButton.Click += new System.EventHandler(this.createOrderButton_Click);
             // 
-            // miscChallengeTypesListBox
+            // refreshOrderButton
             // 
-            this.miscChallengeTypesListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.refreshOrderButton.Location = new System.Drawing.Point(251, 13);
+            this.refreshOrderButton.Name = "refreshOrderButton";
+            this.refreshOrderButton.Size = new System.Drawing.Size(232, 60);
+            this.refreshOrderButton.TabIndex = 7;
+            this.refreshOrderButton.Text = "Referesh Order";
+            this.refreshOrderButton.UseVisualStyleBackColor = true;
+            this.refreshOrderButton.Click += new System.EventHandler(this.refreshOrderButton_Click);
+            // 
+            // clearOrderButton
+            // 
+            this.clearOrderButton.Location = new System.Drawing.Point(489, 13);
+            this.clearOrderButton.Name = "clearOrderButton";
+            this.clearOrderButton.Size = new System.Drawing.Size(232, 60);
+            this.clearOrderButton.TabIndex = 8;
+            this.clearOrderButton.Text = "Clear Order";
+            this.clearOrderButton.UseVisualStyleBackColor = true;
+            this.clearOrderButton.Click += new System.EventHandler(this.clearOrderButton_Click);
+            // 
+            // dnsIdentifiersTextBox
+            // 
+            this.dnsIdentifiersTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.miscChallengeTypesListBox.FormattingEnabled = true;
-            this.miscChallengeTypesListBox.ItemHeight = 25;
-            this.miscChallengeTypesListBox.Location = new System.Drawing.Point(6, 28);
-            this.miscChallengeTypesListBox.Name = "miscChallengeTypesListBox";
-            this.miscChallengeTypesListBox.Size = new System.Drawing.Size(671, 204);
-            this.miscChallengeTypesListBox.TabIndex = 2;
+            this.dnsIdentifiersTextBox.Location = new System.Drawing.Point(207, 3);
+            this.dnsIdentifiersTextBox.Multiline = true;
+            this.dnsIdentifiersTextBox.Name = "dnsIdentifiersTextBox";
+            this.dnsIdentifiersTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.dnsIdentifiersTextBox.Size = new System.Drawing.Size(936, 93);
+            this.dnsIdentifiersTextBox.TabIndex = 2;
+            // 
+            // dnsIdentifiersLabel
+            // 
+            this.dnsIdentifiersLabel.Location = new System.Drawing.Point(3, 6);
+            this.dnsIdentifiersLabel.Name = "dnsIdentifiersLabel";
+            this.dnsIdentifiersLabel.Size = new System.Drawing.Size(198, 90);
+            this.dnsIdentifiersLabel.TabIndex = 1;
+            this.dnsIdentifiersLabel.Text = "DNS Identifiers:";
+            this.dnsIdentifiersLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // mainStatusStrip
+            // 
+            this.mainStatusStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
+            this.mainStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mainStatusLabel});
+            this.mainStatusStrip.Location = new System.Drawing.Point(0, 1639);
+            this.mainStatusStrip.Name = "mainStatusStrip";
+            this.mainStatusStrip.Size = new System.Drawing.Size(1179, 37);
+            this.mainStatusStrip.TabIndex = 15;
+            this.mainStatusStrip.Text = "statusStrip1";
+            // 
+            // mainStatusLabel
+            // 
+            this.mainStatusLabel.Name = "mainStatusLabel";
+            this.mainStatusLabel.Size = new System.Drawing.Size(76, 32);
+            this.mainStatusLabel.Text = "Hello.";
+            // 
+            // accountPropertyGrid
+            // 
+            this.accountPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.accountPropertyGrid.Location = new System.Drawing.Point(190, 746);
+            this.accountPropertyGrid.Name = "accountPropertyGrid";
+            this.accountPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
+            this.accountPropertyGrid.Size = new System.Drawing.Size(774, 479);
+            this.accountPropertyGrid.TabIndex = 14;
+            // 
+            // orderPropertyGrid
+            // 
+            this.tableLayoutPanel2.SetColumnSpan(this.orderPropertyGrid, 2);
+            this.orderPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.orderPropertyGrid.HelpVisible = false;
+            this.orderPropertyGrid.Location = new System.Drawing.Point(3, 396);
+            this.orderPropertyGrid.Name = "orderPropertyGrid";
+            this.orderPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.tableLayoutPanel2.SetRowSpan(this.orderPropertyGrid, 3);
+            this.orderPropertyGrid.Size = new System.Drawing.Size(883, 756);
+            this.orderPropertyGrid.TabIndex = 23;
+            this.orderPropertyGrid.ToolbarVisible = false;
             // 
             // MainForm
             // 
@@ -1578,29 +1606,29 @@ namespace ACMEForms
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.orderButtonsFlowLayoutPanel.ResumeLayout(false);
-            this.mainStatusStrip.ResumeLayout(false);
-            this.mainStatusStrip.PerformLayout();
             this.tabControl3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.challengesTabControl.ResumeLayout(false);
             this.dnsChallengeTabPage.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.httpChallengeTabPage.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.miscChallengesTabPage.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.challengeDetailsPanel.ResumeLayout(false);
             this.challengeDetailsPanel.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.orderButtonsFlowLayoutPanel.ResumeLayout(false);
+            this.mainStatusStrip.ResumeLayout(false);
+            this.mainStatusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1702,7 +1730,7 @@ namespace ACMEForms
         private System.Windows.Forms.Label challengeTokenLabel;
         private System.Windows.Forms.TextBox challengeErrorTextBox;
         private System.Windows.Forms.Label challengeErrorLabel;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox challengeStatusTextBox;
         private System.Windows.Forms.Label challengeStatusLabel;
         private System.Windows.Forms.TextBox challengeTypeTextBox;
         private System.Windows.Forms.Label challengeTypeLabel;
@@ -1729,6 +1757,8 @@ namespace ACMEForms
         private System.Windows.Forms.TextBox httpResourcePathTextBox;
         private System.Windows.Forms.Label httpResourcePathLabel;
         private System.Windows.Forms.ListBox miscChallengeTypesListBox;
+        private System.Windows.Forms.PropertyGrid accountPropertyGrid;
+        private System.Windows.Forms.PropertyGrid orderPropertyGrid;
     }
 }
 

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ACMEForms.Storage;
+using ACMEForms.Util;
 using ACMESharp.Authorizations;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
@@ -26,10 +27,34 @@ namespace ACMEForms
         DbAccount _account;
         DbOrder _lastOrder;
 
+        IList<string> _authzListWrapper;
+        IList<string> _miscChallengesListWrapper;
+
         public MainForm()
         {
             Repo = Program.Repo;
+
+            _authzListWrapper = new ReadOnlyListWrapper<string>(
+                    () => _lastOrder?.Authorizations?.Length ?? 0,
+                    (i) => _lastOrder?.Authorizations?[i].Details.Identifier.Value);
+            _miscChallengesListWrapper = new ReadOnlyListWrapper<string>(
+                    () => SelectedAuthorization?.MiscChallenges?.Length ?? 0,
+                    (i) => SelectedAuthorization?.MiscChallenges?[i].Type);
+
             InitializeComponent();
+
+            authorizationsListBox.DataSource = _authzListWrapper;
+            miscChallengeTypesListBox.DataSource = _miscChallengesListWrapper;
+        }
+
+        private DbAuthz SelectedAuthorization
+        {
+            get
+            {
+                if (authorizationsListBox.SelectedIndex < 0)
+                    return null;
+                return _lastOrder?.Authorizations?[authorizationsListBox.SelectedIndex];
+            }
         }
 
         private void SetStatus(string message, bool addTime = true)
@@ -55,39 +80,6 @@ namespace ACMEForms
             }
         }
 
-        private void RebindAccountControls()
-        {
-            var hasAccount = _account != null;
-            var caServerEndpoint = _account?.AcmeServerEndpoint ?? DbAccount.WellKnownAcmeServers.First().Key;
-            caServerComboBox.SelectedValue = caServerEndpoint;
-            if (caServerComboBox.SelectedIndex == -1)
-            {
-                caServerComboBox.SelectedValue = string.Empty;
-                caServerTextBox.Text = caServerEndpoint;
-            }
-
-            caServerComboBox.Enabled = !hasAccount;
-            contactEmailsTextBox.Text = string.Join("\r\n",
-                    _account?.Details.Payload?.Contact.Select(x => x.Replace("mailto:", ""))
-                    ?? EmptyStrings);
-          //agreeTosCheckbox.Checked = _account?.Details.Payload.TermsOfServiceAgreed ?? false;
-            agreeTosCheckbox.Checked = !string.IsNullOrEmpty(_account?.Details?.TosLink);
-            agreeTosCheckbox.Enabled = !hasAccount;
-
-            createAccountButton.Enabled = !hasAccount;
-            refreshAccountButton.Enabled = hasAccount;
-          //updateAccountButton.Enabled = hasAccount;
-            accountDetailsGroupBox.Visible = hasAccount;
-
-            kidTextBox.Text = _account?.Details.Kid;
-            tosLinkTextBox.Text = _account?.Details.TosLink;
-            statusTextBox.Text = _account?.Details.Payload.Status;
-            ordersTextBox.Text = _account?.Details.Payload.Orders;
-            initialIpTextBox.Text = _account?.Details.Payload.InitialIp;
-            createdAtTextBox.Text = _account?.Details.Payload.CreatedAt;
-            agreementTextBox.Text = _account?.Details.Payload.Agreement;
-        }
-
         private (bool valid, DateTime date) ParseDateRangeDate(string value)
         {
             if (!string.IsNullOrEmpty(value) && DateTime.TryParse(value, out var dt))
@@ -96,43 +88,15 @@ namespace ACMEForms
             return (false, new DateTime(1900, 1, 1));
         }
 
-        private void RebindOrderControls()
+        private string Stringify(object o, object ifNull = null)
         {
-            var hasOrder = _lastOrder != null;
+            if (o == null)
+                if (ifNull is string ifNullString)
+                    return ifNullString;
+                else
+                    o = ifNull;
 
-            createOrderButton.Enabled = !hasOrder;
-            refreshOrderButton.Enabled = hasOrder;
-
-            dnsIdentifiersTextBox.ReadOnly = hasOrder;
-            dnsIdentifiersTextBox.Text = string.Join("\r\n",
-                    _lastOrder?.Details.Payload.Identifiers.Select(x => x.Value)
-                    ?? EmptyStrings);
-
-            var notBefore = ParseDateRangeDate(_lastOrder?.Details.Payload.NotBefore);
-            notBeforeDateTimePicker.Enabled = !hasOrder;
-            notBeforeDateTimePicker.Checked = notBefore.valid;
-            notBeforeDateTimePicker.Value = notBefore.date;
-
-            var notAfter = ParseDateRangeDate(_lastOrder?.Details.Payload.NotAfter);
-            notAfterDateTimePicker.Enabled = !hasOrder;
-            notAfterDateTimePicker.Checked = notAfter.valid;
-            notAfterDateTimePicker.Value = notAfter.date;
-
-            orderUrlTextBox.Text = _lastOrder?.Details.OrderUrl;
-            firstOrderUrlTextBox.Text = _lastOrder?.FirstOrderUrl;
-            orderStatusTextBox.Text = _lastOrder?.Details.Payload.Status;
-            orderExpiresTextBox.Text = _lastOrder?.Details.Payload.Expires;
-
-            finalizeUrlTextBox.Text = _lastOrder?.Details.Payload.Finalize;
-            certificateUrlTextBox.Text = _lastOrder?.Details.Payload.Certificate;
-
-            errorStatusTextBox.Text = _lastOrder?.Details.Payload.Error?.Status?.ToString();
-            errorTypeTextBox.Text = _lastOrder?.Details.Payload.Error?.Type;
-            errorDetailTextBox.Text = _lastOrder?.Details.Payload.Error?.Detail;
-
-            var authzs = _lastOrder?.Authorizations?.Select(x => x.Details.Identifier.Value).ToArray();
-            authorizationsListBox.DataSource = authzs;
-            authorizationsListBox.SelectedIndex = authzs?.Length > 0 ? 0 : -1;
+            return JsonConvert.SerializeObject(o, Formatting.Indented);
         }
 
         private Uri ResolveCaServerEndpoint()
@@ -192,6 +156,221 @@ namespace ACMEForms
 
             _lastOrder = Repo.GetOrders().LastOrDefault();
             RebindOrderControls();
+        }
+
+        private void RebindAccountControls()
+        {
+            var hasAccount = _account != null;
+            var caServerEndpoint = _account?.AcmeServerEndpoint ?? DbAccount.WellKnownAcmeServers.First().Key;
+            caServerComboBox.SelectedValue = caServerEndpoint;
+            if (caServerComboBox.SelectedIndex == -1)
+            {
+                caServerComboBox.SelectedValue = string.Empty;
+                caServerTextBox.Text = caServerEndpoint;
+            }
+
+            caServerComboBox.Enabled = !hasAccount;
+            contactEmailsTextBox.Text = string.Join("\r\n",
+                    _account?.Details.Payload?.Contact.Select(x => x.Replace("mailto:", ""))
+                    ?? EmptyStrings);
+            //agreeTosCheckbox.Checked = _account?.Details.Payload.TermsOfServiceAgreed ?? false;
+            agreeTosCheckbox.Checked = !string.IsNullOrEmpty(_account?.Details?.TosLink);
+            agreeTosCheckbox.Enabled = !hasAccount;
+
+            createAccountButton.Enabled = !hasAccount;
+            refreshAccountButton.Enabled = hasAccount;
+            //updateAccountButton.Enabled = hasAccount;
+            accountDetailsGroupBox.Visible = hasAccount;
+
+            kidTextBox.Text = _account?.Details.Kid;
+            tosLinkTextBox.Text = _account?.Details.TosLink;
+            statusTextBox.Text = _account?.Details.Payload.Status;
+            ordersTextBox.Text = _account?.Details.Payload.Orders;
+            initialIpTextBox.Text = _account?.Details.Payload.InitialIp;
+            createdAtTextBox.Text = _account?.Details.Payload.CreatedAt;
+            agreementTextBox.Text = _account?.Details.Payload.Agreement;
+
+            accountPropertyGrid.SelectedObject = new AccountDetailsViewModel
+            {
+                _mainForm = this,
+        }   ;
+        }
+
+        public class AccountDetailsViewModel
+        {
+            public MainForm _mainForm;
+
+            [DisplayName("KID")]
+            [Description("Key Identifier which uniquely identifies this account with the ACME CA server.")]
+            public string KId => _mainForm._account?.Details.Kid;
+            public string TosLink => _mainForm._account?.Details.TosLink;
+            public string Status => _mainForm._account?.Details.Payload.Status;
+        }
+
+        private void RebindOrderControls()
+        {
+            var hasOrder = _lastOrder != null;
+
+            createOrderButton.Enabled = !hasOrder;
+            refreshOrderButton.Enabled = hasOrder;
+
+            dnsIdentifiersTextBox.ReadOnly = hasOrder;
+            dnsIdentifiersTextBox.Text = string.Join("\r\n",
+                    _lastOrder?.Details.Payload.Identifiers.Select(x => x.Value)
+                    ?? EmptyStrings);
+
+            var notBefore = ParseDateRangeDate(_lastOrder?.Details.Payload.NotBefore);
+            notBeforeDateTimePicker.Enabled = !hasOrder;
+            notBeforeDateTimePicker.Checked = notBefore.valid;
+            notBeforeDateTimePicker.Value = notBefore.date;
+
+            var notAfter = ParseDateRangeDate(_lastOrder?.Details.Payload.NotAfter);
+            notAfterDateTimePicker.Enabled = !hasOrder;
+            notAfterDateTimePicker.Checked = notAfter.valid;
+            notAfterDateTimePicker.Value = notAfter.date;
+
+            orderUrlTextBox.Text = _lastOrder?.Details.OrderUrl;
+            firstOrderUrlTextBox.Text = _lastOrder?.FirstOrderUrl;
+            orderStatusTextBox.Text = _lastOrder?.Details.Payload.Status;
+            orderExpiresTextBox.Text = _lastOrder?.Details.Payload.Expires;
+
+            finalizeUrlTextBox.Text = _lastOrder?.Details.Payload.Finalize;
+            certificateUrlTextBox.Text = _lastOrder?.Details.Payload.Certificate;
+
+            errorStatusTextBox.Text = _lastOrder?.Details.Payload.Error?.Status?.ToString();
+            errorTypeTextBox.Text = _lastOrder?.Details.Payload.Error?.Type;
+            errorDetailTextBox.Text = _lastOrder?.Details.Payload.Error?.Detail;
+
+            //var authzs = _lastOrder?.Authorizations?.Select(x => x.Details.Identifier.Value).ToArray();
+            // We have to "re-set" the DS in order for the control to refresh the contents and bounds
+            authorizationsListBox.DataSource = null;
+            authorizationsListBox.DataSource = _authzListWrapper;
+            authorizationsListBox.SelectedIndex = _authzListWrapper.Count > 0 ? 0 : -1;
+
+            orderPropertyGrid.SelectedObject = new OrderDetailsViewModel
+            {
+                _mainForm = this,
+            };
+        }
+
+        public class OrderDetailsViewModel
+        {
+            const string GeneralCat = "1 - General";
+            const string EndpointUrlsCat = "2 - Endpoint URLs";
+            const string ErrorCat = "3 - Error";
+
+            public MainForm _mainForm;
+
+            [Category(GeneralCat)]
+            public string OrderUrl => _mainForm._lastOrder?.Details.OrderUrl;
+            [Category(GeneralCat)]
+            public string FirstOrderUrl => _mainForm._lastOrder?.FirstOrderUrl;
+            [Category(GeneralCat)]
+            public string Status => _mainForm._lastOrder?.Details.Payload.Status;
+            [Category(GeneralCat)]
+            public string Expires => _mainForm._lastOrder?.Details.Payload.Expires;
+            [Category(EndpointUrlsCat)]
+            public string FinalizeUrl => _mainForm._lastOrder?.Details.Payload.Finalize;
+            [Category(EndpointUrlsCat)]
+            public string CertificateUrl => _mainForm._lastOrder?.Details.Payload.Certificate;
+            [Category(ErrorCat)]
+            //public Problem Error => _mainForm._lastOrder?.Details.Payload.Error;
+            public ProblemViewModel Error => new ProblemViewModel(new Problem()
+            {
+                Type = "FOO",
+                Status = 400,
+                Detail = "This is a FOO 400 error!",
+            });
+        }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public class ProblemViewModel
+        {
+            Problem _problem;
+
+            public ProblemViewModel(Problem p)
+            {
+                _problem = p;
+            }
+
+            public string Type => _problem.Type;
+            public int? Status => _problem.Status;
+            public string Detail => _problem.Detail;
+
+            public override string ToString()
+            {
+                return $"({Type}, {Status}, {Detail})";
+            }
+        }
+
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public class NestedObjectProperty<T>
+        {
+            [Browsable(false)]
+            public Func<NestedObjectProperty<T>, T> Getter { get; set; }
+
+            [Browsable(false)]
+            public Func<NestedObjectProperty<T>, bool> Exister { get; set; } = p => p.Getter(p) != null;
+        }
+
+        private void RebindAuthorizationControls()
+        {
+            var authz = SelectedAuthorization;
+            identifierTypeTextBox.Text = authz?.Details.Identifier.Type;
+            authzUrlTextBox.Text = authz?.Url;
+            isWildcardCheckBox.Checked = authz?.Details.Wildcard ?? false;
+            authzStatusTextBox.Text = authz?.Details.Status;
+            authzExpiresTextBox.Text = authz?.Details.Expires;
+
+            //miscChallengeTypesListBox.DataSource =
+            //        (authz.MiscChallenges?.Select(x => x.Type) ?? EmptyStrings).ToArray();
+            // We have to "re-set" the DS in order for the control to refresh the contents and bounds
+            miscChallengeTypesListBox.DataSource = null;
+            miscChallengeTypesListBox.DataSource = _miscChallengesListWrapper;
+            miscChallengeTypesListBox.SelectedIndex = _miscChallengesListWrapper.Count > 0 ? 0 : -1;
+
+            RebindChallengeControls();
+        }
+
+        private void RebindChallengeControls()
+        {
+            var authz = SelectedAuthorization;
+            var tp = challengesTabControl.SelectedTab;
+
+            dnsRecordNameTextBox.Text = authz?.DnsChallenge?.DnsRecordName;
+            dnsRecordTypeTextBox.Text = authz?.DnsChallenge?.DnsRecordType;
+            dnsRecordValueTextBox.Text = authz?.DnsChallenge?.DnsRecordValue;
+
+            httpResourceUrlTextBox.Text = authz?.HttpChallenge?.HttpResourceUrl;
+            httpResourcePathTextBox.Text = authz?.HttpChallenge?.HttpResourcePath;
+            httpResourceContentTypeTextBox.Text = authz?.HttpChallenge?.HttpResourceContentType;
+            httpResourceValueTextBox.Text = authz?.HttpChallenge?.HttpResourceValue;
+
+            Challenge ch = null;
+
+            if (tp == dnsChallengeTabPage)
+            {
+                ch = authz?.Details.Challenges.FirstOrDefault(
+                        x => x.Type == authz?.DnsChallenge?.ChallengeType);
+            }
+            else if (tp == httpChallengeTabPage)
+            {
+                ch = authz?.Details.Challenges.FirstOrDefault(
+                        x => x.Type == authz?.HttpChallenge?.ChallengeType);
+            }
+            else if (miscChallengeTypesListBox.SelectedIndex >= 0)
+            {
+                ch = authz?.Details.Challenges.FirstOrDefault(
+                        x => x.Type == (string)miscChallengeTypesListBox.SelectedValue);
+            }
+
+            challengeTypeTextBox.Text = ch?.Type;
+            challengeStatusTextBox.Text = ch?.Status;
+            challengeErrorTextBox.Text = Stringify(ch?.Error, string.Empty);
+            challengeTokenTextBox.Text = ch?.Token;
+            challengeUrlTextBox.Text = ch?.Url;
+            challengeValidatedTextBox.Text = ch?.Validated;
+            validationRecordsTextBox.Text = Stringify(ch?.ValidationRecord, string.Empty);
         }
 
         private void caServerComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -329,6 +508,52 @@ namespace ACMEForms
             });
         }
 
+        private async Task RefreshOrderAuthorizations(AcmeProtocolClient acme)
+        {
+            var details = _lastOrder.Details;
+            var authzs = new List<DbAuthz>();
+            foreach (var authzUrl in details.Payload.Authorizations)
+            {
+                var authzDetails = await acme.GetAuthorizationDetailsAsync(authzUrl);
+                authzs.Add(new DbAuthz
+                {
+                    Url = authzUrl,
+                    Details = authzDetails,
+                });
+            }
+            _lastOrder.Authorizations = authzs.ToArray();
+        }
+
+        private Task DecodeOrderAuthorizationChallenges(ACMESharp.Crypto.JOSE.IJwsTool signer)
+        {
+            foreach (var authz in _lastOrder.Authorizations)
+            {
+                var miscList = new List<Challenge>();
+                foreach (var ch in authz.Details.Challenges)
+                {
+                    switch (ch.Type)
+                    {
+                        case Dns01ChallengeValidationDetails.Dns01ChallengeType:
+                            authz.DnsChallenge = AuthorizationDecoder.ResolveChallengeForDns01(
+                                authz.Details, ch, signer);
+                            miscList.Add(ch);
+                            break;
+                        case Http01ChallengeValidationDetails.Http01ChallengeType:
+                            authz.HttpChallenge = AuthorizationDecoder.ResolveChallengeForHttp01(
+                                authz.Details, ch, signer);
+                            miscList.Add(ch);
+                            break;
+                        default:
+                            miscList.Add(ch);
+                            break;
+                    }
+                }
+                authz.MiscChallenges = miscList.ToArray();
+            }
+
+            return Task.CompletedTask;
+        }
+
         private async void createOrderButton_Click(object sender, EventArgs e)
         {
             var url = ResolveCaServerEndpoint();
@@ -370,22 +595,18 @@ namespace ACMEForms
                     RebindOrderControls();
                     SetStatus("Order created and saved");
 
-                    var authzs = new List<DbAuthz>();
-                    foreach (var authzUrl in details.Payload.Authorizations)
-                    {
-                        var authzDetails = await acme.GetAuthorizationDetailsAsync(authzUrl);
-                        authzs.Add(new DbAuthz
-                        {
-                            Url = authzUrl,
-                            Details = authzDetails,
-                        });
-                    }
-                    _lastOrder.Authorizations = authzs.ToArray();
-                    Repo.Saveorder(_lastOrder);
-
-                    RebindOrderControls();
-                    SetStatus("Authorization details resolved and saved");
+                    RefreshOrderAuthorizations(acme);
                 }
+
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("Order created and Authorization resolved and saved");
+
+                DecodeOrderAuthorizationChallenges(signer);
+
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("Order created, Authorizations resolved and Challenges decoded and saved");
             });
         }
 
@@ -416,45 +637,18 @@ namespace ACMEForms
                     RebindOrderControls();
                     SetStatus("Order refreshed and saved");
 
-                    var authzs = new List<DbAuthz>();
-                    foreach (var authzUrl in details.Payload.Authorizations)
-                    {
-                        var authzDetails = await acme.GetAuthorizationDetailsAsync(authzUrl);
-                        authzs.Add(new DbAuthz
-                        {
-                            Url = authzUrl,
-                            Details = authzDetails,
-                        });
-                    }
-                    _lastOrder.Authorizations = authzs.ToArray();
-                    Repo.Saveorder(_lastOrder);
-
-                    RebindOrderControls();
-                    SetStatus("Order details refreshed and saved");
+                    await RefreshOrderAuthorizations(acme);
                 }
 
-                foreach (var authz in _lastOrder.Authorizations)
-                {
-                    var miscList = new List<Challenge>();
-                    foreach (var ch in authz.Details.Challenges)
-                    {
-                        switch (ch.Type)
-                        {
-                            case Dns01ChallengeValidationDetails.Dns01ChallengeType:
-                                authz.DnsChallenge = AuthorizationDecoder.ResolveChallengeForDns01(
-                                    authz.Details, ch, signer);
-                                break;
-                            case Http01ChallengeValidationDetails.Http01ChallengeType:
-                                authz.HttpChallenge= AuthorizationDecoder.ResolveChallengeForHttp01(
-                                    authz.Details, ch, signer);
-                                break;
-                            default:
-                                miscList.Add(ch);
-                                break;
-                        }
-                    }
-                    authz.MiscChallenges = miscList.ToArray();
-                }
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("Order details and Authorizations refreshed and saved");
+
+                await DecodeOrderAuthorizationChallenges(signer);
+
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("Order details and Authorizations refreshed, Challenges decoded and saved");
             });
         }
 
@@ -467,59 +661,17 @@ namespace ACMEForms
 
         private void authorizationsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var authz = _lastOrder?.Authorizations?[authorizationsListBox.SelectedIndex];
-            identifierTypeTextBox.Text = authz?.Details.Identifier.Type;
-            authzUrlTextBox.Text = authz?.Url;
-            isWildcardCheckBox.Checked = authz?.Details.Wildcard ?? false;
-            authzStatusTextBox.Text = authz?.Details.Status;
-            authzExpiresTextBox.Text = authz?.Details.Expires;
-
-            miscChallengeTypesListBox.DataSource =
-                    authz.MiscChallenges.Select(x => x.Type) ?? EmptyStrings;
-
-            // Force a refresh of the challenge details
-            challengesTabControl_SelectedIndexChanged(sender, e);
+            RebindAuthorizationControls();
         }
 
         private void challengesTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var authz = _lastOrder?.Authorizations?[authorizationsListBox.SelectedIndex];
-            var tp = challengesTabControl.SelectedTab;
+            RebindChallengeControls();
+        }
 
-            dnsRecordNameTextBox.Text = authz?.DnsChallenge?.DnsRecordName;
-            dnsRecordTypeTextBox.Text = authz?.DnsChallenge?.DnsRecordType;
-            dnsRecordValueTextBox.Text = authz?.DnsChallenge?.DnsRecordValue;
-
-            httpResourceUrlTextBox.Text = authz?.HttpChallenge?.HttpResourceUrl;
-            httpResourcePathTextBox.Text = authz?.HttpChallenge?.HttpResourcePath;
-            httpResourceContentTypeTextBox.Text = authz?.HttpChallenge?.HttpResourceContentType;
-            httpResourceValueTextBox.Text = authz?.HttpChallenge?.HttpResourceValue;
-
-            Challenge ch = null;
-
-            if (tp == dnsChallengeTabPage)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == authz?.DnsChallenge?.ChallengeType);
-            }
-            else if (tp == httpChallengeTabPage)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == authz?.HttpChallenge?.ChallengeType);
-            }
-            else if (miscChallengeTypesListBox.SelectedIndex >= 0)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == (string)miscChallengeTypesListBox.SelectedValue);
-            }
-
-            challengeTypeTextBox.Text = ch?.Type;
-            challengeTypeTextBox.Text = ch?.Status;
-            challengeTypeTextBox.Text = JsonConvert.SerializeObject(ch?.Error ?? string.Empty);
-            challengeTypeTextBox.Text = ch?.Token;
-            challengeTypeTextBox.Text = ch?.Url;
-            challengeTypeTextBox.Text = ch?.Validated;
-            challengeTypeTextBox.Text = JsonConvert.SerializeObject(ch?.ValidationRecord ?? EmptyStrings);
+        private void miscChallengeTypesListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RebindChallengeControls();
         }
     }
 }
