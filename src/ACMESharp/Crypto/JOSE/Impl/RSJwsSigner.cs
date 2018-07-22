@@ -11,10 +11,10 @@ namespace ACMESharp.Crypto.JOSE.Impl
     /// </summary>
     internal class RSJwsSigner : JwsAlgorithm
     {
-        private HashAlgorithm _hashAlgorithm;
-        private RSACryptoServiceProvider _algorithm;
+        private HashAlgorithmName _hashAlgorithm;
+        private RSA _algorithm;
 
-        private static int[] ValidHashSizes = new[] { 256, 374, 512 };
+        private static int[] ValidHashSizes = new[] { 256, 384, 512 };
         
         public RSJwsSigner(string algorithmIdentifier)
         {
@@ -26,13 +26,27 @@ namespace ACMESharp.Crypto.JOSE.Impl
             AlgorithmIdentifier = algorithmIdentifier;
             JwsAlg = $"RS{sizes.hashSize}";
 
-            _hashAlgorithm = HashAlgorithm.Create($"SHA{sizes.hashSize}");
+            switch(sizes.hashSize)
+            {
+                case 256:
+                    _hashAlgorithm = HashAlgorithmName.SHA256;
+                    break;
+
+                case 384:
+                    _hashAlgorithm = HashAlgorithmName.SHA384;
+                    break;
+
+                case 512:
+                    _hashAlgorithm = HashAlgorithmName.SHA512;
+                    break;
+            }
+
             _algorithm = new RSACryptoServiceProvider(sizes.keySize);
         }
 
         protected override byte[] SignInternal(byte[] input)
         {
-            return _algorithm.SignData(input, _hashAlgorithm);
+            return _algorithm.SignData(input, 0, input.Length, _hashAlgorithm, RSASignaturePadding.Pkcs1);
         }
 
         public override object ExportPublicJwk()
@@ -67,9 +81,6 @@ namespace ACMESharp.Crypto.JOSE.Impl
         {
             _algorithm?.Dispose();
             _algorithm = null;
-
-            _hashAlgorithm?.Dispose();
-            _hashAlgorithm = null;
         }
 
         private static Regex ValidNameRegex = new Regex("^RS(?'hashSize'\\d{3})-(?'keySize'\\d{4})$", RegexOptions.Compiled);
