@@ -1,4 +1,7 @@
-﻿using System;
+using System;
+using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE
 {
@@ -47,6 +50,19 @@ namespace ACMESharp.Crypto.JOSE
         /// </summary>
         public string JwsAlg { get; protected set; }
         
+        public byte[] JwsThumbprint
+        {
+            get
+            {
+                var jwkJson = JsonConvert.SerializeObject(ExportPublicJwk(), Formatting.None);
+                var jwkBytes = Encoding.UTF8.GetBytes(jwkJson);
+
+                using(var sha256 = SHA256.Create())
+                {
+                    return sha256.ComputeHash(jwkBytes);
+                }
+            }
+        }
 
         public JwsAlgorithmExport Export()
         {
