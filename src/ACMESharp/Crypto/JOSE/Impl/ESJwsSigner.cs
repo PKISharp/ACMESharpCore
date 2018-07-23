@@ -84,9 +84,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
             {
                 D = Convert.ToBase64String(ecParams.D),
                 X = Convert.ToBase64String(ecParams.Q.X),
-                Y = Convert.ToBase64String(ecParams.Q.Y),
+                Y = Convert.ToBase64String(ecParams.Q.Y)
             };
-
+            
             return JsonConvert.SerializeObject(details);
         }
 
@@ -120,6 +120,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
             public string Y { get; set; }
         }
+
 
         private static Regex ValidNameRegex = new Regex("^ES(?'hashSize'\\d{3})$", RegexOptions.Compiled);
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -15,7 +16,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
         private RSA _algorithm;
 
         private static int[] ValidHashSizes = new[] { 256, 384, 512 };
-        
+
         public RSJwsSigner(string algorithmIdentifier)
         {
             if (!IsValidIdentifier(algorithmIdentifier))
@@ -26,7 +27,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             AlgorithmIdentifier = algorithmIdentifier;
             JwsAlg = $"RS{sizes.hashSize}";
 
-            switch(sizes.hashSize)
+            switch (sizes.hashSize)
             {
                 case 256:
                     _hashAlgorithm = HashAlgorithmName.SHA256;
@@ -67,12 +68,20 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
         protected override string ExportInternal()
         {
-            return _algorithm.ToXmlString(true);
+            var rsaParams = _algorithm.ExportParameters(true);
+            var details = ExportDetails.FromParameters(rsaParams);
+
+            return JsonConvert.SerializeObject(details);
         }
 
         protected override void ImportInternal(string exported)
         {
-            _algorithm.FromXmlString(exported);
+            var details = JsonConvert.DeserializeObject<ExportDetails>(exported);
+
+            var rsaParams = _algorithm.ExportParameters(true);
+            details.ApplyTo(rsaParams);
+
+            _algorithm.ImportParameters(rsaParams);
         }
 
         protected override bool IsValidIdentifier(string algorithmIdentifier) => IsValidName(algorithmIdentifier);
@@ -83,6 +92,53 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _algorithm?.Dispose();
             _algorithm = null;
         }
+
+
+        class ExportDetails
+        {
+            public string D { get; set; }
+            public string DP { get; set; }
+            public string DQ { get; set; }
+
+            public string Exponent { get; set; }
+            public string InverseQ { get; set; }
+            public string Modulus { get; set; }
+
+            public string P { get; set; }
+            public string Q { get; set; }
+
+            public static ExportDetails FromParameters(RSAParameters rsaParams)
+            {
+                return new ExportDetails
+                {
+                    D = Convert.ToBase64String(rsaParams.D),
+                    DP = Convert.ToBase64String(rsaParams.DP),
+                    DQ = Convert.ToBase64String(rsaParams.DQ),
+
+                    Exponent = Convert.ToBase64String(rsaParams.Exponent),
+                    InverseQ = Convert.ToBase64String(rsaParams.InverseQ),
+                    Modulus = Convert.ToBase64String(rsaParams.Modulus),
+
+                    P = Convert.ToBase64String(rsaParams.P),
+                    Q = Convert.ToBase64String(rsaParams.Q)
+                };
+            }
+
+            public void ApplyTo(RSAParameters rsaParams)
+            {
+                rsaParams.D = Convert.FromBase64String(D);
+                rsaParams.DP = Convert.FromBase64String(DP);
+                rsaParams.DQ = Convert.FromBase64String(DQ);
+
+                rsaParams.Exponent = Convert.FromBase64String(Exponent);
+                rsaParams.InverseQ = Convert.FromBase64String(InverseQ);
+                rsaParams.Modulus = Convert.FromBase64String(Modulus);
+
+                rsaParams.P = Convert.FromBase64String(P);
+                rsaParams.Q = Convert.FromBase64String(Q);
+            }
+        }
+
 
         private static Regex ValidNameRegex = new Regex("^RS(?'hashSize'\\d{3})-(?'keySize'\\d{4})$", RegexOptions.Compiled);
 
@@ -112,7 +168,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             if (!ValidHashSizes.Contains(hashSize))
                 throw new ArgumentOutOfRangeException($"HashSize needs to be one of {string.Join(", ", ValidHashSizes)}", nameof(hashSize));
 
-            if(keySize < 2048 && keySize > 4096 && keySize % 8 == 0)
+            if (keySize < 2048 && keySize > 4096 && keySize % 8 == 0)
                 throw new ArgumentOutOfRangeException($"KeySize needs to be between 2048 and 4096 and divisable by 8", nameof(keySize));
 
             return (hashSize, keySize);
