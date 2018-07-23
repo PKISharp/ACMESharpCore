@@ -41,7 +41,8 @@ namespace ACMESharp.Crypto.JOSE.Impl
                     break;
             }
 
-            _algorithm = new RSACryptoServiceProvider(sizes.keySize);
+            _algorithm = RSA.Create();
+            _algorithm.KeySize = (sizes.keySize);
         }
 
         protected override byte[] SignInternal(byte[] input)
