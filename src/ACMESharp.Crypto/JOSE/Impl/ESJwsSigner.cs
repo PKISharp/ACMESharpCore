@@ -15,7 +15,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
         private HashAlgorithmName _hashName;
         private ECDsa _algorithm;
 
-        private static int[] ValidHashSizes = new[] { 256, 374, 512 };
+        private static int[] ValidHashSizes = new[] { 256, 384, 512 };
 
         /// <summary>
         /// As per:  https://tools.ietf.org/html/rfc7518#section-6.2.1.1

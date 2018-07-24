@@ -5,21 +5,23 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp", "src\ACMESharp\ACMESharp.csproj", "{7271DEFE-BC5D-4716-883E-1C1343AF38EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp", "src\ACMESharp\ACMESharp.csproj", "{7271DEFE-BC5D-4716-883E-1C1343AF38EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.DotNetCore", "src\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj", "{3DE930D7-55B4-419F-8BB3-1FE9424D5644}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp.DotNetCore", "src\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj", "{3DE930D7-55B4-419F-8BB3-1FE9424D5644}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{CB261B10-6C7A-4B27-BB1E-448ACC76A10B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.IntegrationTests", "test\ACMESharp.IntegrationTests\ACMESharp.IntegrationTests.csproj", "{98D57789-FC6E-4369-B5FF-EB2EBC6EB6E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp.IntegrationTests", "test\ACMESharp.IntegrationTests\ACMESharp.IntegrationTests.csproj", "{98D57789-FC6E-4369-B5FF-EB2EBC6EB6E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Testing.Xunit", "test\ACMESharp.Testing.Xunit\ACMESharp.Testing.Xunit.csproj", "{8451C04A-61F3-4F7F-B033-BBF41C2391D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp.Testing.Xunit", "test\ACMESharp.Testing.Xunit\ACMESharp.Testing.Xunit.csproj", "{8451C04A-61F3-4F7F-B033-BBF41C2391D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.UnitTests", "test\ACMESharp.UnitTests\ACMESharp.UnitTests.csproj", "{1470EE7A-CD1B-42E5-BCF3-88EB5194F40C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp.UnitTests", "test\ACMESharp.UnitTests\ACMESharp.UnitTests.csproj", "{1470EE7A-CD1B-42E5-BCF3-88EB5194F40C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKISharp.SimplePKI", "src\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{E8D8739A-DCBC-4A4C-AB65-1A3F9EFB6015}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "src\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{E8D8739A-DCBC-4A4C-AB65-1A3F9EFB6015}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKISharp.SimplePKI.UnitTests", "test\PKISharp.SimplePKI.UnitTests\PKISharp.SimplePKI.UnitTests.csproj", "{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI.UnitTests", "test\PKISharp.SimplePKI.UnitTests\PKISharp.SimplePKI.UnitTests.csproj", "{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp.Crypto", "src\ACMESharp.Crypto\ACMESharp.Crypto.csproj", "{CDF3A96F-5C88-4E33-B400-AA6229C7496C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,9 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7271DEFE-BC5D-4716-883E-1C1343AF38EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -118,14 +117,33 @@ Global
 		{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C}.Release|x64.Build.0 = Release|Any CPU
 		{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C}.Release|x86.Build.0 = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|x64.Build.0 = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Debug|x86.Build.0 = Debug|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|x64.ActiveCfg = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|x64.Build.0 = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|x86.ActiveCfg = Release|Any CPU
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7271DEFE-BC5D-4716-883E-1C1343AF38EA} = {7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}
+		{3DE930D7-55B4-419F-8BB3-1FE9424D5644} = {7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}
 		{98D57789-FC6E-4369-B5FF-EB2EBC6EB6E4} = {CB261B10-6C7A-4B27-BB1E-448ACC76A10B}
 		{8451C04A-61F3-4F7F-B033-BBF41C2391D7} = {CB261B10-6C7A-4B27-BB1E-448ACC76A10B}
 		{1470EE7A-CD1B-42E5-BCF3-88EB5194F40C} = {CB261B10-6C7A-4B27-BB1E-448ACC76A10B}
-		{3DE930D7-55B4-419F-8BB3-1FE9424D5644} = {7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}
 		{E8D8739A-DCBC-4A4C-AB65-1A3F9EFB6015} = {7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}
 		{B4D9A8E9-7EC0-45AB-91A7-E788DD1A811C} = {CB261B10-6C7A-4B27-BB1E-448ACC76A10B}
+		{CDF3A96F-5C88-4E33-B400-AA6229C7496C} = {7E7FB75C-39A9-40A8-A5E0-5D90A21E40C0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E481157-580D-494D-B88F-EF199020F2B6}
 	EndGlobalSection
 EndGlobal
