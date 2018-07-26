@@ -15,6 +15,9 @@ namespace ACMESharp.MockServer
 {
     public class Startup
     {
+        public const string RepositoryFilePathEnvVar = "ACME_REPO_PATH";
+        public const string RepositoryFilePath = "acme-mockserver.db";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,8 +28,11 @@ namespace ACMESharp.MockServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(Storage.Repository.GetInstance());
-            services.AddSingleton<INonceManager, DefaultNonceManager>();
+            var repoPath = Environment.GetEnvironmentVariable(RepositoryFilePathEnvVar)
+                    ?? RepositoryFilePath;
+            var repo = Storage.Impl.LiteDbRepo.GetInstance(repoPath);
+
+            services.AddSingleton<Storage.IRepository>(repo);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
