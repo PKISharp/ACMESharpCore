@@ -3,11 +3,11 @@ using ACMESharp.MockServer.Storage;
 
 namespace ACMESharp.MockServer
 {
-    public class DefaultNonceManager : INonceManager
+    public class RepoNonceManager : INonceManager
     {
-        private Repository _repo;
+        private IRepository _repo;
 
-        public DefaultNonceManager(Repository repo)
+        public RepoNonceManager(IRepository repo)
         {
             _repo = repo;
         }

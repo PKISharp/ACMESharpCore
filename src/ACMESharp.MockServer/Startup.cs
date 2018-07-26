@@ -33,6 +33,7 @@ namespace ACMESharp.MockServer
             var repo = Storage.Impl.LiteDbRepo.GetInstance(repoPath);
 
             services.AddSingleton<Storage.IRepository>(repo);
+            services.AddSingleton<INonceManager, RepoNonceManager>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
