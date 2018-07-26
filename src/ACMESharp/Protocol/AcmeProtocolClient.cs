@@ -686,15 +686,21 @@ namespace ACMESharp.Protocol
             var resp = await _http.SendAsync(requ);
             AfterHttpSend?.Invoke(opName, resp);
 
-            if (!skipNonce)
-                ExtractNextNonce(resp);
-
             if (expectedStatuses.Length > 0
                 && !expectedStatuses.Contains(resp.StatusCode))
             {
+                // Since we're about to throw anyway, we process a nonce if it's
+                // there but if not we don't want to overshadow the more immediate
+                // error that we're about to signal with an exception
+                if (!skipNonce)
+                    ExtractNextNonce(resp, true);
+
                 throw await DecodeResponseErrorAsync(resp, opName: opName);
             }
             
+            if (!skipNonce)
+                ExtractNextNonce(resp);
+
             return resp;
         }
 
@@ -832,17 +838,20 @@ namespace ACMESharp.Protocol
             // return order;
         }
 
-        protected void ExtractNextNonce(HttpResponseMessage resp)
+        protected bool ExtractNextNonce(HttpResponseMessage resp, bool skipThrow = false)
         {
             var headerName = Constants.ReplayNonceHeaderName;
+            NextNonce = null;
             if (resp.Headers.TryGetValues(headerName, out var values))
             {
                 NextNonce = string.Join(",", values);
+                return true;
             }
-            else
+            else if (!skipThrow)
             {
                 throw new Exception($"missing header:  {headerName}");
             }
+            return false;
         }
 
         /// <summary>
@@ -863,7 +872,11 @@ namespace ACMESharp.Protocol
                 ["url"] = requUrl,
             };
             if (!excludeNonce)
+            {
+                if (string.IsNullOrEmpty(NextNonce))
+                    throw new Exception("missing next nonce needed to sign request payload");
                 protectedHeader["nonce"] = NextNonce;
+            }
 
             if (includePublicKey)
                 protectedHeader["jwk"] = signer.ExportJwk();
