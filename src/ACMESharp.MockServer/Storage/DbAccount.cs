@@ -6,6 +6,8 @@ namespace ACMESharp.MockServer.Storage
     {
         public int Id { get; set; }
 
+        public string Jwk { get; set; }
+
         public AccountDetails Details { get; set; }
     }
 }
