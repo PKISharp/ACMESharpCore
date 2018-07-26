@@ -15,12 +15,12 @@ using Newtonsoft.Json;
 
 namespace ACMESharp.MockServer.Controllers
 {
-  //[Route("api/[controller]")]
-    [Route("acme")]
+    [Route(AcmeController.ControllerRoute)]
     [ApiController]
     public class AcmeController : ControllerBase
     {
         Repository _repo;
+        public const string ControllerRoute = "acme";
         INonceManager _nonceMgr;
 
         public AcmeController(Repository repo, INonceManager nonceMgr)
