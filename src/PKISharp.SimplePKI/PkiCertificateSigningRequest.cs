@@ -10,6 +10,7 @@ using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Operators;
+using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
@@ -38,9 +39,114 @@ namespace PKISharp.SimplePKI
             HashAlgorithm = hashAlgorithm;
         }
 
+        public PkiCertificateSigningRequest(PkiEncodingFormat format, byte[] encoded,
+            PkiHashAlgorithm hashAlgorithm)
+        {
+            Pkcs10CertificationRequest pkcs10;
+            switch (format)
+            {
+                case PkiEncodingFormat.Pem:
+                    var encodedString = Encoding.UTF8.GetString(encoded);
+                    using (var sr = new StringReader(encodedString))
+                    {
+                        var pemReader = new PemReader(sr);
+                        pkcs10 = pemReader.ReadObject() as Pkcs10CertificationRequest;
+                        if (pkcs10 == null)
+                            throw new Exception("invalid PEM object is not PKCS#10 archive");
+                    }
+                    break;
+                case PkiEncodingFormat.Der:
+                    pkcs10 = new Pkcs10CertificationRequest(encoded);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+
+            var info = pkcs10.GetCertificationRequestInfo();
+            var nativePublicKey = pkcs10.GetPublicKey();
+            var rsaKey = nativePublicKey as RsaKeyParameters;
+            var ecdsaKey = nativePublicKey as ECPublicKeyParameters;
+
+            if (rsaKey != null)
+            {
+                PublicKey = new PkiKey(nativePublicKey, PkiAsymmetricAlgorithm.Rsa);
+            }
+            else if (ecdsaKey != null)
+            {
+                PublicKey = new PkiKey(nativePublicKey, PkiAsymmetricAlgorithm.Ecdsa);
+            }
+            else
+            {
+                throw new NotSupportedException("unsupported asymmetric algorithm key");
+            }
+            SubjectName = info.Subject.ToString();
+            HashAlgorithm = hashAlgorithm;
+
+
+            // // // Based on:
+            // // //    http://forum.rebex.net/4284/pkcs10-certificate-request-example-provided-castle-working
+
+            // // var extGen = new X509ExtensionsGenerator();
+            // // foreach (var ext in CertificateExtensions)
+            // // {
+            // //     extGen.AddExtension(ext.Identifier, ext.IsCritical, ext.Value);
+            // // }
+            // // var attr = new AttributeX509(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest,
+            // //         new DerSet(extGen.Generate()));
+
+            
+            // Based on:
+            //    http://unitstep.net/blog/2008/10/27/extracting-x509-extensions-from-a-csr-using-the-bouncy-castle-apis/
+            //    https://stackoverflow.com/q/24448909/5428506
+            foreach (var attr in info.Attributes.ToArray())
+            {
+                if (attr is DerSequence derSeq && derSeq.Count == 2)
+                {
+                    var attrX509 = AttributeX509.GetInstance(attr);
+                    if (object.Equals(attrX509.AttrType, PkcsObjectIdentifiers.Pkcs9AtExtensionRequest))
+                    {
+                        // The `Extension Request` attribute is present.
+                        // The X509Extensions are contained as a value of the ASN.1 Set.
+                        // Assume that it is the first value of the set.
+                        if (attrX509.AttrValues.Count >= 1)
+                        {
+                            var csrExts = X509Extensions.GetInstance(attrX509.AttrValues[0]);
+                            foreach (var extOid in csrExts.GetExtensionOids())
+                            {
+                                if (object.Equals(extOid, X509Extensions.SubjectAlternativeName))
+                                {
+                                    var ext = csrExts.GetExtension(extOid);
+                                    var extVal = ext.Value;
+                                    var der = extVal.GetDerEncoded();
+                                    // The ext value, which is an ASN.1 Octet String, **MIGHT** be tagged with
+                                    // a leading indicator that it's an Octet String and its length, so we want
+                                    // to remove it if that's the case to extract the GeneralNames collection
+                                    if (der.Length > 2 && der[0] == 4 && der[1] == der.Length - 2)
+                                        der = der.Skip(2).ToArray();
+                                    var asn1obj = Asn1Object.FromByteArray(der);
+                                    var gnames = GeneralNames.GetInstance(asn1obj);
+                                    CertificateExtensions.Add(new PkiCertificateExtension
+                                    {
+                                        Identifier = extOid,
+                                        IsCritical = ext.IsCritical,
+                                        Value = gnames,
+                                    });
+                                }
+                            }
+
+                            // No need to search any more.
+                            break;
+                        }                        
+                    }
+                }
+            }
+        }
+
         public string SubjectName { get; }
 
         public PkiKey PublicKey { get; }
+
+        public bool HasPrivateKey => _keyPair != null;
 
         public PkiHashAlgorithm HashAlgorithm { get; }
 
@@ -54,6 +160,9 @@ namespace PKISharp.SimplePKI
         /// <returns>An ASN.1 DER-encoded certificate signing request.</returns>
         public byte[] ExportSigningRequest(PkiEncodingFormat format)
         {
+            if (!HasPrivateKey)
+                throw new InvalidOperationException("cannot export CSR without a private key");
+
             // Based on:
             //    https://github.com/bcgit/bc-csharp/blob/master/crypto/test/src/pkcs/test/PKCS10Test.cs
             //    https://stackoverflow.com/questions/46182659/how-to-delay-sign-the-certificate-request-using-bouncy-castle-with-ecdsa-signatu
@@ -179,7 +288,7 @@ namespace PKISharp.SimplePKI
         internal ISignatureFactory ComputeSignatureAlgorithm(AsymmetricKeyParameter privateKey)
         {
             var hashAlgorName = HashAlgorithm.ToString().ToUpper();
-            var asymAlgorName = _keyPair.Algorithm.ToString().ToUpper();
+            var asymAlgorName = (_keyPair?.Algorithm ?? PublicKey.Algorithm).ToString().ToUpper();
             var sigAlgor = $"{hashAlgorName}with{asymAlgorName}";
             var sigFactory = new Asn1SignatureFactory(sigAlgor, privateKey);
 
@@ -194,7 +303,7 @@ namespace PKISharp.SimplePKI
             //    https://stackoverflow.com/a/39456955/5428506
             //    https://github.com/bcgit/bc-csharp/blob/master/crypto/test/src/test/CertTest.cs
 
-            var pubKey = _keyPair.PublicKey.NativeKey;
+            var pubKey = _keyPair?.PublicKey.NativeKey ?? PublicKey.NativeKey;
 
             var sigFactory = ComputeSignatureAlgorithm(issuerPrivateKey.NativeKey);
             var certGen = new X509V3CertificateGenerator();
@@ -299,7 +408,8 @@ namespace PKISharp.SimplePKI
             public RecoverableSerialForm(PkiCertificateSigningRequest csr)
             {
                 _subject = csr.SubjectName;
-                _keypair = new PkiKeyPair.RecoverableSerialForm(csr._keyPair);
+                _keypair = csr._keyPair == null ? null : new PkiKeyPair.RecoverableSerialForm(csr._keyPair);
+                _pubkey = new PkiKey.RecoverableSerialForm(csr.PublicKey);
                 _hashalgor = csr.HashAlgorithm;
                 _exts = csr.CertificateExtensions.Select(x =>
                     (x.Identifier.Id, x.IsCritical,
@@ -309,12 +419,13 @@ namespace PKISharp.SimplePKI
             public int _ver = 1;
             public string _subject;
             public PkiKeyPair.RecoverableSerialForm _keypair;
+            public PkiKey.RecoverableSerialForm _pubkey;
             public PkiHashAlgorithm _hashalgor;
             public (string id, bool crit, byte[] value)[] _exts;
 
             public PkiCertificateSigningRequest Recover()
             {
-                var csr = new PkiCertificateSigningRequest(_subject, _keypair.Recover(), _hashalgor);
+                var csr = new PkiCertificateSigningRequest(_subject, _keypair?.Recover(), _hashalgor);
 
                 foreach (var e in _exts)
                 {
