@@ -8,14 +8,14 @@ namespace ACMEBlazor.Services
 {
     public interface IRepository
     {
-        Task<AccountDetails> GetAccount();
+        //Task<AccountDetails> GetAccount();
     }
 
     public class Repository : IRepository
     {
-        public async Task<AccountDetails> GetAccount()
-        {
-            return null;
-        }
+        //public async Task<AccountDetails> GetAccount()
+        //{
+        //    return null;
+        //}
     }
 }

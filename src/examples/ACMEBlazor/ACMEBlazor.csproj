@@ -12,6 +12,8 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="Blazor.ContextMenu" Version="0.4.0" />
+    <PackageReference Include="Blazor.Extensions.Storage" Version="0.1.1" />
     <PackageReference Include="BlazorDB" Version="0.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Browser" Version="0.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="0.4.0" />

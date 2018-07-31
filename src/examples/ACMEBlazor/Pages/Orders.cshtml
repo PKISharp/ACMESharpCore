@@ -1,0 +1,86 @@
+@page "/orders"
+@using BlazorContextMenu
+@inject HttpClient Http
+@addTagHelper *, BlazorContextMenu
+
+<style>
+    .hoverOver:hover {
+        background-color: #ccc;
+        cursor: context-menu;
+    }
+</style>
+
+<h1>ACME Orders</h1>
+
+<ContextMenu Id="myMenu">
+    <Item Click="@OnClick">Item 1</Item>
+    <Item Click="@OnClick">Item 2</Item>
+    <Item Click="@OnClick" Enabled="false">Item 3 (disabled)</Item>
+    <Seperator />
+    <Item>
+        Submenu
+        <SubMenu>
+            <Item Click="@OnClick">Submenu Item 1</Item>
+            <Item Click="@OnClick">Submenu Item 2</Item>
+        </SubMenu>
+    </Item>
+</ContextMenu>
+
+
+<p>This component demonstrates fetching data from the server. (BEK: Right-click date for more options.)</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>
+                        <ContextMenuTrigger MenuId="myMenu">
+                            <a href="javascript:" class="hoverOver"
+                               title="bek: right-click for options">@forecast.Date.ToShortDateString()</a>
+                        </ContextMenuTrigger>
+                    </td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@functions {
+WeatherForecast[] forecasts;
+
+protected override async Task OnInitAsync()
+{
+    forecasts = await Http.GetJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+}
+
+void OnClick(MenuItemClickEventArgs e)
+{
+    Console.WriteLine($"Item Clicked => Menu: {e.ContextMenuId}, MenuTarget: {e.ContextMenuTargetId}, IsCanceled: {e.IsCanceled}, Item: {e.MenuItemElement}, MouseEvent: {e.MouseEvent}");
+}
+
+class WeatherForecast
+{
+    public DateTime Date { get; set; }
+    public int TemperatureC { get; set; }
+    public int TemperatureF { get; set; }
+    public string Summary { get; set; }
+}
+}

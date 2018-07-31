@@ -1,0 +1,235 @@
+@page "/order"
+
+@using System.Collections.Generic;
+@using Newtonsoft.Json;
+@using PKISharp.SimplePKI;
+@using ACMEBlazor.Services;
+
+@inject HttpClient http
+@inject IRepository repo
+@inject LocalStorage localStorage
+@inject AppState  app
+
+<h1>ACME Current Order</h1>
+
+@{ var alertIndex = 0; }
+@foreach (var a in _alerts)
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        @a
+        <button type="button" class="close" aria-label="Close" onclick="@(() => CloseAlert(alertIndex++))">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div hidden="@(app.Account != null)">
+    <i>You need to create an <a href="account">Account</a> before you can create and Order.</i>
+</div>
+
+<div hidden="@(app.Account == null)">
+    (1) Current Order:
+    <p>DNS Identifiers:</p>
+    <p><textarea cols="80" rows="5" bind="@_dnsNames"
+                 readonly="@(_lastOrder?.Details?.OrderUrl != null)"
+                 disabled="@(_lastOrder?.Details?.OrderUrl != null)"></textarea></p>
+    <p><button class="btn btn-primary" disabled="@(_lastOrder?.Details?.OrderUrl != null)"
+                onclick="@(async () => await CreateOrder())">Create Order</button></p>
+</div>
+
+@if (_lastOrder != null)
+{
+    <div>
+        <p>Order Details:</p>
+        <li>ID: @_lastOrder.Id</li>
+        <li>URL: @_lastOrder.Details.OrderUrl</li>
+        <li>Status: @_lastOrder.Details.Payload.Status</li>
+        <li>Expires: @_lastOrder.Details.Payload.Expires</li>
+
+        <p>Order Certificate:</p>
+        <li>@_lastOrder.Details.Payload.Certificate</li>
+    </div>
+
+    <p><button class="btn btn-primary"
+                onclick="@(async () => await DecodeAuthorizations())">Refresh Authorizations</button></p>
+}
+
+@if (_lastOrder?.Authorizations != null)
+{
+    <div>
+        <p>Order Authorizations:</p>
+        @foreach (var a in _lastOrder.Authorizations)
+        {
+        <li>
+            @a.Details.Identifier.Type: @a.Details.Identifier.Value
+            <ul>
+                <li>URL: @a.Url</li>
+                <li>Expires: @a.Details.Expires</li>
+                <li>IsWild: @a.Details.Wildcard</li>
+                <li>Status: @a.Details.Status</li>
+                <li>
+                    <ul>
+                        <li>DNS Challenge:
+                            <ul>
+                                <li>Name: @a.DnsChallengeDetails.DnsRecordName</li>
+                                <li>Type: @a.DnsChallengeDetails.DnsRecordType</li>
+                                <li>Value: @a.DnsChallengeDetails.DnsRecordValue</li>
+                            </ul>
+                        </li>
+                        <li>HTTP Challenge:
+                            <ul>
+                                <li>URL: @a.HttpChallengeDetails.HttpResourceUrl</li>
+                                <li>Path: @a.HttpChallengeDetails.HttpResourcePath</li>
+                                <li>ContentType: @a.HttpChallengeDetails.HttpResourceContentType</li>
+                                <li>Value: @a.HttpChallengeDetails.HttpResourceValue</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        }
+    </div>
+}
+
+@functions {
+
+    string _dnsNames;
+    BlazorOrder _lastOrder;
+    PkiJwsTool _signer;
+
+    List<string> _alerts = new List<string>();
+
+    protected void AddAlert(string message)
+    {
+        _alerts.Add(message);
+    }
+
+    protected void CloseAlert(int i)
+    {
+        _alerts.RemoveAt(i);
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        if (app.Orders?.Length > 0)
+        {
+            _lastOrder = app.Orders[app.Orders.Length - 1];
+            _dnsNames = _lastOrder.DnsNames;
+        }
+
+        if (_dnsNames == null)
+            _dnsNames = "";
+        Console.WriteLine("Order DNS Names initialized with: " + _dnsNames);
+
+        var acmeUrl = new Uri(Program.LetsEncryptV2StagingEndpoint);
+        http.BaseAddress = acmeUrl;
+
+        _signer = new PkiJwsTool(256);
+        _signer.Import(app.Account.SignerExport);
+        Console.WriteLine("Restored Signer: " + JsonConvert.SerializeObject(_signer.ExportJwk()));
+
+
+        var raw = new byte[] { 0, 1, 2, 3, 4, };
+        var signed = _signer.Sign(raw);
+        var vrfied = _signer.Verify(raw, signed);
+        Console.WriteLine("Signed and verified: " + vrfied);
+
+        await Task.CompletedTask;
+    }
+
+    async Task CreateOrder()
+    {
+        var dnsIds = _dnsNames?.Split(AppState.LineSeps, StringSplitOptions.RemoveEmptyEntries)
+            ?.Select(x => x.Split('#')[0])
+            ?.Select(x => x.Trim())
+            ?.Where(x => x.Length > 0)
+            ?.ToArray();
+        if (dnsIds?.Length == 0)
+        {
+            AddAlert("ERR:  At least one valid DNS name must be specified!");
+            Console.WriteLine("ERR:  At least one valid DNS name must be specified!");
+            return;
+        }
+
+
+        using (var acme = new AcmeProtocolClient(http, signer: _signer, acct: app.Account.Details))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            acme.Directory = dir;
+
+            await acme.GetNonceAsync();
+            Console.WriteLine("Initialized ACME client");
+
+            var order = new BlazorOrder
+            {
+                Account = app.Account,
+                DnsNames = _dnsNames,
+            };
+
+            order.Details = await acme.CreateOrderAsync(dnsIds);
+            Console.WriteLine("Got Order: " + order.Details.OrderUrl);
+
+            if (string.IsNullOrEmpty(order.Details?.OrderUrl))
+            {
+                AddAlert("Missing Order URL!");
+                Console.WriteLine("Missing Order URL!");
+                return;
+            }
+            Console.WriteLine("Order URL: " + order.Details.OrderUrl);
+
+            order.Id = 1 + (app.Orders?.Length ?? 0);
+            localStorage.SetItem(AppState.OrderKey + order.Id, order);
+
+            var list = new List<BlazorOrder>(app.Orders ?? AppState.EmptyOrders);
+            list.Add(order);
+            app.Orders = list.ToArray();
+
+            _lastOrder = order;
+
+            await DecodeAuthorizations();
+        }
+    }
+
+    async Task DecodeAuthorizations()
+    {
+        var authzUrls = _lastOrder?.Details?.Payload?.Authorizations;
+        if (authzUrls?.Length == 0)
+            return;
+
+        var authzList = new List<BlazorAuthorization>();
+        using (var acme = new AcmeProtocolClient(http, signer: _signer, acct: app.Account.Details))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            acme.Directory = dir;
+
+            await acme.GetNonceAsync();
+            Console.WriteLine("Initialized ACME client");
+
+            foreach (var authzUrl in authzUrls)
+            {
+                var authz = new BlazorAuthorization
+                {
+                    //Order = _lastOrder,
+                    Url = authzUrl,
+                    Details = await acme.GetAuthorizationDetailsAsync(authzUrl),
+                };
+                Console.WriteLine("Got Authz Details: " + JsonConvert.SerializeObject(authz.Details));
+
+                authz.DnsChallengeDetails = AuthorizationDecoder.DecodeChallengeValidation(authz.Details,
+                        Dns01ChallengeValidationDetails.Dns01ChallengeType,
+                        _signer) as Dns01ChallengeValidationDetails;
+                Console.WriteLine("Decoded DNS details: " + JsonConvert.SerializeObject(authz.DnsChallengeDetails));
+
+                authz.HttpChallengeDetails = AuthorizationDecoder.DecodeChallengeValidation(authz.Details,
+                        Http01ChallengeValidationDetails.Http01ChallengeType,
+                        _signer) as Http01ChallengeValidationDetails;
+                Console.WriteLine("Decoded HTTP details: " + JsonConvert.SerializeObject(authz.DnsChallengeDetails));
+
+                authzList.Add(authz);
+            }
+        }
+        _lastOrder.Authorizations = authzList.ToArray();
+        localStorage.SetItem(AppState.OrderKey + _lastOrder.Id, _lastOrder);
+    }
+}

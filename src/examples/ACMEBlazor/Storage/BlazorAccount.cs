@@ -11,6 +11,17 @@ namespace ACMEBlazor.Storage
     {
         public int Id { get; set; }
 
+        public string Contacts { get; set; }
+
+        [Required]
+        public string[] ContactEmails { get; set; }
+
+        [Required]
+        public DateTime? TosAgreed { get; set; }
+
+        [Required]
+        public string SignerExport { get; set; }
+
         [Required]
         public AccountDetails Details { get; set; }
     }

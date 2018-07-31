@@ -28,53 +28,16 @@ namespace ACMEBlazor
 
         public PkiKeyPair KeyPair => _keys;
 
-        ///// <summary>
-        ///// Specifies the elliptic curve to use.
-        ///// </summary>
-        ///// <returns></returns>
-        //public ECCurve Curve { get; private set; }
-
-        ///// <summary>
-        ///// As per:  https://tools.ietf.org/html/rfc7518#section-6.2.1.1
-        ///// </summary>
-        //public string CurveName { get; private set; }
-
         public void Init()
         {
-            //switch (Bits)
-            //{
-            //    case 256:
-            //        Curve = ECCurve.NamedCurves.nistP256;
-            //        CurveName = "P-256";
-            //        break;
-            //    case 384:
-            //        Curve = ECCurve.NamedCurves.nistP384;
-            //        CurveName = "P-384";
-            //        break;
-            //    case 512:
-            //        Curve = ECCurve.NamedCurves.nistP521;
-            //        CurveName = "P-521";
-            //        break;
-            //    default:
-            //        throw new System.InvalidOperationException("illegal SHA2 hash size");
-            //}
-
+            _jwk = null;
             _keys = PkiKeyPair.GenerateEcdsaKeyPair(Bits);
         }
 
         public void Dispose()
         {
             _keys = null;
-        }
-
-        public byte[] Sign(byte[] raw)
-        {
-            return _keys.Sign(raw);
-        }
-
-        public bool Verify(byte[] raw, byte[] sig)
-        {
-            return _keys.Verify(raw, sig);
+            _jwk = null;
         }
 
         public string Export()
@@ -88,10 +51,21 @@ namespace ACMEBlazor
 
         public void Import(string exported)
         {
+            _jwk = null;
             using (var ms = new MemoryStream(Convert.FromBase64String(exported)))
             {
                 _keys = PkiKeyPair.Load(ms);
             }
+        }
+
+        public byte[] Sign(byte[] raw)
+        {
+            return _keys.Sign(raw);
+        }
+
+        public bool Verify(byte[] raw, byte[] sig)
+        {
+            return _keys.Verify(raw, sig);
         }
 
         public object ExportJwk(bool canonical = false)
@@ -99,7 +73,7 @@ namespace ACMEBlazor
             // Note, we only produce a canonical form of the JWK
             // for export therefore we ignore the canonical param
 
-            if (_jwk == null)
+            if (_jwk == null) // Use a cached JWK export if we have it
             {
                 _jwk = _keys.ExportJwk();
             }
