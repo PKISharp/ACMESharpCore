@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PKISharp.SimplePKI;
 
 namespace ACMESharp.MockServer
 {
@@ -34,6 +35,16 @@ namespace ACMESharp.MockServer
 
             services.AddSingleton<Storage.IRepository>(repo);
             services.AddSingleton<INonceManager, RepoNonceManager>();
+            services.AddSingleton(new CertificateAuthority(new CertificateAuthority.Options
+            {
+                CaKeyPairSavePath = "ca-kypr.save",
+                KeyPairAlgorithm = PkiAsymmetricAlgorithm.Rsa,
+                BitLength = 2048,
+                CaCertificateSavePath = "ca-cert.save",
+                CaSubjectName = "cn=mock-acme-ca",
+                SignatureHashAlgorithm = PkiHashAlgorithm.Sha512,
+            }));
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
