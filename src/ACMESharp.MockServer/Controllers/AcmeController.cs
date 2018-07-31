@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
@@ -13,6 +14,7 @@ using ACMESharp.Protocol.Resources;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PKISharp.SimplePKI;
 
 namespace ACMESharp.MockServer.Controllers
 {
@@ -88,10 +90,14 @@ namespace ACMESharp.MockServer.Controllers
         IRepository _repo;
         INonceManager _nonceMgr;
 
-        public AcmeController(IRepository repo, INonceManager nonceMgr)
+        CertificateAuthority _ca;
+        string _caCertPem;
+
+        public AcmeController(IRepository repo, INonceManager nonceMgr, CertificateAuthority ca)
         {
             _repo = repo;
             _nonceMgr = nonceMgr;
+            _ca = ca;
         }
 
         T ExtractPayload<T>(JwsSignedPayload signedPayload)
@@ -134,6 +140,22 @@ namespace ACMESharp.MockServer.Controllers
         {
             if (!_nonceMgr.ValidateNonce(protectedHeader.Nonce))
                 throw new Exception("Bad Nonce");
+        }
+
+        string ResolveCaCertPem()
+        {
+            if (_caCertPem == null)
+            {
+                lock (typeof(AcmeController))
+                {
+                    if (_caCertPem == null)
+                    {
+                        var pemBytes = _ca.CaCertificate.Export(PkiEncodingFormat.Pem);
+                        _caCertPem = Encoding.UTF8.GetString(pemBytes);
+                    }
+                }
+            }
+            return _caCertPem;
         }
 
         [HttpHead("new-nonce")]
@@ -257,7 +279,7 @@ namespace ACMESharp.MockServer.Controllers
                     // We start by saving an empty challenge so we can compute the next ID
                     var chlng = new DbChallenge
                     {
-                        Challenge = new Challenge
+                        Payload = new Challenge
                         {
                             Token = chlngToken,
                             // We temporarily assign the token to the URL in order
@@ -267,15 +289,16 @@ namespace ACMESharp.MockServer.Controllers
                     };
                     _repo.SaveChallenge(chlng);
 
-                    chlng.Challenge = new Challenge
+                    chlng.Payload = new Challenge
                     {
                         Type = chlngType,
                         Token = chlngToken,
-                        Status = "testing",
+                        Status = "pending",
                         Url = Url.Action(nameof(GetChallenge), controller: null,
                                 values: new { authzKey, challengeId = chlng.Id.ToString() },
                                 protocol: Request.Scheme),
                     };
+                    _repo.SaveChallenge(chlng);
                     chlngs.Add(chlng);
                 }
 
@@ -284,12 +307,12 @@ namespace ACMESharp.MockServer.Controllers
                     OrderId = dbOrder.Id,
                     Url = Url.Action(nameof(GetAuthorization), controller: null,
                             values: new { authzKey }, protocol: Request.Scheme),
-                    Authorization = new Authorization
+                    Payload = new Authorization
                     {
                         Identifier = dnsId,
-                        Status = "testing",
+                        Status = "pending",
                         Expires = DateTime.Now.AddHours(24).ToUniversalTime().ToString(),
-                        Challenges = chlngs.Select(x => x.Challenge).ToArray(),
+                        Challenges = chlngs.Select(x => x.Payload).ToArray(),
                         Wildcard = isWildcard ? (bool?)true : null,
                     }
                 };
@@ -316,7 +339,7 @@ namespace ACMESharp.MockServer.Controllers
                     Identifiers = requ.Identifiers,
                     Authorizations = authzs.Select(x => x.Url).ToArray(),
                     Finalize = finalizeUrl,
-                    Status = "testing",
+                    Status = "pending",
                     Error = null,
                     Certificate = null,
                 }
@@ -344,18 +367,82 @@ namespace ACMESharp.MockServer.Controllers
 
         // "finalize": "https://acme-staging-v02.api.letsencrypt.org/acme/finalize/6294712/2084859"
         [HttpPost("finalize/{acctId}/{orderId}")]
-        public ActionResult<Order> FinalizeOrder(string acctId, string orderId)
+        public ActionResult<Order> FinalizeOrder(string acctId, string orderId,
+                [FromBody]JwsSignedPayload signedPayload)
         {
             if (!int.TryParse(acctId, out var acctIdNum))
                 return NotFound();
             if (!int.TryParse(orderId, out var orderIdNum))
                 return NotFound();
 
-            var order = _repo.GetOrder(orderIdNum);
-            if (order == null || order.AccountId != acctIdNum)
+            var ph = ExtractProtectedHeader(signedPayload);
+
+            ValidateNonce(ph);
+
+            var acct = _repo.GetAccountByKid(ph.Kid);
+            if (acct == null)
+                throw new Exception("could not resolve account");
+
+            var dbOrder = _repo.GetOrder(orderIdNum);
+            if (dbOrder == null || dbOrder.AccountId != acctIdNum)
                 return NotFound();
 
-            return order.Details.Payload;
+            if (acct.Id != dbOrder.AccountId)
+                throw new Exception("inconsistent state -- "
+                        + "Challenge Order does not belong to resolved Account");
+
+            if (dbOrder.Details.Payload.Status != "pending")
+                throw new Exception("Order no longer pending");
+
+            var requ = ExtractPayload<FinalizeOrderRequest>(signedPayload);
+            var encodedCsr = CryptoHelper.Base64.UrlDecode(requ.Csr);
+
+            var crt = _ca.Sign(PkiEncodingFormat.Der, encodedCsr, PkiHashAlgorithm.Sha256);
+            byte[] crtBytes;
+            using (var ms = new MemoryStream())
+            {
+                crt.Save(ms);
+                ms.Flush();
+                ms.Position = 0;
+                crtBytes = ms.ToArray();
+            }
+
+            var certKey = Guid.NewGuid().ToString();
+            var certPem = Encoding.UTF8.GetString(crt.Export(PkiEncodingFormat.Pem))
+                    + ResolveCaCertPem();
+            var dbCert = new DbCertificate
+            {
+                OrderId = dbOrder.Id,
+                CertKey = certKey,
+                Native = crtBytes,
+                Pem = certPem,
+            };
+            _repo.SaveCertificate(dbCert);
+
+            dbOrder.Details.Payload.Status = "valid";
+            dbOrder.Details.Payload.Certificate = Url.Action(nameof(GetCertificate),
+                    controller: null, values: new { certKey }, protocol: Request.Scheme);
+            _repo.SaveOrder(dbOrder);
+
+            GenerateNonce();
+
+            return dbOrder.Details.Payload;
+        }
+
+        [HttpGet("ca-cert")]
+        public ActionResult<string> GetCaCertificate()
+        {
+            return ResolveCaCertPem();
+        }
+
+        [HttpGet("cert/{certKey}")]
+        public ActionResult<string> GetCertificate(string certKey)
+        {
+            var dbCert = _repo.GetCertificateByKey(certKey);
+            if (dbCert == null)
+                return NotFound();
+            
+            return dbCert.Pem;
         }
 
         // "https://acme-staging-v02.api.letsencrypt.org/acme/authz/740KRMwcT0UrLXdUKOlgMnfNbzpSQtRaWjbyA1UgIJ4",
@@ -408,31 +495,85 @@ namespace ACMESharp.MockServer.Controllers
             if (dbAuthz == null)
                 return NotFound();
             
-            return dbAuthz.Authorization;
+            return dbAuthz.Payload;
+        }
+
+        [HttpGet("challenge/{authzKey}/{challengeId}")]
+        public ActionResult<Challenge> GetChallenge(string authzKey, string challengeId)
+        {
+            var chlngUrl = Request.GetEncodedUrl();
+            var dbChlng = _repo.GetChallengeByUrl(chlngUrl);
+            if (dbChlng == null)
+                return NotFound();
+            
+            return dbChlng.Payload;
         }
 
         [HttpPost("challenge/{authzKey}/{challengeId}")]
-        public ActionResult<Challenge> GetChallenge(string authzKey, string challengeId)
+        public ActionResult<Challenge> AnswerChallenge(string authzKey, string challengeId,
+                [FromBody]JwsSignedPayload signedPayload)
         {
-            return NotFound();
-        }
+            var ph = ExtractProtectedHeader(signedPayload);
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+            ValidateNonce(ph);
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+            var acct = _repo.GetAccountByKid(ph.Kid);
+            if (acct == null)
+                throw new Exception("could not resolve account");
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var chlngUrl = Request.GetEncodedUrl();
+            var dbChlng = _repo.GetChallengeByUrl(chlngUrl);
+            if (dbChlng == null)
+                return NotFound();
+            var dbAuthz = _repo.GetAuthorization(dbChlng.AuthorizationId);
+            if (dbAuthz == null)
+                return NotFound();
+            var dbOrder = _repo.GetOrder(dbAuthz.OrderId);
+            if (dbOrder == null)
+                return NotFound();
+            
+            if (acct.Id != dbOrder.AccountId)
+                throw new Exception("inconsistent state -- "
+                        + "Challenge Order does not belong to resolved Account");
+
+            if (dbChlng.Payload.Status != "pending")
+                throw new Exception("Challenge no longer pending");
+
+            string answer;
+            if (dbChlng.Payload.Type == "dns-01")
+            {
+                // dns-01 Challenge type takes no answer input
+                var requ = ExtractPayload<object>(signedPayload);
+                answer = "dns-01";
+            }
+            else if (dbChlng.Payload.Type == "http-01")
+            {
+                // http-01 Challenge type takes no answer input
+                var requ = ExtractPayload<object>(signedPayload);
+                answer = "http-01";
+            }
+            else
+            {
+                throw new Exception("unsupported Challenge type: " + dbChlng.Payload.Type);
+            }
+
+            dbChlng.Payload.Status = "valid";
+            dbChlng.Payload.Validated = DateTime.Now.ToUniversalTime().ToString();
+            dbChlng.Payload.ValidationRecord = new object[]
+            {
+                new { iTakeYourWordForIt = answer }
+            };
+            _repo.SaveChallenge(dbChlng);
+
+            if (dbAuthz.Payload.Status == "pending")
+            {
+                dbAuthz.Payload.Status = "valid";
+                _repo.SaveAuthorization(dbAuthz);
+            }
+
+            GenerateNonce();
+
+            return dbChlng.Payload;
         }
     }
 }

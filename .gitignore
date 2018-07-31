@@ -290,3 +290,6 @@ __pycache__/
 # Global ignore folder
 _IGNORE
 _TMP
+*.db
+*.crt
+*.pem
