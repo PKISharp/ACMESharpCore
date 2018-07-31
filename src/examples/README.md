@@ -13,7 +13,7 @@ The examples and their current state are as follows:
 
 | Project | Status | Notes
 |-|-|-|
-| ACMECli | Works! | A console-based CLI app.  See [full details](./ACMECli/README.md).
+| ACMECLI | Works! | A console-based CLI app.  See [full details](./ACMECLI/README.md).
 | ACMEKestrel | Works! | Provide sample middleware and services to automatically obtain ACME certs for a Kestrel-based (ASP.NET Core) app.
 | ACMEBlazor | In-progress | Provides a simple, browser-only client based on the [Blazor](https://blazor.net) project.
 | ACMETerm | In-progress | Provides a terminal-based GUI app based on the [gui.cs](https://github.com/migueldeicaza/gui.cs) project.
