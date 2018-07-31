@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +38,12 @@ namespace ACMEForms
 
             _authzListWrapper = new ReadOnlyListWrapper<string>(
                     () => _lastOrder?.Authorizations?.Length ?? 0,
-                    (i) => _lastOrder?.Authorizations?[i].Details.Identifier.Value);
+                    (i) => {
+                        var authz = _lastOrder?.Authorizations?[i];
+                        if (authz != null)
+                            return $"{authz.Details.Identifier.Value} - {authz.Details.Status}";
+                        return null;
+                    });
             _miscChallengesListWrapper = new ReadOnlyListWrapper<string>(
                     () => SelectedAuthorization?.MiscChallenges?.Length ?? 0,
                     (i) => SelectedAuthorization?.MiscChallenges?[i].Type);
@@ -54,6 +61,14 @@ namespace ACMEForms
             {
                 OrderGetter = () => _lastOrder,
             };
+            authorizationPropertyGrid.SelectedObject = new AuthorizationViewModel
+            {
+                AuthzGetter = () => SelectedAuthorization,
+            };
+            challengePopertyGrid.SelectedObject = new ChallengeViewModel
+            {
+                ChlngGetter = () => SelectedChallenge,
+            };
         }
 
         private DbAuthz SelectedAuthorization
@@ -63,6 +78,25 @@ namespace ACMEForms
                 if (authorizationsListBox.SelectedIndex < 0)
                     return null;
                 return _lastOrder?.Authorizations?[authorizationsListBox.SelectedIndex];
+            }
+        }
+
+        private Challenge SelectedChallenge
+        {
+            get
+            {
+                Challenge chlng = null;
+
+                var authz = SelectedAuthorization;
+                var chlngTabPage = challengesTabControl.SelectedTab;
+
+                if (miscChallengeTypesListBox.SelectedIndex >= 0)
+                {
+                    chlng = authz?.Details.Challenges.FirstOrDefault(
+                            x => x.Type == (string)miscChallengeTypesListBox.SelectedValue);
+                }
+
+                return chlng;
             }
         }
 
@@ -97,7 +131,7 @@ namespace ACMEForms
             return (false, new DateTime(1900, 1, 1));
         }
 
-        private string Stringify(object o, object ifNull = null)
+        public static string Stringify(object o, object ifNull = null)
         {
             if (o == null)
                 if (ifNull is string ifNullString)
@@ -169,6 +203,8 @@ namespace ACMEForms
 
         private void RebindAccountControls()
         {
+            accountPropertyGrid.Refresh();
+
             var hasAccount = _account != null;
             var caServerEndpoint = _account?.AcmeServerEndpoint ?? DbAccount.WellKnownAcmeServers.First().Key;
             caServerComboBox.SelectedValue = caServerEndpoint;
@@ -189,21 +225,23 @@ namespace ACMEForms
             createAccountButton.Enabled = !hasAccount;
             refreshAccountButton.Enabled = hasAccount;
             //updateAccountButton.Enabled = hasAccount;
-            accountDetailsGroupBox.Visible = hasAccount;
+            //accountDetailsGroupBox.Visible = hasAccount;
 
-            kidTextBox.Text = _account?.Details.Kid;
-            tosLinkTextBox.Text = _account?.Details.TosLink;
-            statusTextBox.Text = _account?.Details.Payload.Status;
-            ordersTextBox.Text = _account?.Details.Payload.Orders;
-            initialIpTextBox.Text = _account?.Details.Payload.InitialIp;
-            createdAtTextBox.Text = _account?.Details.Payload.CreatedAt;
-            agreementTextBox.Text = _account?.Details.Payload.Agreement;
+            //kidTextBox.Text = _account?.Details.Kid;
+            //tosLinkTextBox.Text = _account?.Details.TosLink;
+            //statusTextBox.Text = _account?.Details.Payload.Status;
+            //ordersTextBox.Text = _account?.Details.Payload.Orders;
+            //initialIpTextBox.Text = _account?.Details.Payload.InitialIp;
+            //createdAtTextBox.Text = _account?.Details.Payload.CreatedAt;
+            //agreementTextBox.Text = _account?.Details.Payload.Agreement;
 
 
         }
 
         private void RebindOrderControls()
         {
+            orderPropertyGrid.Refresh();
+
             var hasOrder = _lastOrder != null;
 
             createOrderButton.Enabled = !hasOrder;
@@ -224,17 +262,17 @@ namespace ACMEForms
             notAfterDateTimePicker.Checked = notAfter.valid;
             notAfterDateTimePicker.Value = notAfter.date;
 
-            orderUrlTextBox.Text = _lastOrder?.Details.OrderUrl;
-            firstOrderUrlTextBox.Text = _lastOrder?.FirstOrderUrl;
-            orderStatusTextBox.Text = _lastOrder?.Details.Payload.Status;
-            orderExpiresTextBox.Text = _lastOrder?.Details.Payload.Expires;
+            //orderUrlTextBox.Text = _lastOrder?.Details.OrderUrl;
+            //firstOrderUrlTextBox.Text = _lastOrder?.FirstOrderUrl;
+            //orderStatusTextBox.Text = _lastOrder?.Details.Payload.Status;
+            //orderExpiresTextBox.Text = _lastOrder?.Details.Payload.Expires;
 
-            finalizeUrlTextBox.Text = _lastOrder?.Details.Payload.Finalize;
-            certificateUrlTextBox.Text = _lastOrder?.Details.Payload.Certificate;
+            //finalizeUrlTextBox.Text = _lastOrder?.Details.Payload.Finalize;
+            //certificateUrlTextBox.Text = _lastOrder?.Details.Payload.Certificate;
 
-            errorStatusTextBox.Text = _lastOrder?.Details.Payload.Error?.Status?.ToString();
-            errorTypeTextBox.Text = _lastOrder?.Details.Payload.Error?.Type;
-            errorDetailTextBox.Text = _lastOrder?.Details.Payload.Error?.Detail;
+            //errorStatusTextBox.Text = _lastOrder?.Details.Payload.Error?.Status?.ToString();
+            //errorTypeTextBox.Text = _lastOrder?.Details.Payload.Error?.Type;
+            //errorDetailTextBox.Text = _lastOrder?.Details.Payload.Error?.Detail;
 
             //var authzs = _lastOrder?.Authorizations?.Select(x => x.Details.Identifier.Value).ToArray();
             // We have to "re-set" the DS in order for the control to refresh the contents and bounds
@@ -243,82 +281,20 @@ namespace ACMEForms
             authorizationsListBox.SelectedIndex = _authzListWrapper.Count > 0 ? 0 : -1;
         }
 
-        public class OrderDetailsViewModel
-        {
-            // We use strings with increasing number of space characters to define
-            // a sort order without actually providing any real category labels
-            const string GeneralCat = " ";//"1 - General";
-            const string EndpointUrlsCat = "  "; //"2 - Endpoint URLs";
-            const string ErrorCat = "   "; //"3 - Error";
-
-            private ProblemViewModel _Error;
-
-            public OrderDetailsViewModel()
-            {
-                _Error = new ProblemViewModel
-                {
-                    ProblemGetter = () => OrderGetter()?.Details.Payload.Error,
-                };
-            }
-
-            [Browsable(false)]
-            public Func<DbOrder> OrderGetter { get; set; } = () => null;
-
-            [Category(GeneralCat)]
-            public string OrderUrl => OrderGetter()?.Details.OrderUrl;
-            [Category(GeneralCat)]
-            public string FirstOrderUrl => OrderGetter()?.FirstOrderUrl;
-            [Category(GeneralCat)]
-            public string Status => OrderGetter()?.Details.Payload.Status;
-            [Category(GeneralCat)]
-            public string Expires => OrderGetter()?.Details.Payload.Expires;
-
-            [Category(EndpointUrlsCat)]
-            public string FinalizeUrl => OrderGetter()?.Details.Payload.Finalize;
-            [Category(EndpointUrlsCat)]
-            public string CertificateUrl => OrderGetter()?.Details.Payload.Certificate;
-
-            [Category(ErrorCat)]
-            public ProblemViewModel Error => OrderGetter()?.Details.Payload.Error == null
-                    ? null : _Error;
-        }
-
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public class ProblemViewModel
-        {
-            [Browsable(false)]
-            public Func<Problem> ProblemGetter { get; set; } = () => null;
-
-            public string Type => ProblemGetter()?.Type;
-
-            public int? Status => ProblemGetter()?.Status;
-
-            public string Detail => ProblemGetter()?.Detail;
-
-            public override string ToString()
-            {
-                return ProblemGetter() == null ? "" : $"({Type}, {Status}, {Detail})";
-            }
-        }
-
-        [TypeConverter(typeof(ExpandableObjectConverter))]
-        public class NestedObjectProperty<T>
-        {
-            [Browsable(false)]
-            public Func<NestedObjectProperty<T>, T> Getter { get; set; }
-
-            [Browsable(false)]
-            public Func<NestedObjectProperty<T>, bool> Exister { get; set; } = p => p.Getter(p) != null;
-        }
-
         private void RebindAuthorizationControls()
         {
-            var authz = SelectedAuthorization;
-            identifierTypeTextBox.Text = authz?.Details.Identifier.Type;
-            authzUrlTextBox.Text = authz?.Url;
-            isWildcardCheckBox.Checked = authz?.Details.Wildcard ?? false;
-            authzStatusTextBox.Text = authz?.Details.Status;
-            authzExpiresTextBox.Text = authz?.Details.Expires;
+            authorizationPropertyGrid.Refresh();
+
+            //var authzViewModel = authorizationPropertyGrid.SelectedObject;
+            //authorizationPropertyGrid.SelectedObject = null;
+            //authorizationPropertyGrid.SelectedObject = authzViewModel;
+
+            //var authz = SelectedAuthorization;
+            //identifierTypeTextBox.Text = authz?.Details.Identifier.Type;
+            //authzUrlTextBox.Text = authz?.Url;
+            //isWildcardCheckBox.Checked = authz?.Details.Wildcard ?? false;
+            //authzStatusTextBox.Text = authz?.Details.Status;
+            //authzExpiresTextBox.Text = authz?.Details.Expires;
 
             //miscChallengeTypesListBox.DataSource =
             //        (authz.MiscChallenges?.Select(x => x.Type) ?? EmptyStrings).ToArray();
@@ -332,8 +308,9 @@ namespace ACMEForms
 
         private void RebindChallengeControls()
         {
+            challengePopertyGrid.Refresh();
+
             var authz = SelectedAuthorization;
-            var tp = challengesTabControl.SelectedTab;
 
             dnsRecordNameTextBox.Text = authz?.DnsChallenge?.DnsRecordName;
             dnsRecordTypeTextBox.Text = authz?.DnsChallenge?.DnsRecordType;
@@ -344,31 +321,15 @@ namespace ACMEForms
             httpResourceContentTypeTextBox.Text = authz?.HttpChallenge?.HttpResourceContentType;
             httpResourceValueTextBox.Text = authz?.HttpChallenge?.HttpResourceValue;
 
-            Challenge ch = null;
+            var chlng = SelectedChallenge;
 
-            if (tp == dnsChallengeTabPage)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == authz?.DnsChallenge?.ChallengeType);
-            }
-            else if (tp == httpChallengeTabPage)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == authz?.HttpChallenge?.ChallengeType);
-            }
-            else if (miscChallengeTypesListBox.SelectedIndex >= 0)
-            {
-                ch = authz?.Details.Challenges.FirstOrDefault(
-                        x => x.Type == (string)miscChallengeTypesListBox.SelectedValue);
-            }
-
-            challengeTypeTextBox.Text = ch?.Type;
-            challengeStatusTextBox.Text = ch?.Status;
-            challengeErrorTextBox.Text = Stringify(ch?.Error, string.Empty);
-            challengeTokenTextBox.Text = ch?.Token;
-            challengeUrlTextBox.Text = ch?.Url;
-            challengeValidatedTextBox.Text = ch?.Validated;
-            validationRecordsTextBox.Text = Stringify(ch?.ValidationRecord, string.Empty);
+            //challengeTypeTextBox.Text = chlng?.Type;
+            //challengeStatusTextBox.Text = chlng?.Status;
+            challengeErrorTextBox.Text = Stringify(chlng?.Error, string.Empty);
+            //challengeTokenTextBox.Text = chlng?.Token;
+            //challengeUrlTextBox.Text = chlng?.Url;
+            //challengeValidatedTextBox.Text = chlng?.Validated;
+            validationRecordsTextBox.Text = Stringify(chlng?.ValidationRecord, string.Empty);
         }
 
         private void caServerComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -593,14 +554,14 @@ namespace ACMEForms
                     RebindOrderControls();
                     SetStatus("Order created and saved");
 
-                    RefreshOrderAuthorizations(acme);
+                    await RefreshOrderAuthorizations(acme);
                 }
 
                 Repo.Saveorder(_lastOrder);
                 RebindOrderControls();
                 SetStatus("Order created and Authorization resolved and saved");
 
-                DecodeOrderAuthorizationChallenges(signer);
+                await DecodeOrderAuthorizationChallenges(signer);
 
                 Repo.Saveorder(_lastOrder);
                 RebindOrderControls();
@@ -671,6 +632,53 @@ namespace ACMEForms
         {
             RebindChallengeControls();
         }
+
+        private async void submitDnsAnswerButton_Click(object sender, EventArgs e)
+        {
+            var url = ResolveCaServerEndpoint();
+            if (url == null)
+                return;
+
+            await InvokeWithWaitCursor(async () =>
+            {
+                var signer = new PkiJwsTool(256);
+                signer.Import(_account.JwsSigner);
+
+                using (var acme = new AcmeProtocolClient(url, signer: signer,
+                        acct: _account.Details))
+                {
+                    var dir = await acme.GetDirectoryAsync();
+                    acme.Directory = dir;
+
+                    await acme.GetNonceAsync();
+
+                    var dnsChallenge = SelectedAuthorization.Details.Challenges.First(
+                            x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType);
+
+                    var updatedDnsChallenge = await acme.AnswerChallengeAsync(dnsChallenge.Url);
+                    var details = await acme.GetOrderDetailsAsync(
+                            _lastOrder.Details.OrderUrl ?? _lastOrder.FirstOrderUrl);
+                    _lastOrder.Details = details;
+                    Repo.Saveorder(_lastOrder);
+
+                    RebindOrderControls();
+                    SetStatus("DNS Challenge Answered; Order refreshed and saved");
+
+                    await RefreshOrderAuthorizations(acme);
+                }
+
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("DNS Challenge Answered; Order details and Authorizations refreshed and saved");
+
+                await DecodeOrderAuthorizationChallenges(signer);
+
+                Repo.Saveorder(_lastOrder);
+                RebindOrderControls();
+                SetStatus("DNS Challenge Answered; Order details and Authorizations refreshed, Challenges decoded and saved");
+            });
+
+        }
     }
 
 
@@ -697,5 +705,121 @@ namespace ACMEForms
         public string CreatedAt => AccountGetter()?.Details.Payload.CreatedAt;
 
         public string Agreement => AccountGetter()?.Details.Payload.Agreement;
+    }
+
+    public class OrderDetailsViewModel
+    {
+        // We use strings with increasing number of space characters to define
+        // a sort order without actually providing any real category labels
+        const string GeneralCat = " ";//"1 - General";
+        const string EndpointUrlsCat = "  "; //"2 - Endpoint URLs";
+        const string ErrorCat = "   "; //"3 - Error";
+
+        private ProblemViewModel _Error;
+
+        public OrderDetailsViewModel()
+        {
+            _Error = new ProblemViewModel
+            {
+                ProblemGetter = () => OrderGetter()?.Details.Payload.Error,
+            };
+        }
+
+        [Browsable(false)]
+        public Func<DbOrder> OrderGetter { get; set; } = () => null;
+
+        [Category(GeneralCat)]
+        public string OrderUrl => OrderGetter()?.Details.OrderUrl;
+        [Category(GeneralCat)]
+        public string FirstOrderUrl => OrderGetter()?.FirstOrderUrl;
+        [Category(GeneralCat)]
+        public string Status => OrderGetter()?.Details.Payload.Status;
+        [Category(GeneralCat)]
+        public string Expires => OrderGetter()?.Details.Payload.Expires;
+
+        [Category(EndpointUrlsCat)]
+        public string FinalizeUrl => OrderGetter()?.Details.Payload.Finalize;
+        [Category(EndpointUrlsCat)]
+        public string CertificateUrl => OrderGetter()?.Details.Payload.Certificate;
+
+        [Category(ErrorCat)]
+        public ProblemViewModel Error => OrderGetter()?.Details.Payload.Error == null
+                ? null : _Error;
+    }
+
+    public class AuthorizationViewModel
+    {
+        [Browsable(false)]
+        public Func<DbAuthz> AuthzGetter { get; set; } = () => null;
+
+        [DisplayName("Identifier Type")]
+        public string IdentifierType => AuthzGetter()?.Details.Identifier.Type;
+
+        [DisplayName("Identifier Value")]
+        public string IdentifierValue => AuthzGetter()?.Details.Identifier.Value;
+
+        [DisplayName("Is Wildcard")]
+        public bool IsWildcard => AuthzGetter()?.Details.Wildcard ?? false;
+
+        [DisplayName("Authorization URL")]
+        public string AuthorizationUrl => AuthzGetter()?.Url;
+
+        public string Status => AuthzGetter()?.Details.Status;
+
+        public string Expires => AuthzGetter()?.Details.Expires;
+    }
+
+    public class ChallengeViewModel
+    {
+        [Browsable(false)]
+        public Func<Challenge> ChlngGetter { get; set; } = () => null;
+
+        [DisplayName("Challenge Type")]
+        public string ChallengeType => ChlngGetter()?.Type;
+
+        public string Status => ChlngGetter()?.Status;
+
+        //[Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        //public string Error => MainForm.Stringify(ChlngGetter()?.Error, string.Empty);
+
+        public string Token => ChlngGetter()?.Token;
+
+        [DisplayName("Challenge URL")]
+        public string ChallengeUrl => ChlngGetter()?.Url;
+
+        [DisplayName("Validated Date")]
+        public string ValidatedDate => ChlngGetter()?.Validated;
+
+        //[DisplayName("Validation Records")]
+        //[Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        //public string ValidationRecords => MainForm.Stringify(ChlngGetter()?.ValidationRecord, string.Empty);
+    }
+
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public class ProblemViewModel
+    {
+        [Browsable(false)]
+        public Func<Problem> ProblemGetter { get; set; } = () => null;
+
+        public string Type => ProblemGetter()?.Type;
+
+        public int? Status => ProblemGetter()?.Status;
+
+        public string Detail => ProblemGetter()?.Detail;
+
+        public override string ToString()
+        {
+            return ProblemGetter() == null ? "" : $"({Type}, {Status}, {Detail})";
+        }
+    }
+
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public class NestedObjectProperty<T>
+    {
+        [Browsable(false)]
+        public Func<NestedObjectProperty<T>, T> Getter { get; set; }
+
+        [Browsable(false)]
+        public Func<NestedObjectProperty<T>, bool> Exister { get; set; } = p => p.Getter(p) != null;
     }
 }
