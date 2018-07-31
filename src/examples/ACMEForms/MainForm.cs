@@ -45,6 +45,15 @@ namespace ACMEForms
 
             authorizationsListBox.DataSource = _authzListWrapper;
             miscChallengeTypesListBox.DataSource = _miscChallengesListWrapper;
+
+            accountPropertyGrid.SelectedObject = new AccountDetailsViewModel
+            {
+                AccountGetter = () => _account,
+            };
+            orderPropertyGrid.SelectedObject = new OrderDetailsViewModel
+            {
+                OrderGetter = () => _lastOrder,
+            };
         }
 
         private DbAuthz SelectedAuthorization
@@ -190,21 +199,7 @@ namespace ACMEForms
             createdAtTextBox.Text = _account?.Details.Payload.CreatedAt;
             agreementTextBox.Text = _account?.Details.Payload.Agreement;
 
-            accountPropertyGrid.SelectedObject = new AccountDetailsViewModel
-            {
-                _mainForm = this,
-        }   ;
-        }
 
-        public class AccountDetailsViewModel
-        {
-            public MainForm _mainForm;
-
-            [DisplayName("KID")]
-            [Description("Key Identifier which uniquely identifies this account with the ACME CA server.")]
-            public string KId => _mainForm._account?.Details.Kid;
-            public string TosLink => _mainForm._account?.Details.TosLink;
-            public string Status => _mainForm._account?.Details.Payload.Status;
         }
 
         private void RebindOrderControls()
@@ -246,60 +241,63 @@ namespace ACMEForms
             authorizationsListBox.DataSource = null;
             authorizationsListBox.DataSource = _authzListWrapper;
             authorizationsListBox.SelectedIndex = _authzListWrapper.Count > 0 ? 0 : -1;
-
-            orderPropertyGrid.SelectedObject = new OrderDetailsViewModel
-            {
-                _mainForm = this,
-            };
         }
 
         public class OrderDetailsViewModel
         {
-            const string GeneralCat = "1 - General";
-            const string EndpointUrlsCat = "2 - Endpoint URLs";
-            const string ErrorCat = "3 - Error";
+            // We use strings with increasing number of space characters to define
+            // a sort order without actually providing any real category labels
+            const string GeneralCat = " ";//"1 - General";
+            const string EndpointUrlsCat = "  "; //"2 - Endpoint URLs";
+            const string ErrorCat = "   "; //"3 - Error";
 
-            public MainForm _mainForm;
+            private ProblemViewModel _Error;
 
-            [Category(GeneralCat)]
-            public string OrderUrl => _mainForm._lastOrder?.Details.OrderUrl;
-            [Category(GeneralCat)]
-            public string FirstOrderUrl => _mainForm._lastOrder?.FirstOrderUrl;
-            [Category(GeneralCat)]
-            public string Status => _mainForm._lastOrder?.Details.Payload.Status;
-            [Category(GeneralCat)]
-            public string Expires => _mainForm._lastOrder?.Details.Payload.Expires;
-            [Category(EndpointUrlsCat)]
-            public string FinalizeUrl => _mainForm._lastOrder?.Details.Payload.Finalize;
-            [Category(EndpointUrlsCat)]
-            public string CertificateUrl => _mainForm._lastOrder?.Details.Payload.Certificate;
-            [Category(ErrorCat)]
-            //public Problem Error => _mainForm._lastOrder?.Details.Payload.Error;
-            public ProblemViewModel Error => new ProblemViewModel(new Problem()
+            public OrderDetailsViewModel()
             {
-                Type = "FOO",
-                Status = 400,
-                Detail = "This is a FOO 400 error!",
-            });
+                _Error = new ProblemViewModel
+                {
+                    ProblemGetter = () => OrderGetter()?.Details.Payload.Error,
+                };
+            }
+
+            [Browsable(false)]
+            public Func<DbOrder> OrderGetter { get; set; } = () => null;
+
+            [Category(GeneralCat)]
+            public string OrderUrl => OrderGetter()?.Details.OrderUrl;
+            [Category(GeneralCat)]
+            public string FirstOrderUrl => OrderGetter()?.FirstOrderUrl;
+            [Category(GeneralCat)]
+            public string Status => OrderGetter()?.Details.Payload.Status;
+            [Category(GeneralCat)]
+            public string Expires => OrderGetter()?.Details.Payload.Expires;
+
+            [Category(EndpointUrlsCat)]
+            public string FinalizeUrl => OrderGetter()?.Details.Payload.Finalize;
+            [Category(EndpointUrlsCat)]
+            public string CertificateUrl => OrderGetter()?.Details.Payload.Certificate;
+
+            [Category(ErrorCat)]
+            public ProblemViewModel Error => OrderGetter()?.Details.Payload.Error == null
+                    ? null : _Error;
         }
 
         [TypeConverter(typeof(ExpandableObjectConverter))]
         public class ProblemViewModel
         {
-            Problem _problem;
+            [Browsable(false)]
+            public Func<Problem> ProblemGetter { get; set; } = () => null;
 
-            public ProblemViewModel(Problem p)
-            {
-                _problem = p;
-            }
+            public string Type => ProblemGetter()?.Type;
 
-            public string Type => _problem.Type;
-            public int? Status => _problem.Status;
-            public string Detail => _problem.Detail;
+            public int? Status => ProblemGetter()?.Status;
+
+            public string Detail => ProblemGetter()?.Detail;
 
             public override string ToString()
             {
-                return $"({Type}, {Status}, {Detail})";
+                return ProblemGetter() == null ? "" : $"({Type}, {Status}, {Detail})";
             }
         }
 
@@ -673,5 +671,31 @@ namespace ACMEForms
         {
             RebindChallengeControls();
         }
+    }
+
+
+    public class AccountDetailsViewModel
+    {
+        [Browsable(false)]
+        public Func<DbAccount> AccountGetter { get; set; } = () => null;
+
+        [DisplayName("KID")]
+        [Description("Key Identifier which uniquely identifies this account with the ACME CA server.")]
+        public string KId => AccountGetter()?.Details.Kid;
+
+        [DisplayName("ToS Link")]
+        public string TosLink => AccountGetter()?.Details.TosLink;
+
+        public string Status => AccountGetter()?.Details.Payload.Status;
+
+        public string Orders => AccountGetter()?.Details.Payload.Orders;
+
+        [DisplayName("Initial IP")]
+        public string InitialIp => AccountGetter()?.Details.Payload.InitialIp;
+
+        [DisplayName("Created At")]
+        public string CreatedAt => AccountGetter()?.Details.Payload.CreatedAt;
+
+        public string Agreement => AccountGetter()?.Details.Payload.Agreement;
     }
 }

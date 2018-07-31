@@ -51,6 +51,7 @@ namespace ACMEForms
             this.tosLinkLabel = new System.Windows.Forms.Label();
             this.ordersTextBox = new System.Windows.Forms.TextBox();
             this.initialIpTextBox = new System.Windows.Forms.TextBox();
+            this.accountPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.contactEmailsTextBox = new System.Windows.Forms.TextBox();
             this.contactEmailsLabel = new System.Windows.Forms.Label();
             this.caServerTextBox = new System.Windows.Forms.TextBox();
@@ -89,8 +90,10 @@ namespace ACMEForms
             this.orderStatusLabel = new System.Windows.Forms.Label();
             this.finalizeUrlTextBox = new System.Windows.Forms.TextBox();
             this.certificateUrlTextBox = new System.Windows.Forms.TextBox();
+            this.orderPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.challengesTabControl = new System.Windows.Forms.TabControl();
             this.dnsChallengeTabPage = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -141,6 +144,7 @@ namespace ACMEForms
             this.challengeStatusLabel = new System.Windows.Forms.Label();
             this.challengeTypeTextBox = new System.Windows.Forms.TextBox();
             this.challengeTypeLabel = new System.Windows.Forms.Label();
+            this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
             this.orderButtonsFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.createOrderButton = new System.Windows.Forms.Button();
             this.refreshOrderButton = new System.Windows.Forms.Button();
@@ -149,8 +153,7 @@ namespace ACMEForms
             this.dnsIdentifiersLabel = new System.Windows.Forms.Label();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.mainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.accountPropertyGrid = new System.Windows.Forms.PropertyGrid();
-            this.orderPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabControl1.SuspendLayout();
             this.accountTabPage.SuspendLayout();
             this.accountPanel.SuspendLayout();
@@ -178,6 +181,7 @@ namespace ACMEForms
             this.challengeDetailsPanel.SuspendLayout();
             this.orderButtonsFlowLayoutPanel.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -292,175 +296,203 @@ namespace ACMEForms
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.kidLabel, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.agreementLabel, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.kidTextBox, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.createdAtLabel, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.agreementTextBox, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.initialIpLabel, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.tosLinkTextBox, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ordersLabel, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.statusTextBox, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.statusLabel, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.createdAtTextBox, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.tosLinkLabel, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.ordersTextBox, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.initialIpTextBox, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.accountPropertyGrid, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.kidLabel, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.agreementLabel, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.kidTextBox, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.createdAtLabel, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.agreementTextBox, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.initialIpLabel, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this.tosLinkTextBox, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.ordersLabel, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this.statusTextBox, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.statusLabel, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.createdAtTextBox, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.tosLinkLabel, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.ordersTextBox, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.initialIpTextBox, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.accountPropertyGrid, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 30);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 9;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowCount = 12;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(967, 1228);
             this.tableLayoutPanel1.TabIndex = 14;
             // 
             // kidLabel
             // 
             this.kidLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.kidLabel.Location = new System.Drawing.Point(3, 0);
+            this.kidLabel.Location = new System.Drawing.Point(3, 928);
             this.kidLabel.Name = "kidLabel";
             this.kidLabel.Size = new System.Drawing.Size(181, 37);
             this.kidLabel.TabIndex = 0;
             this.kidLabel.Text = "KID:";
             this.kidLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.kidLabel.Visible = false;
             // 
             // agreementLabel
             // 
             this.agreementLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.agreementLabel.Location = new System.Drawing.Point(3, 222);
+            this.agreementLabel.Location = new System.Drawing.Point(3, 1150);
             this.agreementLabel.Name = "agreementLabel";
             this.agreementLabel.Size = new System.Drawing.Size(181, 37);
             this.agreementLabel.TabIndex = 13;
             this.agreementLabel.Text = "Agreement:";
             this.agreementLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.agreementLabel.Visible = false;
             // 
             // kidTextBox
             // 
             this.kidTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.kidTextBox.Location = new System.Drawing.Point(190, 3);
+            this.kidTextBox.Location = new System.Drawing.Point(190, 931);
             this.kidTextBox.Name = "kidTextBox";
             this.kidTextBox.ReadOnly = true;
             this.kidTextBox.Size = new System.Drawing.Size(774, 31);
             this.kidTextBox.TabIndex = 1;
+            this.kidTextBox.Visible = false;
             // 
             // createdAtLabel
             // 
             this.createdAtLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.createdAtLabel.Location = new System.Drawing.Point(3, 185);
+            this.createdAtLabel.Location = new System.Drawing.Point(3, 1113);
             this.createdAtLabel.Name = "createdAtLabel";
             this.createdAtLabel.Size = new System.Drawing.Size(181, 37);
             this.createdAtLabel.TabIndex = 11;
             this.createdAtLabel.Text = "Created At:";
             this.createdAtLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.createdAtLabel.Visible = false;
             // 
             // agreementTextBox
             // 
             this.agreementTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.agreementTextBox.Location = new System.Drawing.Point(190, 225);
+            this.agreementTextBox.Location = new System.Drawing.Point(190, 1153);
             this.agreementTextBox.Name = "agreementTextBox";
             this.agreementTextBox.ReadOnly = true;
             this.agreementTextBox.Size = new System.Drawing.Size(774, 31);
             this.agreementTextBox.TabIndex = 12;
+            this.agreementTextBox.Visible = false;
             // 
             // initialIpLabel
             // 
             this.initialIpLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.initialIpLabel.Location = new System.Drawing.Point(3, 148);
+            this.initialIpLabel.Location = new System.Drawing.Point(3, 1076);
             this.initialIpLabel.Name = "initialIpLabel";
             this.initialIpLabel.Size = new System.Drawing.Size(181, 37);
             this.initialIpLabel.TabIndex = 9;
             this.initialIpLabel.Text = "Initial IP:";
             this.initialIpLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.initialIpLabel.Visible = false;
             // 
             // tosLinkTextBox
             // 
             this.tosLinkTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tosLinkTextBox.Location = new System.Drawing.Point(190, 40);
+            this.tosLinkTextBox.Location = new System.Drawing.Point(190, 968);
             this.tosLinkTextBox.Name = "tosLinkTextBox";
             this.tosLinkTextBox.ReadOnly = true;
             this.tosLinkTextBox.Size = new System.Drawing.Size(774, 31);
             this.tosLinkTextBox.TabIndex = 2;
+            this.tosLinkTextBox.Visible = false;
             // 
             // ordersLabel
             // 
             this.ordersLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ordersLabel.Location = new System.Drawing.Point(3, 111);
+            this.ordersLabel.Location = new System.Drawing.Point(3, 1039);
             this.ordersLabel.Name = "ordersLabel";
             this.ordersLabel.Size = new System.Drawing.Size(181, 37);
             this.ordersLabel.TabIndex = 7;
             this.ordersLabel.Text = "Orders:";
             this.ordersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ordersLabel.Visible = false;
             // 
             // statusTextBox
             // 
             this.statusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.statusTextBox.Location = new System.Drawing.Point(190, 77);
+            this.statusTextBox.Location = new System.Drawing.Point(190, 1005);
             this.statusTextBox.Name = "statusTextBox";
             this.statusTextBox.ReadOnly = true;
             this.statusTextBox.Size = new System.Drawing.Size(774, 31);
             this.statusTextBox.TabIndex = 4;
+            this.statusTextBox.Visible = false;
             // 
             // statusLabel
             // 
             this.statusLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.statusLabel.Location = new System.Drawing.Point(3, 74);
+            this.statusLabel.Location = new System.Drawing.Point(3, 1002);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(181, 37);
             this.statusLabel.TabIndex = 5;
             this.statusLabel.Text = "Status:";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.statusLabel.Visible = false;
             // 
             // createdAtTextBox
             // 
             this.createdAtTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.createdAtTextBox.Location = new System.Drawing.Point(190, 188);
+            this.createdAtTextBox.Location = new System.Drawing.Point(190, 1116);
             this.createdAtTextBox.Name = "createdAtTextBox";
             this.createdAtTextBox.ReadOnly = true;
             this.createdAtTextBox.Size = new System.Drawing.Size(774, 31);
             this.createdAtTextBox.TabIndex = 10;
+            this.createdAtTextBox.Visible = false;
             // 
             // tosLinkLabel
             // 
             this.tosLinkLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tosLinkLabel.Location = new System.Drawing.Point(3, 37);
+            this.tosLinkLabel.Location = new System.Drawing.Point(3, 965);
             this.tosLinkLabel.Name = "tosLinkLabel";
             this.tosLinkLabel.Size = new System.Drawing.Size(181, 37);
             this.tosLinkLabel.TabIndex = 3;
             this.tosLinkLabel.Text = "ToS Link:";
             this.tosLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.tosLinkLabel.Visible = false;
             // 
             // ordersTextBox
             // 
             this.ordersTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ordersTextBox.Location = new System.Drawing.Point(190, 114);
+            this.ordersTextBox.Location = new System.Drawing.Point(190, 1042);
             this.ordersTextBox.Name = "ordersTextBox";
             this.ordersTextBox.ReadOnly = true;
             this.ordersTextBox.Size = new System.Drawing.Size(774, 31);
             this.ordersTextBox.TabIndex = 6;
+            this.ordersTextBox.Visible = false;
             // 
             // initialIpTextBox
             // 
             this.initialIpTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.initialIpTextBox.Location = new System.Drawing.Point(190, 151);
+            this.initialIpTextBox.Location = new System.Drawing.Point(190, 1079);
             this.initialIpTextBox.Name = "initialIpTextBox";
             this.initialIpTextBox.ReadOnly = true;
             this.initialIpTextBox.Size = new System.Drawing.Size(774, 31);
             this.initialIpTextBox.TabIndex = 8;
+            this.initialIpTextBox.Visible = false;
+            // 
+            // accountPropertyGrid
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.accountPropertyGrid, 2);
+            this.accountPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.accountPropertyGrid.Location = new System.Drawing.Point(3, 3);
+            this.accountPropertyGrid.Name = "accountPropertyGrid";
+            this.accountPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
+            this.accountPropertyGrid.Size = new System.Drawing.Size(961, 448);
+            this.accountPropertyGrid.TabIndex = 14;
+            this.accountPropertyGrid.ToolbarVisible = false;
             // 
             // contactEmailsTextBox
             // 
@@ -660,6 +692,7 @@ namespace ACMEForms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl3.Controls.Add(this.tabPage4);
+            this.tabControl3.Controls.Add(this.tabPage1);
             this.tabControl3.Controls.Add(this.tabPage5);
             this.tabControl3.Location = new System.Drawing.Point(14, 30);
             this.tabControl3.Name = "tabControl3";
@@ -669,7 +702,7 @@ namespace ACMEForms
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.tableLayoutPanel2);
+            this.tabPage4.Controls.Add(this.orderPropertyGrid);
             this.tabPage4.Location = new System.Drawing.Point(8, 39);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -686,28 +719,29 @@ namespace ACMEForms
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.orderExpiresTextBox, 1, 3);
-            this.tableLayoutPanel2.Controls.Add(this.firstOrderUrlLabel, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.firstOrderUrlTextBox, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label8, 0, 10);
-            this.tableLayoutPanel2.Controls.Add(this.errorTypeTextBox, 1, 9);
-            this.tableLayoutPanel2.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 9);
-            this.tableLayoutPanel2.Controls.Add(this.orderUrlTextBox, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label3, 0, 8);
-            this.tableLayoutPanel2.Controls.Add(this.errorDetailTextBox, 1, 10);
-            this.tableLayoutPanel2.Controls.Add(this.label4, 0, 6);
-            this.tableLayoutPanel2.Controls.Add(this.orderStatusTextBox, 1, 2);
-            this.tableLayoutPanel2.Controls.Add(this.label5, 0, 5);
-            this.tableLayoutPanel2.Controls.Add(this.label6, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.errorStatusTextBox, 1, 8);
-            this.tableLayoutPanel2.Controls.Add(this.orderStatusLabel, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.finalizeUrlTextBox, 1, 5);
-            this.tableLayoutPanel2.Controls.Add(this.certificateUrlTextBox, 1, 6);
-            this.tableLayoutPanel2.Controls.Add(this.orderPropertyGrid, 0, 12);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 4);
+            this.tableLayoutPanel2.Controls.Add(this.orderExpiresTextBox, 1, 5);
+            this.tableLayoutPanel2.Controls.Add(this.firstOrderUrlLabel, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.firstOrderUrlTextBox, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.label8, 0, 12);
+            this.tableLayoutPanel2.Controls.Add(this.errorTypeTextBox, 1, 11);
+            this.tableLayoutPanel2.Controls.Add(this.label1, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 11);
+            this.tableLayoutPanel2.Controls.Add(this.orderUrlTextBox, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.label3, 0, 10);
+            this.tableLayoutPanel2.Controls.Add(this.errorDetailTextBox, 1, 12);
+            this.tableLayoutPanel2.Controls.Add(this.label4, 0, 8);
+            this.tableLayoutPanel2.Controls.Add(this.orderStatusTextBox, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.label5, 0, 7);
+            this.tableLayoutPanel2.Controls.Add(this.label6, 0, 5);
+            this.tableLayoutPanel2.Controls.Add(this.errorStatusTextBox, 1, 10);
+            this.tableLayoutPanel2.Controls.Add(this.orderStatusLabel, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.finalizeUrlTextBox, 1, 7);
+            this.tableLayoutPanel2.Controls.Add(this.certificateUrlTextBox, 1, 8);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 17;
+            this.tableLayoutPanel2.RowCount = 14;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -719,11 +753,6 @@ namespace ACMEForms
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 66.66667F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(889, 1196);
@@ -733,181 +762,209 @@ namespace ACMEForms
             // 
             this.orderExpiresTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.orderExpiresTextBox.Location = new System.Drawing.Point(190, 114);
+            this.orderExpiresTextBox.Location = new System.Drawing.Point(190, 917);
             this.orderExpiresTextBox.Name = "orderExpiresTextBox";
             this.orderExpiresTextBox.ReadOnly = true;
             this.orderExpiresTextBox.Size = new System.Drawing.Size(696, 31);
             this.orderExpiresTextBox.TabIndex = 22;
+            this.orderExpiresTextBox.Visible = false;
             // 
             // firstOrderUrlLabel
             // 
             this.firstOrderUrlLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.firstOrderUrlLabel.Location = new System.Drawing.Point(3, 37);
+            this.firstOrderUrlLabel.Location = new System.Drawing.Point(3, 840);
             this.firstOrderUrlLabel.Name = "firstOrderUrlLabel";
             this.firstOrderUrlLabel.Size = new System.Drawing.Size(181, 37);
             this.firstOrderUrlLabel.TabIndex = 21;
             this.firstOrderUrlLabel.Text = "First Order URL:";
             this.firstOrderUrlLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.firstOrderUrlLabel.Visible = false;
             // 
             // firstOrderUrlTextBox
             // 
             this.firstOrderUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.firstOrderUrlTextBox.Location = new System.Drawing.Point(190, 40);
+            this.firstOrderUrlTextBox.Location = new System.Drawing.Point(190, 843);
             this.firstOrderUrlTextBox.Name = "firstOrderUrlTextBox";
             this.firstOrderUrlTextBox.ReadOnly = true;
             this.firstOrderUrlTextBox.Size = new System.Drawing.Size(696, 31);
             this.firstOrderUrlTextBox.TabIndex = 20;
+            this.firstOrderUrlTextBox.Visible = false;
             // 
             // label8
             // 
             this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.Location = new System.Drawing.Point(3, 336);
+            this.label8.Location = new System.Drawing.Point(3, 1139);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(181, 37);
             this.label8.TabIndex = 15;
             this.label8.Text = "Error Detail:";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label8.Visible = false;
             // 
             // errorTypeTextBox
             // 
             this.errorTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorTypeTextBox.Location = new System.Drawing.Point(190, 302);
+            this.errorTypeTextBox.Location = new System.Drawing.Point(190, 1105);
             this.errorTypeTextBox.Name = "errorTypeTextBox";
             this.errorTypeTextBox.ReadOnly = true;
             this.errorTypeTextBox.Size = new System.Drawing.Size(696, 31);
             this.errorTypeTextBox.TabIndex = 14;
+            this.errorTypeTextBox.Visible = false;
             // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Location = new System.Drawing.Point(3, 803);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(181, 37);
             this.label1.TabIndex = 0;
             this.label1.Text = "Order URL:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label1.Visible = false;
             // 
             // label2
             // 
             this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 299);
+            this.label2.Location = new System.Drawing.Point(3, 1102);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(181, 37);
             this.label2.TabIndex = 13;
             this.label2.Text = "Error Type:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label2.Visible = false;
             // 
             // orderUrlTextBox
             // 
             this.orderUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.orderUrlTextBox.Location = new System.Drawing.Point(190, 3);
+            this.orderUrlTextBox.Location = new System.Drawing.Point(190, 806);
             this.orderUrlTextBox.Name = "orderUrlTextBox";
             this.orderUrlTextBox.ReadOnly = true;
             this.orderUrlTextBox.Size = new System.Drawing.Size(696, 31);
             this.orderUrlTextBox.TabIndex = 1;
+            this.orderUrlTextBox.Visible = false;
             // 
             // label3
             // 
             this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(3, 262);
+            this.label3.Location = new System.Drawing.Point(3, 1065);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(181, 37);
             this.label3.TabIndex = 11;
             this.label3.Text = "Error Status:";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label3.Visible = false;
             // 
             // errorDetailTextBox
             // 
             this.errorDetailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorDetailTextBox.Location = new System.Drawing.Point(190, 339);
+            this.errorDetailTextBox.Location = new System.Drawing.Point(190, 1142);
             this.errorDetailTextBox.Name = "errorDetailTextBox";
             this.errorDetailTextBox.ReadOnly = true;
             this.errorDetailTextBox.Size = new System.Drawing.Size(696, 31);
             this.errorDetailTextBox.TabIndex = 12;
+            this.errorDetailTextBox.Visible = false;
             // 
             // label4
             // 
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 205);
+            this.label4.Location = new System.Drawing.Point(3, 1008);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(181, 37);
             this.label4.TabIndex = 9;
             this.label4.Text = "Certificate URL:";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label4.Visible = false;
             // 
             // orderStatusTextBox
             // 
             this.orderStatusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.orderStatusTextBox.Location = new System.Drawing.Point(190, 77);
+            this.orderStatusTextBox.Location = new System.Drawing.Point(190, 880);
             this.orderStatusTextBox.Name = "orderStatusTextBox";
             this.orderStatusTextBox.ReadOnly = true;
             this.orderStatusTextBox.Size = new System.Drawing.Size(696, 31);
             this.orderStatusTextBox.TabIndex = 2;
+            this.orderStatusTextBox.Visible = false;
             // 
             // label5
             // 
             this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 168);
+            this.label5.Location = new System.Drawing.Point(3, 971);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(181, 37);
             this.label5.TabIndex = 7;
             this.label5.Text = "Finalize URL:";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label5.Visible = false;
             // 
             // label6
             // 
             this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 111);
+            this.label6.Location = new System.Drawing.Point(3, 914);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(181, 37);
             this.label6.TabIndex = 5;
             this.label6.Text = "Expires:";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label6.Visible = false;
             // 
             // errorStatusTextBox
             // 
             this.errorStatusTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.errorStatusTextBox.Location = new System.Drawing.Point(190, 265);
+            this.errorStatusTextBox.Location = new System.Drawing.Point(190, 1068);
             this.errorStatusTextBox.Name = "errorStatusTextBox";
             this.errorStatusTextBox.ReadOnly = true;
             this.errorStatusTextBox.Size = new System.Drawing.Size(696, 31);
             this.errorStatusTextBox.TabIndex = 10;
+            this.errorStatusTextBox.Visible = false;
             // 
             // orderStatusLabel
             // 
             this.orderStatusLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.orderStatusLabel.Location = new System.Drawing.Point(3, 74);
+            this.orderStatusLabel.Location = new System.Drawing.Point(3, 877);
             this.orderStatusLabel.Name = "orderStatusLabel";
             this.orderStatusLabel.Size = new System.Drawing.Size(181, 37);
             this.orderStatusLabel.TabIndex = 3;
             this.orderStatusLabel.Text = "Status:";
             this.orderStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.orderStatusLabel.Visible = false;
             // 
             // finalizeUrlTextBox
             // 
             this.finalizeUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.finalizeUrlTextBox.Location = new System.Drawing.Point(190, 171);
+            this.finalizeUrlTextBox.Location = new System.Drawing.Point(190, 974);
             this.finalizeUrlTextBox.Name = "finalizeUrlTextBox";
             this.finalizeUrlTextBox.ReadOnly = true;
             this.finalizeUrlTextBox.Size = new System.Drawing.Size(696, 31);
             this.finalizeUrlTextBox.TabIndex = 6;
+            this.finalizeUrlTextBox.Visible = false;
             // 
             // certificateUrlTextBox
             // 
             this.certificateUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.certificateUrlTextBox.Location = new System.Drawing.Point(190, 208);
+            this.certificateUrlTextBox.Location = new System.Drawing.Point(190, 1011);
             this.certificateUrlTextBox.Name = "certificateUrlTextBox";
             this.certificateUrlTextBox.ReadOnly = true;
             this.certificateUrlTextBox.Size = new System.Drawing.Size(696, 31);
             this.certificateUrlTextBox.TabIndex = 8;
+            this.certificateUrlTextBox.Visible = false;
+            // 
+            // orderPropertyGrid
+            // 
+            this.orderPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.orderPropertyGrid.Location = new System.Drawing.Point(3, 3);
+            this.orderPropertyGrid.Name = "orderPropertyGrid";
+            this.orderPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.orderPropertyGrid.Size = new System.Drawing.Size(895, 1200);
+            this.orderPropertyGrid.TabIndex = 23;
+            this.orderPropertyGrid.ToolbarVisible = false;
             // 
             // tabPage5
             // 
@@ -925,24 +982,36 @@ namespace ACMEForms
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.challengesTabControl, 1, 4);
-            this.tableLayoutPanel4.Controls.Add(this.label7, 0, 4);
-            this.tableLayoutPanel4.Controls.Add(this.panel1, 1, 2);
+            this.tableLayoutPanel4.Controls.Add(this.propertyGrid1, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.challengesTabControl, 1, 5);
+            this.tableLayoutPanel4.Controls.Add(this.label7, 0, 5);
+            this.tableLayoutPanel4.Controls.Add(this.panel1, 1, 3);
             this.tableLayoutPanel4.Controls.Add(this.authorizationsListBox, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.challengeDetailsPanel, 1, 5);
+            this.tableLayoutPanel4.Controls.Add(this.challengeDetailsPanel, 1, 7);
+            this.tableLayoutPanel4.Controls.Add(this.propertyGrid2, 0, 6);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 6;
+            this.tableLayoutPanel4.RowCount = 8;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(895, 1200);
             this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // propertyGrid1
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.propertyGrid1, 2);
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(3, 103);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(889, 175);
+            this.propertyGrid1.TabIndex = 29;
             // 
             // challengesTabControl
             // 
@@ -950,10 +1019,10 @@ namespace ACMEForms
             this.challengesTabControl.Controls.Add(this.httpChallengeTabPage);
             this.challengesTabControl.Controls.Add(this.miscChallengesTabPage);
             this.challengesTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.challengesTabControl.Location = new System.Drawing.Point(190, 297);
+            this.challengesTabControl.Location = new System.Drawing.Point(190, 458);
             this.challengesTabControl.Name = "challengesTabControl";
             this.challengesTabControl.SelectedIndex = 0;
-            this.challengesTabControl.Size = new System.Drawing.Size(702, 294);
+            this.challengesTabControl.Size = new System.Drawing.Size(702, 356);
             this.challengesTabControl.TabIndex = 25;
             this.challengesTabControl.SelectedIndexChanged += new System.EventHandler(this.challengesTabControl_SelectedIndexChanged);
             // 
@@ -963,7 +1032,7 @@ namespace ACMEForms
             this.dnsChallengeTabPage.Location = new System.Drawing.Point(8, 39);
             this.dnsChallengeTabPage.Name = "dnsChallengeTabPage";
             this.dnsChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.dnsChallengeTabPage.Size = new System.Drawing.Size(686, 247);
+            this.dnsChallengeTabPage.Size = new System.Drawing.Size(686, 309);
             this.dnsChallengeTabPage.TabIndex = 0;
             this.dnsChallengeTabPage.Text = "DNS Challenge";
             this.dnsChallengeTabPage.UseVisualStyleBackColor = true;
@@ -979,7 +1048,7 @@ namespace ACMEForms
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(680, 241);
+            this.panel3.Size = new System.Drawing.Size(680, 303);
             this.panel3.TabIndex = 0;
             // 
             // dnsRecordValueTextBox
@@ -1045,7 +1114,7 @@ namespace ACMEForms
             this.httpChallengeTabPage.Location = new System.Drawing.Point(8, 39);
             this.httpChallengeTabPage.Name = "httpChallengeTabPage";
             this.httpChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.httpChallengeTabPage.Size = new System.Drawing.Size(686, 247);
+            this.httpChallengeTabPage.Size = new System.Drawing.Size(686, 309);
             this.httpChallengeTabPage.TabIndex = 1;
             this.httpChallengeTabPage.Text = "HTTP Challenge";
             this.httpChallengeTabPage.UseVisualStyleBackColor = true;
@@ -1063,7 +1132,7 @@ namespace ACMEForms
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(3, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(680, 241);
+            this.panel4.Size = new System.Drawing.Size(680, 303);
             this.panel4.TabIndex = 0;
             // 
             // httpResourceValueTextBox
@@ -1151,7 +1220,7 @@ namespace ACMEForms
             this.miscChallengesTabPage.Location = new System.Drawing.Point(8, 39);
             this.miscChallengesTabPage.Name = "miscChallengesTabPage";
             this.miscChallengesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.miscChallengesTabPage.Size = new System.Drawing.Size(686, 247);
+            this.miscChallengesTabPage.Size = new System.Drawing.Size(686, 309);
             this.miscChallengesTabPage.TabIndex = 2;
             this.miscChallengesTabPage.Text = "Misc Challenges";
             this.miscChallengesTabPage.UseVisualStyleBackColor = true;
@@ -1163,7 +1232,7 @@ namespace ACMEForms
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(680, 241);
+            this.panel2.Size = new System.Drawing.Size(680, 303);
             this.panel2.TabIndex = 0;
             // 
             // miscChallengeTypesListBox
@@ -1175,7 +1244,7 @@ namespace ACMEForms
             this.miscChallengeTypesListBox.ItemHeight = 25;
             this.miscChallengeTypesListBox.Location = new System.Drawing.Point(6, 28);
             this.miscChallengeTypesListBox.Name = "miscChallengeTypesListBox";
-            this.miscChallengeTypesListBox.Size = new System.Drawing.Size(671, 204);
+            this.miscChallengeTypesListBox.Size = new System.Drawing.Size(671, 254);
             this.miscChallengeTypesListBox.TabIndex = 2;
             this.miscChallengeTypesListBox.SelectedIndexChanged += new System.EventHandler(this.miscChallengeTypesListBox_SelectedIndexChanged);
             // 
@@ -1192,9 +1261,9 @@ namespace ACMEForms
             // label7
             // 
             this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 294);
+            this.label7.Location = new System.Drawing.Point(3, 455);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(181, 300);
+            this.label7.Size = new System.Drawing.Size(181, 362);
             this.label7.TabIndex = 24;
             this.label7.Text = "Challenges:";
             this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -1211,7 +1280,7 @@ namespace ACMEForms
             this.panel1.Controls.Add(this.identifierTypeTextBox);
             this.panel1.Controls.Add(this.identifierTypeLabel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(190, 103);
+            this.panel1.Location = new System.Drawing.Point(190, 284);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(702, 168);
             this.panel1.TabIndex = 20;
@@ -1336,9 +1405,9 @@ namespace ACMEForms
             this.challengeDetailsPanel.Controls.Add(this.challengeTypeTextBox);
             this.challengeDetailsPanel.Controls.Add(this.challengeTypeLabel);
             this.challengeDetailsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.challengeDetailsPanel.Location = new System.Drawing.Point(190, 597);
+            this.challengeDetailsPanel.Location = new System.Drawing.Point(190, 840);
             this.challengeDetailsPanel.Name = "challengeDetailsPanel";
-            this.challengeDetailsPanel.Size = new System.Drawing.Size(702, 600);
+            this.challengeDetailsPanel.Size = new System.Drawing.Size(702, 357);
             this.challengeDetailsPanel.TabIndex = 26;
             // 
             // validationRecordsTextBox
@@ -1478,6 +1547,15 @@ namespace ACMEForms
             this.challengeTypeLabel.TabIndex = 3;
             this.challengeTypeLabel.Text = "Type:";
             // 
+            // propertyGrid2
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.propertyGrid2, 2);
+            this.propertyGrid2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid2.Location = new System.Drawing.Point(3, 820);
+            this.propertyGrid2.Name = "propertyGrid2";
+            this.propertyGrid2.Size = new System.Drawing.Size(889, 14);
+            this.propertyGrid2.TabIndex = 28;
+            // 
             // orderButtonsFlowLayoutPanel
             // 
             this.orderButtonsFlowLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1558,27 +1636,16 @@ namespace ACMEForms
             this.mainStatusLabel.Size = new System.Drawing.Size(76, 32);
             this.mainStatusLabel.Text = "Hello.";
             // 
-            // accountPropertyGrid
+            // tabPage1
             // 
-            this.accountPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.accountPropertyGrid.Location = new System.Drawing.Point(190, 746);
-            this.accountPropertyGrid.Name = "accountPropertyGrid";
-            this.accountPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.accountPropertyGrid.Size = new System.Drawing.Size(774, 479);
-            this.accountPropertyGrid.TabIndex = 14;
-            // 
-            // orderPropertyGrid
-            // 
-            this.tableLayoutPanel2.SetColumnSpan(this.orderPropertyGrid, 2);
-            this.orderPropertyGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.orderPropertyGrid.HelpVisible = false;
-            this.orderPropertyGrid.Location = new System.Drawing.Point(3, 396);
-            this.orderPropertyGrid.Name = "orderPropertyGrid";
-            this.orderPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.tableLayoutPanel2.SetRowSpan(this.orderPropertyGrid, 3);
-            this.orderPropertyGrid.Size = new System.Drawing.Size(883, 756);
-            this.orderPropertyGrid.TabIndex = 23;
-            this.orderPropertyGrid.ToolbarVisible = false;
+            this.tabPage1.Controls.Add(this.tableLayoutPanel2);
+            this.tabPage1.Location = new System.Drawing.Point(8, 39);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(901, 1206);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Old General";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1629,6 +1696,7 @@ namespace ACMEForms
             this.orderButtonsFlowLayoutPanel.ResumeLayout(false);
             this.mainStatusStrip.ResumeLayout(false);
             this.mainStatusStrip.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1759,6 +1827,9 @@ namespace ACMEForms
         private System.Windows.Forms.ListBox miscChallengeTypesListBox;
         private System.Windows.Forms.PropertyGrid accountPropertyGrid;
         private System.Windows.Forms.PropertyGrid orderPropertyGrid;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid propertyGrid2;
+        private System.Windows.Forms.TabPage tabPage1;
     }
 }
 
