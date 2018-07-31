@@ -17,6 +17,6 @@ The examples and their current state are as follows:
 | ACMEKestrel | Works! | Provide sample middleware and services to automatically obtain ACME certs for a Kestrel-based (ASP.NET Core) app.
 | ACMEBlazor | In-progress | Provides a simple, browser-only client based on the [Blazor](https://blazor.net) project.
 | ACMETerm | In-progress | Provides a terminal-based GUI app based on the [gui.cs](https://github.com/migueldeicaza/gui.cs) project.
-| ACMEForms | Investigating | Provides a WinForms client, testing ACMESharp support on earlier versions of .NET Framework.
+| ACMEForms | In-progress | Provides a WinForms client, testing ACMESharp support on earlier versions of .NET Framework.
 | ACMEAvalon | Investigating | Provides a cross-platform, WPF-like GUI client, based on the [Avalonia](http://avaloniaui.net/) project.
 
