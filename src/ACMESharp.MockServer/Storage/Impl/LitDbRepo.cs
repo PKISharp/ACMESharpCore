@@ -13,18 +13,53 @@ namespace ACMESharp.MockServer.Storage.Impl
 
         public static LiteDbRepo GetInstance(string dbName = DefaultDbName)
         {
-            return new LiteDbRepo
+            var repo = new LiteDbRepo
             {
                 DbName = dbName,
             };
+            repo.Init();
+            return repo;
+        }
+
+        private void Init()
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                // DbNonce
+                db.GetCollection<DbNonce>()
+                    .EnsureIndex(x => x.Nonce, true);
+                // DbAccount
+                db.GetCollection<DbAccount>()
+                    .EnsureIndex(x => x.Jwk, true);
+                db.GetCollection<DbAccount>()
+                    .EnsureIndex(x => x.Details.Kid, true);
+                // DbOrder
+                db.GetCollection<DbOrder>()
+                    .EnsureIndex(x => x.Url, true);
+                db.GetCollection<DbOrder>()
+                    .EnsureIndex(x => x.AccountId);
+                // DbAuthorization
+                db.GetCollection<DbAuthorization>()
+                    .EnsureIndex(x => x.Url, true);
+                db.GetCollection<DbAuthorization>()
+                    .EnsureIndex(x => x.OrderId);
+                // DbChallenge
+                db.GetCollection<DbChallenge>()
+                    .EnsureIndex(x => x.Payload.Url, true);
+                db.GetCollection<DbChallenge>()
+                    .EnsureIndex(x => x.AuthorizationId);
+                // DbCertificate
+                db.GetCollection<DbCertificate>()
+                    .EnsureIndex(x => x.CertKey, true);
+                db.GetCollection<DbCertificate>()
+                    .EnsureIndex(x => x.OrderId);
+            }
         }
 
         public void SaveNonce(DbNonce nonce)
         {
             using (var db = new LiteDatabase(DbName))
             {
-                db.GetCollection<DbNonce>()
-                    .EnsureIndex(x => x.Nonce, true);
                 db.GetCollection<DbNonce>().Upsert(nonce);
             }
         }
@@ -59,10 +94,6 @@ namespace ACMESharp.MockServer.Storage.Impl
         {
             using (var db = new LiteDatabase(DbName))
             {
-                db.GetCollection<DbAccount>()
-                    .EnsureIndex(x => x.Jwk, true);
-                db.GetCollection<DbAccount>()
-                    .EnsureIndex(x => x.Details.Kid, true);
                 db.GetCollection<DbAccount>()
                     .Upsert(acct);
             }
@@ -101,10 +132,6 @@ namespace ACMESharp.MockServer.Storage.Impl
         {
             using (var db = new LiteDatabase(DbName))
             {
-                db.GetCollection<DbOrder>()
-                    .EnsureIndex(x => x.Url, true);
-                db.GetCollection<DbOrder>()
-                    .EnsureIndex(x => x.AccountId);
                 db.GetCollection<DbOrder>().Upsert(order);
             }
         }
@@ -140,10 +167,6 @@ namespace ACMESharp.MockServer.Storage.Impl
         {
             using (var db = new LiteDatabase(DbName))
             {
-                db.GetCollection<DbAuthorization>()
-                    .EnsureIndex(x => x.Url, true);
-                db.GetCollection<DbAuthorization>()
-                    .EnsureIndex(x => x.OrderId);
                 db.GetCollection<DbAuthorization>().Upsert(authz);
             }
         }
@@ -177,10 +200,6 @@ namespace ACMESharp.MockServer.Storage.Impl
         {
             using (var db = new LiteDatabase(DbName))
             {
-                db.GetCollection<DbChallenge>()
-                    .EnsureIndex(x => x.Challenge.Url, true);
-                db.GetCollection<DbChallenge>()
-                    .EnsureIndex(x => x.AuthorizationId);
                 db.GetCollection<DbChallenge>().Upsert(chlng);
             }
         }
@@ -198,7 +217,7 @@ namespace ACMESharp.MockServer.Storage.Impl
             using (var db = new LiteDatabase(DbName))
             {
                 return db.GetCollection<DbChallenge>()
-                    .FindOne(x => x.Challenge.Url == url);
+                    .FindOne(x => x.Payload.Url == url);
             }
         }
         public IEnumerable<DbChallenge> GetChallengesByAuthorizationId(int id)
@@ -207,6 +226,39 @@ namespace ACMESharp.MockServer.Storage.Impl
             {
                 return db.GetCollection<DbChallenge>()
                     .Find(x => x.AuthorizationId == id);
+            }
+        }
+
+        public void SaveCertificate(DbCertificate cert)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                db.GetCollection<DbCertificate>().Upsert(cert);
+            }
+        }
+
+        public DbCertificate GetCertificate(int id)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                return db.GetCollection<DbCertificate>()
+                    .FindById(id);
+            }
+        }
+        public DbCertificate GetCertificateByKey(string certKey)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                return db.GetCollection<DbCertificate>()
+                    .FindOne(x => x.CertKey == certKey);
+            }
+        }
+        public IEnumerable<DbCertificate> GetCertificatesByOrderId(int id)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                return db.GetCollection<DbCertificate>()
+                    .Find(x => x.OrderId == id);
             }
         }
     }

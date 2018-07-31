@@ -28,5 +28,10 @@ namespace ACMESharp.MockServer.Storage
         DbChallenge GetChallenge(int id);
         DbChallenge GetChallengeByUrl(string url);
         IEnumerable<DbChallenge> GetChallengesByAuthorizationId(int id);
+
+        void SaveCertificate(DbCertificate cert);
+        DbCertificate GetCertificate(int id);
+        DbCertificate GetCertificateByKey(string key);
+        IEnumerable<DbCertificate> GetCertificatesByOrderId(int id);
     }
 }

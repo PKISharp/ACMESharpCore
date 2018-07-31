@@ -10,6 +10,6 @@ namespace ACMESharp.MockServer.Storage
 
         public string Url { get; set; }
 
-        public Authorization Authorization { get; set; }
+        public Authorization Payload { get; set; }
     }
 }

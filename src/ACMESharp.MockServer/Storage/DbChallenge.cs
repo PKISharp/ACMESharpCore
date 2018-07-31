@@ -8,6 +8,6 @@ namespace ACMESharp.MockServer.Storage
 
         public int AuthorizationId { get; set; }
 
-        public Challenge Challenge { get; set; }
+        public Challenge Payload { get; set; }
     }
 }
