@@ -1,0 +1,115 @@
+@page "/trydoh"
+@using Examples.Common;
+@using Makaretu.Dns;
+@inject HttpClient http
+
+<h1>Try DNS over HTTP</h1>
+
+<div>
+    <input type="text" bind="@_txtQuery" />
+    <button class="btn btn-primary" title="TXT DNS Name" onclick="@LookupTxt">Query TXT</button>
+</div>
+
+<div>
+    <input type="text" bind="@_ipv4Query" />
+    <button class="btn btn-primary" title="A DNS Name" onclick="@LookupIpv4">Query A</button>
+</div>
+
+<div>
+    <input type="text" bind="@_ipv6Query" />
+    <button class="btn btn-primary" title="AAAA DNS Name" onclick="@LookupIpv6">Query AAAA</button>
+</div>
+
+<div>
+    <input type="text" bind="@_cnameQuery" />
+    <button class="btn btn-primary" title="CNAME DNS NAME" onclick="@LookupCname">Query CNAME</button>
+</div>
+
+<p>
+    Result:<br />
+    <textarea rows="10" cols="100" readonly="readonly" bind="@_queryResult"></textarea>
+</p>
+<p>
+    Raw Result:<br />
+    <textarea rows="10" cols="100" readonly="readonly" bind="@_rawQueryResult"></textarea>
+</p>
+
+
+@functions
+{
+    string _queryResult;
+    string _rawQueryResult;
+
+    string _txtQuery;
+    string _ipv4Query;
+    string _ipv6Query;
+    string _cnameQuery;
+
+    static readonly string[] EmptyStrings = new string[0];
+
+    protected override void OnInit()
+    {
+        DohUtil.Client.HttpClient = http;
+    }
+
+    async Task<string> QueryRawAsync(string name, DnsType dnsType)
+    {
+        try
+        {
+            var raw = await DohUtil.Client.QueryAsync(name, dnsType);
+            return JsonUtil.Serialize(raw);
+        }
+        catch (Exception ex)
+        {
+            return ex.ToString();
+        }
+    }
+
+    async Task LookupTxt()
+    {
+        _queryResult = null;
+        _rawQueryResult = null;
+
+        var txt = await DohUtil.LookupTxtRecordsAsync(_txtQuery);
+        var raw = await QueryRawAsync(_txtQuery, DnsType.TXT);
+
+        _queryResult = string.Join("\r\n", (txt ?? EmptyStrings));
+        _rawQueryResult = raw;
+    }
+
+    async Task LookupIpv4()
+    {
+        _queryResult = null;
+        _rawQueryResult = null;
+
+        var adr = await DohUtil.LookupIpv4RecordsAsync(_ipv4Query);
+        var raw = await QueryRawAsync(_ipv4Query, DnsType.A);
+
+        _queryResult = string.Join("\r\n", (adr.Select(x => x.ToString()) ?? EmptyStrings));
+        _rawQueryResult = raw;
+    }
+
+    async Task LookupIpv6()
+    {
+        _queryResult = null;
+        _rawQueryResult = null;
+
+        var adr = await DohUtil.LookupIpv6RecordsAsync(_ipv6Query);
+        var raw = await QueryRawAsync(_ipv6Query, DnsType.AAAA);
+
+        _queryResult = string.Join("\r\n", (adr.Select(x => x.ToString()) ?? EmptyStrings));
+        _rawQueryResult = raw;
+    }
+
+    async Task LookupCname()
+    {
+        _queryResult = null;
+        _rawQueryResult = null;
+
+        var cnm = await DohUtil.LookupCnameRecordsAsync(_cnameQuery);
+        var raw = await QueryRawAsync(_cnameQuery, DnsType.CNAME);
+
+        _queryResult = string.Join("\r\n", (cnm ?? EmptyStrings));
+        _rawQueryResult = raw;
+    }
+}
