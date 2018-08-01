@@ -16,6 +16,7 @@ using ACMESharp.Crypto.JOSE;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
+using Examples.Common;
 using McMaster.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 

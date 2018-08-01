@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.Common.PKI", "..\E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "..\..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{CFECC9DD-048C-4E17-B268-DA6E7429CFB3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.Common", "..\Examples.Common\Examples.Common.csproj", "{C5868DE7-C546-4A3B-8472-5DCF0809102B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{CFECC9DD-048C-4E17-B268-DA6E7429CFB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFECC9DD-048C-4E17-B268-DA6E7429CFB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFECC9DD-048C-4E17-B268-DA6E7429CFB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5868DE7-C546-4A3B-8472-5DCF0809102B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5868DE7-C546-4A3B-8472-5DCF0809102B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5868DE7-C546-4A3B-8472-5DCF0809102B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5868DE7-C546-4A3B-8472-5DCF0809102B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

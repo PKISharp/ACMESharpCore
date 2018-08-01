@@ -35,6 +35,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
       <HintPath>packages\Portable.BouncyCastle.1.8.2\lib\net40\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="DnsClient, Version=1.1.1.0, Culture=neutral, PublicKeyToken=4574bb5573c51424, processorArchitecture=MSIL">
+      <HintPath>packages\DnsClient.1.1.1\lib\net45\DnsClient.dll</HintPath>
+    </Reference>
     <Reference Include="LiteDB, Version=4.1.4.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>packages\LiteDB.4.1.4\lib\net40\LiteDB.dll</HintPath>
     </Reference>
@@ -144,6 +147,10 @@
     <ProjectReference Include="..\Examples.Common.PKI\Examples.Common.PKI.csproj">
       <Project>{e3fa6fa5-2252-49d8-92fb-e5ca98d5d6ce}</Project>
       <Name>Examples.Common.PKI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Examples.Common\Examples.Common.csproj">
+      <Project>{c5868de7-c546-4a3b-8472-5dcf0809102b}</Project>
+      <Name>Examples.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

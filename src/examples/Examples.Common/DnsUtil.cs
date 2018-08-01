@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using DnsClient;
 using DnsClient.Protocol;
 
-namespace ACMECLI
+namespace Examples.Common
 {
     public static class DnsUtil
     {
