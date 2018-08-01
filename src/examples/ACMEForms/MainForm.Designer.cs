@@ -55,26 +55,39 @@ namespace ACMEForms
             this.orderPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.authorizationsTabPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.authorizationsListBox = new System.Windows.Forms.ListBox();
+            this.authorizationsTabControl = new System.Windows.Forms.TabControl();
+            this.authorizationDetailsTabPage = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.authorizationPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.challengesTabControl = new System.Windows.Forms.TabControl();
             this.dnsChallengeTabPage = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.dnsRecordValueTextBox = new System.Windows.Forms.TextBox();
+            this.dnsRecordNameTextBox = new System.Windows.Forms.TextBox();
             this.dnsRecordValueLabel = new System.Windows.Forms.Label();
             this.dnsRecordTypeTextBox = new System.Windows.Forms.TextBox();
             this.dnsRecordTypeLabel = new System.Windows.Forms.Label();
-            this.dnsRecordNameTextBox = new System.Windows.Forms.TextBox();
             this.dnsRecordNameLabel = new System.Windows.Forms.Label();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.submitDnsAnswerButton = new System.Windows.Forms.Button();
+            this.testDnsAnswerButton = new System.Windows.Forms.Button();
             this.httpChallengeTabPage = new System.Windows.Forms.TabPage();
-            this.httpResourceValueTextBox = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.httpResourceValueLabel = new System.Windows.Forms.Label();
-            this.httpResourceContentTypeTextBox = new System.Windows.Forms.TextBox();
+            this.httpResourceValueTextBox = new System.Windows.Forms.TextBox();
             this.httpResourceContentTypeLabel = new System.Windows.Forms.Label();
-            this.httpResourcePathTextBox = new System.Windows.Forms.TextBox();
-            this.httpResourcePathLabel = new System.Windows.Forms.Label();
             this.httpResourceUrlTextBox = new System.Windows.Forms.TextBox();
+            this.httpResourcePathLabel = new System.Windows.Forms.Label();
+            this.httpResourcePathTextBox = new System.Windows.Forms.TextBox();
             this.httpResourceUrlLabel = new System.Windows.Forms.Label();
+            this.httpResourceContentTypeTextBox = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.submitHttpAnswerButton = new System.Windows.Forms.Button();
+            this.testHttpAnswerButton = new System.Windows.Forms.Button();
+            this.challengesTabPage = new System.Windows.Forms.TabPage();
+            this.challengesTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.miscChallengeTypesListBox = new System.Windows.Forms.ListBox();
-            this.authorizationsListBox = new System.Windows.Forms.ListBox();
             this.challengeDetailsTabControl = new System.Windows.Forms.TabControl();
             this.challengeDetailsTabPage = new System.Windows.Forms.TabPage();
             this.challengePopertyGrid = new System.Windows.Forms.PropertyGrid();
@@ -95,19 +108,6 @@ namespace ACMEForms
             this.dnsIdentifiersTextBox = new System.Windows.Forms.TextBox();
             this.mainStatusStrip = new System.Windows.Forms.StatusStrip();
             this.mainStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.authorizationsTabControl = new System.Windows.Forms.TabControl();
-            this.authorizationDetailsTabPage = new System.Windows.Forms.TabPage();
-            this.challengesTabPage = new System.Windows.Forms.TabPage();
-            this.challengesTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.submitHttpAnswerButton = new System.Windows.Forms.Button();
-            this.testHttpAnswerButton = new System.Windows.Forms.Button();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.submitDnsAnswerButton = new System.Windows.Forms.Button();
-            this.testDnsAnswerButton = new System.Windows.Forms.Button();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl1.SuspendLayout();
             this.accountTabPage.SuspendLayout();
             this.accountPanel.SuspendLayout();
@@ -122,9 +122,18 @@ namespace ACMEForms
             this.orderDetailsTabPage.SuspendLayout();
             this.authorizationsTabPage.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.authorizationsTabControl.SuspendLayout();
+            this.authorizationDetailsTabPage.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.challengesTabControl.SuspendLayout();
             this.dnsChallengeTabPage.SuspendLayout();
+            this.tableLayoutPanel7.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.httpChallengeTabPage.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.challengesTabPage.SuspendLayout();
+            this.challengesTableLayoutPanel.SuspendLayout();
             this.challengeDetailsTabControl.SuspendLayout();
             this.challengeDetailsTabPage.SuspendLayout();
             this.challengeErrorTabPage.SuspendLayout();
@@ -132,15 +141,6 @@ namespace ACMEForms
             this.tableLayoutPanel3.SuspendLayout();
             this.orderButtonsFlowLayoutPanel.SuspendLayout();
             this.mainStatusStrip.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.authorizationsTabControl.SuspendLayout();
-            this.authorizationDetailsTabPage.SuspendLayout();
-            this.challengesTabPage.SuspendLayout();
-            this.challengesTableLayoutPanel.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel7.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -160,7 +160,7 @@ namespace ACMEForms
             this.accountTabPage.Location = new System.Drawing.Point(8, 39);
             this.accountTabPage.Name = "accountTabPage";
             this.accountTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.accountTabPage.Size = new System.Drawing.Size(1328, 1386);
+            this.accountTabPage.Size = new System.Drawing.Size(1328, 1474);
             this.accountTabPage.TabIndex = 0;
             this.accountTabPage.Text = "Account";
             this.accountTabPage.UseVisualStyleBackColor = true;
@@ -172,7 +172,7 @@ namespace ACMEForms
             this.accountPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.accountPanel.Location = new System.Drawing.Point(3, 3);
             this.accountPanel.Name = "accountPanel";
-            this.accountPanel.Size = new System.Drawing.Size(1322, 1380);
+            this.accountPanel.Size = new System.Drawing.Size(1322, 1468);
             this.accountPanel.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -198,7 +198,7 @@ namespace ACMEForms
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1322, 1380);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1322, 1468);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // accountDetailsTabControl
@@ -210,7 +210,7 @@ namespace ACMEForms
             this.accountDetailsTabControl.Location = new System.Drawing.Point(27, 378);
             this.accountDetailsTabControl.Name = "accountDetailsTabControl";
             this.accountDetailsTabControl.SelectedIndex = 0;
-            this.accountDetailsTabControl.Size = new System.Drawing.Size(1292, 999);
+            this.accountDetailsTabControl.Size = new System.Drawing.Size(1292, 1087);
             this.accountDetailsTabControl.TabIndex = 15;
             // 
             // accountDetailsTabPage
@@ -219,7 +219,7 @@ namespace ACMEForms
             this.accountDetailsTabPage.Location = new System.Drawing.Point(8, 39);
             this.accountDetailsTabPage.Name = "accountDetailsTabPage";
             this.accountDetailsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.accountDetailsTabPage.Size = new System.Drawing.Size(1276, 952);
+            this.accountDetailsTabPage.Size = new System.Drawing.Size(1276, 1040);
             this.accountDetailsTabPage.TabIndex = 0;
             this.accountDetailsTabPage.Text = "Account Details";
             this.accountDetailsTabPage.UseVisualStyleBackColor = true;
@@ -230,7 +230,7 @@ namespace ACMEForms
             this.accountPropertyGrid.Location = new System.Drawing.Point(3, 3);
             this.accountPropertyGrid.Name = "accountPropertyGrid";
             this.accountPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.NoSort;
-            this.accountPropertyGrid.Size = new System.Drawing.Size(1270, 946);
+            this.accountPropertyGrid.Size = new System.Drawing.Size(1270, 1034);
             this.accountPropertyGrid.TabIndex = 14;
             this.accountPropertyGrid.ToolbarVisible = false;
             // 
@@ -449,7 +449,7 @@ namespace ACMEForms
             this.orderDetailsTabPage.Location = new System.Drawing.Point(8, 39);
             this.orderDetailsTabPage.Name = "orderDetailsTabPage";
             this.orderDetailsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.orderDetailsTabPage.Size = new System.Drawing.Size(1269, 1010);
+            this.orderDetailsTabPage.Size = new System.Drawing.Size(1269, 1098);
             this.orderDetailsTabPage.TabIndex = 0;
             this.orderDetailsTabPage.Text = "Order Details";
             this.orderDetailsTabPage.UseVisualStyleBackColor = true;
@@ -460,7 +460,7 @@ namespace ACMEForms
             this.orderPropertyGrid.Location = new System.Drawing.Point(3, 3);
             this.orderPropertyGrid.Name = "orderPropertyGrid";
             this.orderPropertyGrid.PropertySort = System.Windows.Forms.PropertySort.Categorized;
-            this.orderPropertyGrid.Size = new System.Drawing.Size(1263, 1004);
+            this.orderPropertyGrid.Size = new System.Drawing.Size(1263, 1092);
             this.orderPropertyGrid.TabIndex = 23;
             this.orderPropertyGrid.ToolbarVisible = false;
             // 
@@ -491,6 +491,55 @@ namespace ACMEForms
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(1263, 1092);
             this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // authorizationsListBox
+            // 
+            this.authorizationsListBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.authorizationsListBox.FormattingEnabled = true;
+            this.authorizationsListBox.ItemHeight = 25;
+            this.authorizationsListBox.Location = new System.Drawing.Point(22, 3);
+            this.authorizationsListBox.Name = "authorizationsListBox";
+            this.authorizationsListBox.Size = new System.Drawing.Size(1238, 104);
+            this.authorizationsListBox.TabIndex = 17;
+            this.authorizationsListBox.SelectedIndexChanged += new System.EventHandler(this.authorizationsListBox_SelectedIndexChanged);
+            // 
+            // authorizationsTabControl
+            // 
+            this.authorizationsTabControl.Controls.Add(this.authorizationDetailsTabPage);
+            this.authorizationsTabControl.Controls.Add(this.challengesTabPage);
+            this.authorizationsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.authorizationsTabControl.Location = new System.Drawing.Point(22, 113);
+            this.authorizationsTabControl.Name = "authorizationsTabControl";
+            this.authorizationsTabControl.SelectedIndex = 0;
+            this.authorizationsTabControl.Size = new System.Drawing.Size(1238, 976);
+            this.authorizationsTabControl.TabIndex = 33;
+            // 
+            // authorizationDetailsTabPage
+            // 
+            this.authorizationDetailsTabPage.Controls.Add(this.tableLayoutPanel2);
+            this.authorizationDetailsTabPage.Location = new System.Drawing.Point(8, 39);
+            this.authorizationDetailsTabPage.Name = "authorizationDetailsTabPage";
+            this.authorizationDetailsTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.authorizationDetailsTabPage.Size = new System.Drawing.Size(1222, 929);
+            this.authorizationDetailsTabPage.TabIndex = 0;
+            this.authorizationDetailsTabPage.Text = "Details";
+            this.authorizationDetailsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.authorizationPropertyGrid, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.challengesTabControl, 1, 1);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1216, 923);
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
             // authorizationPropertyGrid
             // 
@@ -526,6 +575,29 @@ namespace ACMEForms
             this.dnsChallengeTabPage.Text = "DNS Challenge";
             this.dnsChallengeTabPage.UseVisualStyleBackColor = true;
             // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.ColumnCount = 2;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordValueTextBox, 1, 2);
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordNameTextBox, 1, 0);
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordValueLabel, 0, 2);
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordTypeTextBox, 1, 1);
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordTypeLabel, 0, 1);
+            this.tableLayoutPanel7.Controls.Add(this.dnsRecordNameLabel, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel2, 1, 3);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.RowCount = 4;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(1167, 360);
+            this.tableLayoutPanel7.TabIndex = 0;
+            // 
             // dnsRecordValueTextBox
             // 
             this.dnsRecordValueTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -537,6 +609,16 @@ namespace ACMEForms
             this.dnsRecordValueTextBox.Size = new System.Drawing.Size(941, 194);
             this.dnsRecordValueTextBox.TabIndex = 8;
             this.dnsRecordValueTextBox.WordWrap = false;
+            // 
+            // dnsRecordNameTextBox
+            // 
+            this.dnsRecordNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dnsRecordNameTextBox.Location = new System.Drawing.Point(223, 3);
+            this.dnsRecordNameTextBox.Name = "dnsRecordNameTextBox";
+            this.dnsRecordNameTextBox.ReadOnly = true;
+            this.dnsRecordNameTextBox.Size = new System.Drawing.Size(941, 31);
+            this.dnsRecordNameTextBox.TabIndex = 4;
             // 
             // dnsRecordValueLabel
             // 
@@ -566,16 +648,6 @@ namespace ACMEForms
             this.dnsRecordTypeLabel.TabIndex = 7;
             this.dnsRecordTypeLabel.Text = "Record Type:";
             // 
-            // dnsRecordNameTextBox
-            // 
-            this.dnsRecordNameTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dnsRecordNameTextBox.Location = new System.Drawing.Point(223, 3);
-            this.dnsRecordNameTextBox.Name = "dnsRecordNameTextBox";
-            this.dnsRecordNameTextBox.ReadOnly = true;
-            this.dnsRecordNameTextBox.Size = new System.Drawing.Size(941, 31);
-            this.dnsRecordNameTextBox.TabIndex = 4;
-            // 
             // dnsRecordNameLabel
             // 
             this.dnsRecordNameLabel.AutoSize = true;
@@ -585,28 +657,80 @@ namespace ACMEForms
             this.dnsRecordNameLabel.TabIndex = 5;
             this.dnsRecordNameLabel.Text = "Record Name:";
             // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.submitDnsAnswerButton);
+            this.flowLayoutPanel2.Controls.Add(this.testDnsAnswerButton);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(223, 277);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(941, 80);
+            this.flowLayoutPanel2.TabIndex = 10;
+            // 
+            // submitDnsAnswerButton
+            // 
+            this.submitDnsAnswerButton.AutoSize = true;
+            this.submitDnsAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.submitDnsAnswerButton.Location = new System.Drawing.Point(10, 10);
+            this.submitDnsAnswerButton.Margin = new System.Windows.Forms.Padding(10);
+            this.submitDnsAnswerButton.Name = "submitDnsAnswerButton";
+            this.submitDnsAnswerButton.Padding = new System.Windows.Forms.Padding(10);
+            this.submitDnsAnswerButton.Size = new System.Drawing.Size(235, 55);
+            this.submitDnsAnswerButton.TabIndex = 8;
+            this.submitDnsAnswerButton.Text = "Submit DNS Answer";
+            this.submitDnsAnswerButton.UseVisualStyleBackColor = true;
+            this.submitDnsAnswerButton.Click += new System.EventHandler(this.submitDnsAnswerButton_Click);
+            // 
+            // testDnsAnswerButton
+            // 
+            this.testDnsAnswerButton.AutoSize = true;
+            this.testDnsAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.testDnsAnswerButton.Location = new System.Drawing.Point(265, 10);
+            this.testDnsAnswerButton.Margin = new System.Windows.Forms.Padding(10);
+            this.testDnsAnswerButton.Name = "testDnsAnswerButton";
+            this.testDnsAnswerButton.Padding = new System.Windows.Forms.Padding(10);
+            this.testDnsAnswerButton.Size = new System.Drawing.Size(211, 55);
+            this.testDnsAnswerButton.TabIndex = 9;
+            this.testDnsAnswerButton.Text = "Test DNS Answer";
+            this.testDnsAnswerButton.UseVisualStyleBackColor = true;
+            this.testDnsAnswerButton.Click += new System.EventHandler(this.testDnsAnswerButton_Click);
+            // 
             // httpChallengeTabPage
             // 
             this.httpChallengeTabPage.Controls.Add(this.tableLayoutPanel5);
             this.httpChallengeTabPage.Location = new System.Drawing.Point(8, 39);
             this.httpChallengeTabPage.Name = "httpChallengeTabPage";
             this.httpChallengeTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.httpChallengeTabPage.Size = new System.Drawing.Size(1166, 275);
+            this.httpChallengeTabPage.Size = new System.Drawing.Size(1173, 366);
             this.httpChallengeTabPage.TabIndex = 1;
             this.httpChallengeTabPage.Text = "HTTP Challenge";
             this.httpChallengeTabPage.UseVisualStyleBackColor = true;
             // 
-            // httpResourceValueTextBox
+            // tableLayoutPanel5
             // 
-            this.httpResourceValueTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.httpResourceValueTextBox.Location = new System.Drawing.Point(223, 114);
-            this.httpResourceValueTextBox.Multiline = true;
-            this.httpResourceValueTextBox.Name = "httpResourceValueTextBox";
-            this.httpResourceValueTextBox.ReadOnly = true;
-            this.httpResourceValueTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.httpResourceValueTextBox.Size = new System.Drawing.Size(934, 66);
-            this.httpResourceValueTextBox.TabIndex = 12;
-            this.httpResourceValueTextBox.WordWrap = false;
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceValueLabel, 0, 3);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceValueTextBox, 1, 3);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceContentTypeLabel, 0, 2);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceUrlTextBox, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourcePathLabel, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourcePathTextBox, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceUrlLabel, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.httpResourceContentTypeTextBox, 1, 2);
+            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel1, 1, 4);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 5;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(1167, 360);
+            this.tableLayoutPanel5.TabIndex = 0;
             // 
             // httpResourceValueLabel
             // 
@@ -617,15 +741,17 @@ namespace ACMEForms
             this.httpResourceValueLabel.TabIndex = 13;
             this.httpResourceValueLabel.Text = "Resource Value:";
             // 
-            // httpResourceContentTypeTextBox
+            // httpResourceValueTextBox
             // 
-            this.httpResourceContentTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourceContentTypeTextBox.Location = new System.Drawing.Point(223, 77);
-            this.httpResourceContentTypeTextBox.Name = "httpResourceContentTypeTextBox";
-            this.httpResourceContentTypeTextBox.ReadOnly = true;
-            this.httpResourceContentTypeTextBox.Size = new System.Drawing.Size(934, 31);
-            this.httpResourceContentTypeTextBox.TabIndex = 10;
+            this.httpResourceValueTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.httpResourceValueTextBox.Location = new System.Drawing.Point(223, 114);
+            this.httpResourceValueTextBox.Multiline = true;
+            this.httpResourceValueTextBox.Name = "httpResourceValueTextBox";
+            this.httpResourceValueTextBox.ReadOnly = true;
+            this.httpResourceValueTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.httpResourceValueTextBox.Size = new System.Drawing.Size(941, 157);
+            this.httpResourceValueTextBox.TabIndex = 12;
+            this.httpResourceValueTextBox.WordWrap = false;
             // 
             // httpResourceContentTypeLabel
             // 
@@ -636,15 +762,15 @@ namespace ACMEForms
             this.httpResourceContentTypeLabel.TabIndex = 11;
             this.httpResourceContentTypeLabel.Text = "Res Content-type:";
             // 
-            // httpResourcePathTextBox
+            // httpResourceUrlTextBox
             // 
-            this.httpResourcePathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.httpResourceUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourcePathTextBox.Location = new System.Drawing.Point(223, 40);
-            this.httpResourcePathTextBox.Name = "httpResourcePathTextBox";
-            this.httpResourcePathTextBox.ReadOnly = true;
-            this.httpResourcePathTextBox.Size = new System.Drawing.Size(934, 31);
-            this.httpResourcePathTextBox.TabIndex = 8;
+            this.httpResourceUrlTextBox.Location = new System.Drawing.Point(223, 3);
+            this.httpResourceUrlTextBox.Name = "httpResourceUrlTextBox";
+            this.httpResourceUrlTextBox.ReadOnly = true;
+            this.httpResourceUrlTextBox.Size = new System.Drawing.Size(941, 31);
+            this.httpResourceUrlTextBox.TabIndex = 6;
             // 
             // httpResourcePathLabel
             // 
@@ -655,15 +781,15 @@ namespace ACMEForms
             this.httpResourcePathLabel.TabIndex = 9;
             this.httpResourcePathLabel.Text = "Resource Path:";
             // 
-            // httpResourceUrlTextBox
+            // httpResourcePathTextBox
             // 
-            this.httpResourceUrlTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.httpResourcePathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.httpResourceUrlTextBox.Location = new System.Drawing.Point(223, 3);
-            this.httpResourceUrlTextBox.Name = "httpResourceUrlTextBox";
-            this.httpResourceUrlTextBox.ReadOnly = true;
-            this.httpResourceUrlTextBox.Size = new System.Drawing.Size(934, 31);
-            this.httpResourceUrlTextBox.TabIndex = 6;
+            this.httpResourcePathTextBox.Location = new System.Drawing.Point(223, 40);
+            this.httpResourcePathTextBox.Name = "httpResourcePathTextBox";
+            this.httpResourcePathTextBox.ReadOnly = true;
+            this.httpResourcePathTextBox.Size = new System.Drawing.Size(941, 31);
+            this.httpResourcePathTextBox.TabIndex = 8;
             // 
             // httpResourceUrlLabel
             // 
@@ -673,6 +799,79 @@ namespace ACMEForms
             this.httpResourceUrlLabel.Size = new System.Drawing.Size(158, 25);
             this.httpResourceUrlLabel.TabIndex = 7;
             this.httpResourceUrlLabel.Text = "Resource URL:";
+            // 
+            // httpResourceContentTypeTextBox
+            // 
+            this.httpResourceContentTypeTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.httpResourceContentTypeTextBox.Location = new System.Drawing.Point(223, 77);
+            this.httpResourceContentTypeTextBox.Name = "httpResourceContentTypeTextBox";
+            this.httpResourceContentTypeTextBox.ReadOnly = true;
+            this.httpResourceContentTypeTextBox.Size = new System.Drawing.Size(941, 31);
+            this.httpResourceContentTypeTextBox.TabIndex = 10;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.submitHttpAnswerButton);
+            this.flowLayoutPanel1.Controls.Add(this.testHttpAnswerButton);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(223, 277);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(941, 80);
+            this.flowLayoutPanel1.TabIndex = 14;
+            // 
+            // submitHttpAnswerButton
+            // 
+            this.submitHttpAnswerButton.AutoSize = true;
+            this.submitHttpAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.submitHttpAnswerButton.Location = new System.Drawing.Point(10, 10);
+            this.submitHttpAnswerButton.Margin = new System.Windows.Forms.Padding(10);
+            this.submitHttpAnswerButton.Name = "submitHttpAnswerButton";
+            this.submitHttpAnswerButton.Padding = new System.Windows.Forms.Padding(10);
+            this.submitHttpAnswerButton.Size = new System.Drawing.Size(246, 55);
+            this.submitHttpAnswerButton.TabIndex = 7;
+            this.submitHttpAnswerButton.Text = "Submit HTTP Answer";
+            this.submitHttpAnswerButton.UseVisualStyleBackColor = true;
+            // 
+            // testHttpAnswerButton
+            // 
+            this.testHttpAnswerButton.AutoSize = true;
+            this.testHttpAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.testHttpAnswerButton.Location = new System.Drawing.Point(276, 10);
+            this.testHttpAnswerButton.Margin = new System.Windows.Forms.Padding(10);
+            this.testHttpAnswerButton.Name = "testHttpAnswerButton";
+            this.testHttpAnswerButton.Padding = new System.Windows.Forms.Padding(10);
+            this.testHttpAnswerButton.Size = new System.Drawing.Size(222, 55);
+            this.testHttpAnswerButton.TabIndex = 8;
+            this.testHttpAnswerButton.Text = "Test HTTP Answer";
+            this.testHttpAnswerButton.UseVisualStyleBackColor = true;
+            // 
+            // challengesTabPage
+            // 
+            this.challengesTabPage.Controls.Add(this.challengesTableLayoutPanel);
+            this.challengesTabPage.Location = new System.Drawing.Point(8, 39);
+            this.challengesTabPage.Name = "challengesTabPage";
+            this.challengesTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.challengesTabPage.Size = new System.Drawing.Size(1222, 929);
+            this.challengesTabPage.TabIndex = 1;
+            this.challengesTabPage.Text = "Full Challenge Details";
+            this.challengesTabPage.UseVisualStyleBackColor = true;
+            // 
+            // challengesTableLayoutPanel
+            // 
+            this.challengesTableLayoutPanel.ColumnCount = 2;
+            this.challengesTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.challengesTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.challengesTableLayoutPanel.Controls.Add(this.miscChallengeTypesListBox, 1, 0);
+            this.challengesTableLayoutPanel.Controls.Add(this.challengeDetailsTabControl, 1, 1);
+            this.challengesTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.challengesTableLayoutPanel.Location = new System.Drawing.Point(3, 3);
+            this.challengesTableLayoutPanel.Name = "challengesTableLayoutPanel";
+            this.challengesTableLayoutPanel.RowCount = 2;
+            this.challengesTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.challengesTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.challengesTableLayoutPanel.Size = new System.Drawing.Size(1216, 923);
+            this.challengesTableLayoutPanel.TabIndex = 0;
             // 
             // miscChallengeTypesListBox
             // 
@@ -684,17 +883,6 @@ namespace ACMEForms
             this.miscChallengeTypesListBox.Size = new System.Drawing.Size(1189, 154);
             this.miscChallengeTypesListBox.TabIndex = 2;
             this.miscChallengeTypesListBox.SelectedIndexChanged += new System.EventHandler(this.miscChallengeTypesListBox_SelectedIndexChanged);
-            // 
-            // authorizationsListBox
-            // 
-            this.authorizationsListBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.authorizationsListBox.FormattingEnabled = true;
-            this.authorizationsListBox.ItemHeight = 25;
-            this.authorizationsListBox.Location = new System.Drawing.Point(22, 3);
-            this.authorizationsListBox.Name = "authorizationsListBox";
-            this.authorizationsListBox.Size = new System.Drawing.Size(1238, 104);
-            this.authorizationsListBox.TabIndex = 17;
-            this.authorizationsListBox.SelectedIndexChanged += new System.EventHandler(this.authorizationsListBox_SelectedIndexChanged);
             // 
             // challengeDetailsTabControl
             // 
@@ -736,7 +924,7 @@ namespace ACMEForms
             this.challengeErrorTabPage.Location = new System.Drawing.Point(8, 39);
             this.challengeErrorTabPage.Name = "challengeErrorTabPage";
             this.challengeErrorTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.challengeErrorTabPage.Size = new System.Drawing.Size(1173, 307);
+            this.challengeErrorTabPage.Size = new System.Drawing.Size(1173, 710);
             this.challengeErrorTabPage.TabIndex = 1;
             this.challengeErrorTabPage.Text = "Error";
             this.challengeErrorTabPage.UseVisualStyleBackColor = true;
@@ -748,7 +936,7 @@ namespace ACMEForms
             this.challengeErrorTextBox.Multiline = true;
             this.challengeErrorTextBox.Name = "challengeErrorTextBox";
             this.challengeErrorTextBox.ReadOnly = true;
-            this.challengeErrorTextBox.Size = new System.Drawing.Size(1167, 301);
+            this.challengeErrorTextBox.Size = new System.Drawing.Size(1167, 704);
             this.challengeErrorTextBox.TabIndex = 2;
             this.challengeErrorTextBox.WordWrap = false;
             // 
@@ -758,7 +946,7 @@ namespace ACMEForms
             this.validationRecordsTabPage.Location = new System.Drawing.Point(8, 39);
             this.validationRecordsTabPage.Name = "validationRecordsTabPage";
             this.validationRecordsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.validationRecordsTabPage.Size = new System.Drawing.Size(1173, 307);
+            this.validationRecordsTabPage.Size = new System.Drawing.Size(1173, 710);
             this.validationRecordsTabPage.TabIndex = 2;
             this.validationRecordsTabPage.Text = "Validation Records";
             this.validationRecordsTabPage.UseVisualStyleBackColor = true;
@@ -770,7 +958,7 @@ namespace ACMEForms
             this.validationRecordsTextBox.Multiline = true;
             this.validationRecordsTextBox.Name = "validationRecordsTextBox";
             this.validationRecordsTextBox.ReadOnly = true;
-            this.validationRecordsTextBox.Size = new System.Drawing.Size(1167, 301);
+            this.validationRecordsTextBox.Size = new System.Drawing.Size(1167, 704);
             this.validationRecordsTextBox.TabIndex = 12;
             this.validationRecordsTextBox.WordWrap = false;
             // 
@@ -928,193 +1116,6 @@ namespace ACMEForms
             this.mainStatusLabel.Size = new System.Drawing.Size(76, 32);
             this.mainStatusLabel.Text = "Hello.";
             // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceValueLabel, 0, 3);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceValueTextBox, 1, 3);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceContentTypeLabel, 0, 2);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceUrlTextBox, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourcePathLabel, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourcePathTextBox, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceUrlLabel, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.httpResourceContentTypeTextBox, 1, 2);
-            this.tableLayoutPanel5.Controls.Add(this.flowLayoutPanel1, 1, 4);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 5;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(1160, 269);
-            this.tableLayoutPanel5.TabIndex = 0;
-            // 
-            // authorizationsTabControl
-            // 
-            this.authorizationsTabControl.Controls.Add(this.authorizationDetailsTabPage);
-            this.authorizationsTabControl.Controls.Add(this.challengesTabPage);
-            this.authorizationsTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.authorizationsTabControl.Location = new System.Drawing.Point(22, 113);
-            this.authorizationsTabControl.Name = "authorizationsTabControl";
-            this.authorizationsTabControl.SelectedIndex = 0;
-            this.authorizationsTabControl.Size = new System.Drawing.Size(1238, 976);
-            this.authorizationsTabControl.TabIndex = 33;
-            // 
-            // authorizationDetailsTabPage
-            // 
-            this.authorizationDetailsTabPage.Controls.Add(this.tableLayoutPanel2);
-            this.authorizationDetailsTabPage.Location = new System.Drawing.Point(8, 39);
-            this.authorizationDetailsTabPage.Name = "authorizationDetailsTabPage";
-            this.authorizationDetailsTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.authorizationDetailsTabPage.Size = new System.Drawing.Size(1222, 929);
-            this.authorizationDetailsTabPage.TabIndex = 0;
-            this.authorizationDetailsTabPage.Text = "Details";
-            this.authorizationDetailsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // challengesTabPage
-            // 
-            this.challengesTabPage.Controls.Add(this.challengesTableLayoutPanel);
-            this.challengesTabPage.Location = new System.Drawing.Point(8, 39);
-            this.challengesTabPage.Name = "challengesTabPage";
-            this.challengesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.challengesTabPage.Size = new System.Drawing.Size(1222, 929);
-            this.challengesTabPage.TabIndex = 1;
-            this.challengesTabPage.Text = "Full Challenge Details";
-            this.challengesTabPage.UseVisualStyleBackColor = true;
-            // 
-            // challengesTableLayoutPanel
-            // 
-            this.challengesTableLayoutPanel.ColumnCount = 2;
-            this.challengesTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.challengesTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.challengesTableLayoutPanel.Controls.Add(this.miscChallengeTypesListBox, 1, 0);
-            this.challengesTableLayoutPanel.Controls.Add(this.challengeDetailsTabControl, 1, 1);
-            this.challengesTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.challengesTableLayoutPanel.Location = new System.Drawing.Point(3, 3);
-            this.challengesTableLayoutPanel.Name = "challengesTableLayoutPanel";
-            this.challengesTableLayoutPanel.RowCount = 2;
-            this.challengesTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.challengesTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.challengesTableLayoutPanel.Size = new System.Drawing.Size(1216, 923);
-            this.challengesTableLayoutPanel.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.submitHttpAnswerButton);
-            this.flowLayoutPanel1.Controls.Add(this.testHttpAnswerButton);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(223, 186);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(934, 80);
-            this.flowLayoutPanel1.TabIndex = 14;
-            // 
-            // submitHttpAnswerButton
-            // 
-            this.submitHttpAnswerButton.AutoSize = true;
-            this.submitHttpAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.submitHttpAnswerButton.Location = new System.Drawing.Point(10, 10);
-            this.submitHttpAnswerButton.Margin = new System.Windows.Forms.Padding(10);
-            this.submitHttpAnswerButton.Name = "submitHttpAnswerButton";
-            this.submitHttpAnswerButton.Padding = new System.Windows.Forms.Padding(10);
-            this.submitHttpAnswerButton.Size = new System.Drawing.Size(246, 55);
-            this.submitHttpAnswerButton.TabIndex = 7;
-            this.submitHttpAnswerButton.Text = "Submit HTTP Answer";
-            this.submitHttpAnswerButton.UseVisualStyleBackColor = true;
-            // 
-            // testHttpAnswerButton
-            // 
-            this.testHttpAnswerButton.AutoSize = true;
-            this.testHttpAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.testHttpAnswerButton.Location = new System.Drawing.Point(276, 10);
-            this.testHttpAnswerButton.Margin = new System.Windows.Forms.Padding(10);
-            this.testHttpAnswerButton.Name = "testHttpAnswerButton";
-            this.testHttpAnswerButton.Padding = new System.Windows.Forms.Padding(10);
-            this.testHttpAnswerButton.Size = new System.Drawing.Size(222, 55);
-            this.testHttpAnswerButton.TabIndex = 8;
-            this.testHttpAnswerButton.Text = "Test HTTP Answer";
-            this.testHttpAnswerButton.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel7
-            // 
-            this.tableLayoutPanel7.ColumnCount = 2;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordValueTextBox, 1, 2);
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordNameTextBox, 1, 0);
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordValueLabel, 0, 2);
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordTypeTextBox, 1, 1);
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordTypeLabel, 0, 1);
-            this.tableLayoutPanel7.Controls.Add(this.dnsRecordNameLabel, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel2, 1, 3);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 4;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(1167, 360);
-            this.tableLayoutPanel7.TabIndex = 0;
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.submitDnsAnswerButton);
-            this.flowLayoutPanel2.Controls.Add(this.testDnsAnswerButton);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(223, 277);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(941, 80);
-            this.flowLayoutPanel2.TabIndex = 10;
-            // 
-            // submitDnsAnswerButton
-            // 
-            this.submitDnsAnswerButton.AutoSize = true;
-            this.submitDnsAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.submitDnsAnswerButton.Location = new System.Drawing.Point(10, 10);
-            this.submitDnsAnswerButton.Margin = new System.Windows.Forms.Padding(10);
-            this.submitDnsAnswerButton.Name = "submitDnsAnswerButton";
-            this.submitDnsAnswerButton.Padding = new System.Windows.Forms.Padding(10);
-            this.submitDnsAnswerButton.Size = new System.Drawing.Size(235, 55);
-            this.submitDnsAnswerButton.TabIndex = 8;
-            this.submitDnsAnswerButton.Text = "Submit DNS Answer";
-            this.submitDnsAnswerButton.UseVisualStyleBackColor = true;
-            this.submitDnsAnswerButton.Click += new System.EventHandler(this.submitDnsAnswerButton_Click);
-            // 
-            // testDnsAnswerButton
-            // 
-            this.testDnsAnswerButton.AutoSize = true;
-            this.testDnsAnswerButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.testDnsAnswerButton.Location = new System.Drawing.Point(265, 10);
-            this.testDnsAnswerButton.Margin = new System.Windows.Forms.Padding(10);
-            this.testDnsAnswerButton.Name = "testDnsAnswerButton";
-            this.testDnsAnswerButton.Padding = new System.Windows.Forms.Padding(10);
-            this.testDnsAnswerButton.Size = new System.Drawing.Size(211, 55);
-            this.testDnsAnswerButton.TabIndex = 9;
-            this.testDnsAnswerButton.Text = "Test DNS Answer";
-            this.testDnsAnswerButton.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.authorizationPropertyGrid, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.challengesTabControl, 1, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1216, 923);
-            this.tableLayoutPanel2.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -1144,9 +1145,22 @@ namespace ACMEForms
             this.orderDetailsTabPage.ResumeLayout(false);
             this.authorizationsTabPage.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
+            this.authorizationsTabControl.ResumeLayout(false);
+            this.authorizationDetailsTabPage.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
             this.challengesTabControl.ResumeLayout(false);
             this.dnsChallengeTabPage.ResumeLayout(false);
+            this.tableLayoutPanel7.ResumeLayout(false);
+            this.tableLayoutPanel7.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.httpChallengeTabPage.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.challengesTabPage.ResumeLayout(false);
+            this.challengesTableLayoutPanel.ResumeLayout(false);
             this.challengeDetailsTabControl.ResumeLayout(false);
             this.challengeDetailsTabPage.ResumeLayout(false);
             this.challengeErrorTabPage.ResumeLayout(false);
@@ -1159,19 +1173,6 @@ namespace ACMEForms
             this.orderButtonsFlowLayoutPanel.PerformLayout();
             this.mainStatusStrip.ResumeLayout(false);
             this.mainStatusStrip.PerformLayout();
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            this.authorizationsTabControl.ResumeLayout(false);
-            this.authorizationDetailsTabPage.ResumeLayout(false);
-            this.challengesTabPage.ResumeLayout(false);
-            this.challengesTableLayoutPanel.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel7.PerformLayout();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

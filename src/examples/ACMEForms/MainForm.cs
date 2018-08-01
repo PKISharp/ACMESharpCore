@@ -14,6 +14,7 @@ using ACMEForms.Util;
 using ACMESharp.Authorizations;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
+using Examples.Common;
 using Examples.Common.PKI;
 using Newtonsoft.Json;
 
@@ -678,6 +679,32 @@ namespace ACMEForms
                 SetStatus("DNS Challenge Answered; Order details and Authorizations refreshed, Challenges decoded and saved");
             });
 
+        }
+
+        private async void testDnsAnswerButton_Click(object sender, EventArgs e)
+        {
+            var dnsChallenge = SelectedAuthorization?.DnsChallenge;
+            if (dnsChallenge == null)
+                return;
+
+            await InvokeWithWaitCursor(async () =>
+            {
+                try
+                {
+                    var dnsValues = (await DnsUtil.LookupRecordAsync(dnsChallenge.DnsRecordType, dnsChallenge.DnsRecordName))?.ToArray();
+                    var dnsValue = string.Join(",", dnsValues ?? EmptyStrings);
+                    if (string.IsNullOrEmpty(dnsValue))
+                        MessageBox.Show("Could not resolve DNS value!");
+                    else if (!string.Equals(dnsChallenge.DnsRecordValue, dnsValue))
+                        MessageBox.Show("DNS value is not expected! " + dnsValue);
+                    else
+                        MessageBox.Show("Looks good!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed to resolve DNS value: " + ex.Message);
+                }
+            });
         }
     }
 
