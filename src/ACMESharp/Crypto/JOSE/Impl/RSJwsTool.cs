@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -108,6 +109,18 @@ namespace ACMESharp.Crypto.JOSE.Impl
             return _jwk;
         }
 
+        public void ImportJwk(string jwkJson)
+        {
+            Init();
+            var jwk = JsonConvert.DeserializeObject<JwkExport>(jwkJson);
+            var keyParams = new RSAParameters
+            {
+                Exponent = CryptoHelper.Base64.UrlDecode(jwk.e),
+                Modulus = CryptoHelper.Base64.UrlDecode(jwk.n),
+            };
+            _rsa.ImportParameters(keyParams);
+        }
+
         public byte[] Sign(byte[] raw)
         {
             return _rsa.SignData(raw, _sha);
@@ -116,6 +129,18 @@ namespace ACMESharp.Crypto.JOSE.Impl
         public bool Verify(byte[] raw, byte[] sig)
         {
             return _rsa.VerifyData(raw, _sha, sig);
+        }
+
+        public class JwkExport
+        {
+            // As per RFC 7638 Section 3, these are the *required* elements of the
+            // JWK and are sorted in lexicographic order to produce a canonical form
+
+            public string e { get; set; }
+
+            public string kty { get; set; }
+
+            public string n { get; set; }
         }
     }
 }

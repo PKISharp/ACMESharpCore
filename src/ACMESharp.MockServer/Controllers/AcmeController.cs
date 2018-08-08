@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
+using ACMESharp.Crypto.JOSE.Impl;
 using ACMESharp.MockServer.Storage;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
@@ -182,6 +183,8 @@ namespace ACMESharp.MockServer.Controllers
                 throw new Exception("could not resolve account");
             var acctId = acct.Id.ToString();
 
+            ValidateAccount(acct, signedPayload);
+
             if (requ.Identifiers.Length == 0)
                 throw new Exception("at least one identifier is required");
             
@@ -325,6 +328,8 @@ namespace ACMESharp.MockServer.Controllers
             if (acct == null)
                 throw new Exception("could not resolve account");
 
+            ValidateAccount(acct, signedPayload);
+
             var dbOrder = _repo.GetOrder(orderIdNum);
             if (dbOrder == null || dbOrder.AccountId != acctIdNum)
                 return NotFound();
@@ -463,6 +468,8 @@ namespace ACMESharp.MockServer.Controllers
             if (acct == null)
                 throw new Exception("could not resolve account");
 
+            ValidateAccount(acct, signedPayload);
+
             var chlngUrl = Request.GetEncodedUrl();
             var dbChlng = _repo.GetChallengeByUrl(chlngUrl);
             if (dbChlng == null)
@@ -559,6 +566,58 @@ namespace ACMESharp.MockServer.Controllers
             if (!_nonceMgr.ValidateNonce(protectedHeader.Nonce))
                 throw new Exception("Bad Nonce");
         }
+
+        void ValidateAccount(DbAccount acct, JwsSignedPayload signedPayload)
+        {
+            var ph = ExtractProtectedHeader(signedPayload);
+            var jwk = JsonConvert.DeserializeObject<Dictionary<string, string>>(acct.Jwk);
+
+            if (string.IsNullOrEmpty(ph.Alg))
+                throw new Exception("invalid JWS header, missing 'alg'");
+            if (string.IsNullOrEmpty(ph.Url))
+                throw new Exception("invalid JWS header, missing 'url'");
+            if (string.IsNullOrEmpty(ph.Nonce))
+                throw new Exception("invalid JWS header, missing 'nonce'");
+            
+            IJwsTool tool = null;
+            switch (ph.Alg)
+            {
+                case "RS256":
+                    tool = new RSJwsTool { HashSize = 256 };
+                    ((RSJwsTool)tool).ImportJwk(acct.Jwk);
+                    break;
+                case "RS384":
+                    tool = new RSJwsTool { HashSize = 384 };
+                    ((RSJwsTool)tool).ImportJwk(acct.Jwk);
+                    break;
+                case "RS512":
+                    tool = new RSJwsTool { HashSize = 512 };
+                    ((RSJwsTool)tool).ImportJwk(acct.Jwk);
+                    break;
+                case "ES256":
+                    tool = new ESJwsTool { HashSize = 256 };
+                    break;
+                case "ES384":
+                    tool = new ESJwsTool { HashSize = 384 };
+                    break;
+                case "ES512":
+                    tool = new ESJwsTool { HashSize = 512 };
+                    break;
+                default:
+                    throw new Exception("unknown or unsupported signature algorithm");
+            }
+
+            var sig = CryptoHelper.Base64.UrlDecode(signedPayload.Signature);
+            var pld = CryptoHelper.Base64.UrlDecode(signedPayload.Payload);
+            var prt = CryptoHelper.Base64.UrlDecode(signedPayload.Protected);
+
+            var sigInput = $"{signedPayload.Protected}.{signedPayload.Payload}";
+            var sigInputBytes = Encoding.ASCII.GetBytes(sigInput);
+            
+            if (!tool.Verify(sigInputBytes, sig))
+                throw new Exception("account signature failure");
+        }
+
         string ResolveCaCertPem()
         {
             if (_caCertPem == null)

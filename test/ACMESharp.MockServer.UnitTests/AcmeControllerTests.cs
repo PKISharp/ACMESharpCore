@@ -107,16 +107,39 @@ namespace ACMESharp.MockServer.UnitTests
             using (var http = _server.CreateClient())
             {
                 var dir = await GetDir();
+                var dnsIds = new[] { "foo.mock.acme2.zyborg.io" };
+
                 var signer = new Crypto.JOSE.Impl.RSJwsTool();
                 signer.Init();
+                AccountDetails acct;
+
                 using (var acme = new AcmeProtocolClient(http, dir,
                     signer: signer))
                 {
                     await acme.GetNonceAsync();
-                    var acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
+                    acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
+                    acme.Account = acct;
+                }
+
+                var badSigner = new Crypto.JOSE.Impl.RSJwsTool();
+                badSigner.Init();
+
+                using (var acme = new AcmeProtocolClient(http, dir,
+                    signer: badSigner))
+                {
+                    await acme.GetNonceAsync();
+                    acme.Account = acct;
+                    
+                    await Assert.ThrowsExceptionAsync<Exception>(
+                        async () => await acme.CreateOrderAsync(dnsIds));
+                }
+
+                using (var acme = new AcmeProtocolClient(http, dir,
+                    signer: signer))
+                {
+                    await acme.GetNonceAsync();
                     acme.Account = acct;
 
-                    var dnsIds = new[] { "foo.mock.acme2.zyborg.io" };
                     var order = await acme.CreateOrderAsync(dnsIds);
                     Assert.IsNotNull(order?.OrderUrl);
 
@@ -268,6 +291,8 @@ namespace ACMESharp.MockServer.UnitTests
             using (var http = _server.CreateClient())
             {
                 var dir = await GetDir();
+                var dnsIds = new[] { "foo.mock.acme2.zyborg.io" };
+
                 var signer = new Crypto.JOSE.Impl.RSJwsTool();
                 signer.Init();
                 using (var acme = new AcmeProtocolClient(http, dir,
@@ -277,7 +302,6 @@ namespace ACMESharp.MockServer.UnitTests
                     var acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
                     acme.Account = acct;
 
-                    var dnsIds = new[] { "foo.mock.acme2.zyborg.io" };
                     var order = await acme.CreateOrderAsync(dnsIds);
                     Assert.IsNotNull(order?.OrderUrl);
                     Assert.AreEqual(dnsIds.Length, order.Payload.Authorizations?.Length);
