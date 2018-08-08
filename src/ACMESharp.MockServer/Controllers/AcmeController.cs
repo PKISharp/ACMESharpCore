@@ -100,64 +100,6 @@ namespace ACMESharp.MockServer.Controllers
             _ca = ca;
         }
 
-        T ExtractPayload<T>(JwsSignedPayload signedPayload)
-        {
-            var payloadBytes = CryptoHelper.Base64.UrlDecode(signedPayload.Payload);
-            var payloadJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Payload);
-            return JsonConvert.DeserializeObject<T>(payloadJson);
-        }
-
-        ProtectedHeader ExtractProtectedHeader(JwsSignedPayload signedPayload)
-        {
-            var protectedJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Protected);
-            return JsonConvert.DeserializeObject<ProtectedHeader>(protectedJson);
-        }
-
-        Uri ComputeRelativeUrl(string relPath)
-        {
-            var requPort = Request.Host.Port.HasValue
-                ? Request.Host.Port.Value
-                : Request.IsHttps ? 443 : 80;
-            var requUrl = new UriBuilder(Request.Scheme, Request.Host.Host, requPort,
-                    $"/acme/{relPath}").Uri;
-            return requUrl;
-        }
-
-        void GenerateNonce()
-        {
-            Response.Headers.Add(
-                    Constants.ReplayNonceHeaderName,
-                    _nonceMgr.GenerateNonce());
-        }
-
-        void ValidateNonce(JwsSignedPayload signedPayload)
-        {
-            var protectedHeader = ExtractProtectedHeader(signedPayload);
-            ValidateNonce(protectedHeader);
-        }
-
-        void ValidateNonce(ProtectedHeader protectedHeader)
-        {
-            if (!_nonceMgr.ValidateNonce(protectedHeader.Nonce))
-                throw new Exception("Bad Nonce");
-        }
-
-        string ResolveCaCertPem()
-        {
-            if (_caCertPem == null)
-            {
-                lock (typeof(AcmeController))
-                {
-                    if (_caCertPem == null)
-                    {
-                        var pemBytes = _ca.CaCertificate.Export(PkiEncodingFormat.Pem);
-                        _caCertPem = Encoding.UTF8.GetString(pemBytes);
-                    }
-                }
-            }
-            return _caCertPem;
-        }
-
         [HttpHead("new-nonce")]
         [HttpGet("new-nonce")]
         public ActionResult NewNonce()
@@ -574,6 +516,63 @@ namespace ACMESharp.MockServer.Controllers
             GenerateNonce();
 
             return dbChlng.Payload;
+        }
+
+        T ExtractPayload<T>(JwsSignedPayload signedPayload)
+        {
+            var payloadBytes = CryptoHelper.Base64.UrlDecode(signedPayload.Payload);
+            var payloadJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Payload);
+            return JsonConvert.DeserializeObject<T>(payloadJson);
+        }
+
+        ProtectedHeader ExtractProtectedHeader(JwsSignedPayload signedPayload)
+        {
+            var protectedJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Protected);
+            return JsonConvert.DeserializeObject<ProtectedHeader>(protectedJson);
+        }
+
+        Uri ComputeRelativeUrl(string relPath)
+        {
+            var requPort = Request.Host.Port.HasValue
+                ? Request.Host.Port.Value
+                : Request.IsHttps ? 443 : 80;
+            var requUrl = new UriBuilder(Request.Scheme, Request.Host.Host, requPort,
+                    $"/acme/{relPath}").Uri;
+            return requUrl;
+        }
+
+        void GenerateNonce()
+        {
+            Response.Headers.Add(
+                    Constants.ReplayNonceHeaderName,
+                    _nonceMgr.GenerateNonce());
+        }
+
+        void ValidateNonce(JwsSignedPayload signedPayload)
+        {
+            var protectedHeader = ExtractProtectedHeader(signedPayload);
+            ValidateNonce(protectedHeader);
+        }
+
+        void ValidateNonce(ProtectedHeader protectedHeader)
+        {
+            if (!_nonceMgr.ValidateNonce(protectedHeader.Nonce))
+                throw new Exception("Bad Nonce");
+        }
+        string ResolveCaCertPem()
+        {
+            if (_caCertPem == null)
+            {
+                lock (typeof(AcmeController))
+                {
+                    if (_caCertPem == null)
+                    {
+                        var pemBytes = _ca.CaCertificate.Export(PkiEncodingFormat.Pem);
+                        _caCertPem = Encoding.UTF8.GetString(pemBytes);
+                    }
+                }
+            }
+            return _caCertPem;
         }
     }
 }
