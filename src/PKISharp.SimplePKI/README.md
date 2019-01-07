@@ -5,7 +5,7 @@ API that implements the specific operations that are typically needed on the
 client side when working with certificates and certificate requests.
 
 
-![NuGet Pre Release](https://img.shields.io/nuget/vpre/PKISharp.SimplePKI.svg)
+[![NuGet Pre Release](https://img.shields.io/nuget/vpre/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI)
 
 
 ## Background
