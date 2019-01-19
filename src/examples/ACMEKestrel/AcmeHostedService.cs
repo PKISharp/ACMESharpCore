@@ -11,6 +11,7 @@ using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
+using Examples.Common.PKI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
