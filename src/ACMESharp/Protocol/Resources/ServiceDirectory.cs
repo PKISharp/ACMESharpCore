@@ -8,16 +8,16 @@ namespace ACMESharp.Protocol.Resources
         [JsonExtensionData]
         private IDictionary<string, object> _extra;
 
-        public string Directory { get; set; } = "/directory";
+        public string Directory { get; set; } = "directory";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NewNonce { get; set; } //! = "/acme/new-nonce";
+        public string NewNonce { get; set; } //! = "acme/new-nonce";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NewAccount { get; set; } //! = "/acme/new-acct";
+        public string NewAccount { get; set; } //! = "acme/new-acct";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NewOrder { get; set; } //! = "/acme/new-order";
+        public string NewOrder { get; set; } //! = "acme/new-order";
 
 
         /// <summary>
@@ -26,13 +26,13 @@ namespace ACMESharp.Protocol.Resources
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4.1
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string NewAuthz { get; set; } //! = "/acme/new-authz";
+        public string NewAuthz { get; set; } //! = "acme/new-authz";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RevokeCert { get; set; } //! = "/acme/revoke-cert";
+        public string RevokeCert { get; set; } //! = "acme/revoke-cert";
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string KeyChange { get; set; } //! = "/acme/key-change";
+        public string KeyChange { get; set; } //! = "acme/key-change";
 
         public DirectoryMeta Meta { get; set; }
 
