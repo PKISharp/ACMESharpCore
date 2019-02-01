@@ -3,6 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 using ACMESharp.Authorizations;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
+using Examples.Common.PKI;
 
 namespace ACMEKestrel
 {

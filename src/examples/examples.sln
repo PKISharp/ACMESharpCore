@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMESharp", "..\ACMESharp\ACMESharp.csproj", "{2D582638-6E48-424B-B93C-9B68C29C9A61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp", "..\ACMESharp\ACMESharp.csproj", "{2D582638-6E48-424B-B93C-9B68C29C9A61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMETerm", "ACMETerm\ACMETerm.csproj", "{2F8F18CE-52E8-4B64-A7E6-56FCE2C99C15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMETerm", "ACMETerm\ACMETerm.csproj", "{2F8F18CE-52E8-4B64-A7E6-56FCE2C99C15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMECLI", "ACMECLI\ACMECLI.csproj", "{215EDA52-4598-4E8D-BBD8-097F7FF015D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMECLI", "ACMECLI\ACMECLI.csproj", "{215EDA52-4598-4E8D-BBD8-097F7FF015D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ACMEKestrel", "ACMEKestrel\ACMEKestrel.csproj", "{D4C1D60E-F4F4-4378-959E-3DC072E4B660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMEKestrel", "ACMEKestrel\ACMEKestrel.csproj", "{D4C1D60E-F4F4-4378-959E-3DC072E4B660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PKISharp.SimplePKI", "..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{C68522D5-864D-4EF8-915A-87DA1E36F665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{C68522D5-864D-4EF8-915A-87DA1E36F665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Common", "Examples.Common\Examples.Common.csproj", "{46C2C67F-89E1-4ABA-8572-B1D85B1C173E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.Common", "Examples.Common\Examples.Common.csproj", "{46C2C67F-89E1-4ABA-8572-B1D85B1C173E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.Common.PKI", "Examples.Common.PKI\Examples.Common.PKI.csproj", "{CBC5C933-18B5-4396-B799-D3F1C0E0CBD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.Common.PKI", "Examples.Common.PKI\Examples.Common.PKI.csproj", "{CBC5C933-18B5-4396-B799-D3F1C0E0CBD1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ACMESharp.DotNetCore", "..\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj", "{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,9 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2D582638-6E48-424B-B93C-9B68C29C9A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -114,5 +113,23 @@ Global
 		{CBC5C933-18B5-4396-B799-D3F1C0E0CBD1}.Release|x64.Build.0 = Release|Any CPU
 		{CBC5C933-18B5-4396-B799-D3F1C0E0CBD1}.Release|x86.ActiveCfg = Release|Any CPU
 		{CBC5C933-18B5-4396-B799-D3F1C0E0CBD1}.Release|x86.Build.0 = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|x64.Build.0 = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Debug|x86.Build.0 = Debug|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|x64.ActiveCfg = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|x64.Build.0 = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|x86.ActiveCfg = Release|Any CPU
+		{74AA1103-03CB-4F6F-AFF0-D27DF75A684C}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA521F60-080E-4F97-9507-2E450FC8A368}
 	EndGlobalSection
 EndGlobal

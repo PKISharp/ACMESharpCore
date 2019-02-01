@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using ACMESharp.Protocol;
+using Examples.Common.PKI;
 using Newtonsoft.Json;
 using PKISharp.SimplePKI;
 using Terminal.Gui;

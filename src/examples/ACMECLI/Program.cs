@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -17,6 +17,7 @@ using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
 using Examples.Common;
+using Examples.Common.PKI;
 using McMaster.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
@@ -755,36 +756,6 @@ namespace ACMECLI
                 var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(value));
                 return BitConverter.ToString(hash).Replace("-", "");
             }
-        }
-    }
-
-
-    internal class AccountKey
-    {
-        public string KeyType { get; set; }
-        public string KeyExport { get; set; }
-
-        public IJwsTool GenerateTool()
-        {
-            if (KeyType.StartsWith("ES"))
-            {
-                var tool = new ACMESharp.Crypto.JOSE.Impl.ESJwsTool();
-                tool.HashSize = int.Parse(KeyType.Substring(2));
-                tool.Init();
-                tool.Import(KeyExport);
-                return tool;
-            }
-
-            if (KeyType.StartsWith("RS"))
-            {
-                var tool = new ACMESharp.Crypto.JOSE.Impl.RSJwsTool();
-                tool.KeySize = int.Parse(KeyType.Substring(2));
-                tool.Init();
-                tool.Import(KeyExport);
-                return tool;
-            }
-
-            throw new Exception($"Unknown or unsupported KeyType [{KeyType}]");
         }
     }
 }
