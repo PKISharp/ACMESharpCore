@@ -139,6 +139,11 @@ namespace ACMESharp.Crypto.JOSE.Impl
             return _dsa.SignData(raw, _shaName);
         }
 
+        public bool Verify(byte[] raw, byte[] sig)
+        {
+            return _dsa.VerifyData(raw, sig, _shaName);
+        }
+
         class ExportDetails
         {
             public int HashSize { get; set; }

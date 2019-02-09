@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\ACMESharp\ACMESharp.csproj" />
     <ProjectReference Include="..\..\ACMESharp.DotNetCore\ACMESharp.DotNetCore.csproj" />
+    <ProjectReference Include="..\Examples.Common.PKI\Examples.Common.PKI.csproj" />
   </ItemGroup>
 
 </Project>

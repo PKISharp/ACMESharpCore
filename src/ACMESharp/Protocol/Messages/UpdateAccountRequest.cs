@@ -15,7 +15,7 @@ namespace ACMESharp.Protocol.Messages
         /// requires this value, when used in a request to lookup an existing account
         /// this property can be omitted.
         /// </summary>
-        [JsonProperty("contact")]
+        [JsonProperty("contact", NullValueHandling=NullValueHandling.Ignore)]
         public IEnumerable<string> Contact { get; set; }
 
         [JsonProperty("termsOfServiceAgreed", NullValueHandling=NullValueHandling.Ignore)]

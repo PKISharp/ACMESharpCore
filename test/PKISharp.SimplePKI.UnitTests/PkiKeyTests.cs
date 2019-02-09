@@ -51,13 +51,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pubOut, rsaKeys.PublicKey.Export(PkiEncodingFormat.Pem));
             File.WriteAllBytes(prvOut, rsaKeys.PrivateKey.Export(PkiEncodingFormat.Pem));
             
-            using (var proc = Process.Start("openssl", $"rsa -in {pubOut} -pubin"))
+            using (var proc = OpenSsl.Start($"rsa -in {pubOut} -pubin"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"rsa -in {prvOut} -check"))
+            using (var proc = OpenSsl.Start($"rsa -in {prvOut} -check"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -84,13 +84,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(prvOut, rsaKeys.PrivateKey.Export(PkiEncodingFormat.Pem,
                     password: "123456".ToCharArray()));
             
-            using (var proc = Process.Start("openssl", $"rsa -in {pubOut} -pubin"))
+            using (var proc = OpenSsl.Start($"rsa -in {pubOut} -pubin"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = Process.Start("openssl", $"rsa -in {prvOut} -check -passin pass:123456"))
+            using (var proc = OpenSsl.Start($"rsa -in {prvOut} -check -passin pass:123456"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -118,16 +118,16 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(prvOut, ecdsaKeys.PrivateKey.Export(PkiEncodingFormat.Pem));
 
             
-            using (var proc = Process.Start("openssl", $"ec -in {pubOut} -pubin"))
+            using (var proc = OpenSsl.Start($"ec -in {pubOut} -pubin"))
             {
                 proc.WaitForExit();
-                Assert.AreEqual(0, proc.ExitCode);
+                Assert.AreEqual(0, proc.ExitCode, "OpenSSL exit code checking EC public key");
             }
 
-            using (var proc = Process.Start("openssl", $"ec -in {prvOut} -check"))
+            using (var proc = OpenSsl.Start($"ec -in {prvOut} -check"))
             {
                 proc.WaitForExit();
-                Assert.AreEqual(0, proc.ExitCode);
+                Assert.AreEqual(0, proc.ExitCode, "OpenSSL exit code checking EC private key");
             }
         }
 

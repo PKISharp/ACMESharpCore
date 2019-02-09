@@ -21,5 +21,7 @@ namespace ACMESharp.Crypto.JOSE
         object ExportJwk(bool canonical = false);
 
         byte[] Sign(byte[] raw);
+
+        bool Verify(byte[] raw, byte[] sig);
     }
 }

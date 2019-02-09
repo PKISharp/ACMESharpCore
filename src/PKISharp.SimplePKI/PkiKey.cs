@@ -2,11 +2,13 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Xml.Serialization;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
+using static PKISharp.SimplePKI.PkiKeyPair;
 
 namespace PKISharp.SimplePKI
 {
@@ -68,6 +70,39 @@ namespace PKISharp.SimplePKI
                 
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+
+        [XmlType(nameof(PkiKey))]
+        [XmlInclude(typeof(PkiKeyPairRsaParams))]
+        [XmlInclude(typeof(PkiKeyPairEcdsaParams))]
+        public class RecoverableSerialForm
+        {
+            public RecoverableSerialForm()
+            { }
+
+            public RecoverableSerialForm(PkiKey key)
+            {
+                _algorithm = key.Algorithm;
+                _key = key.Export(PkiEncodingFormat.Der);
+                _isPrivate = key.IsPrivate;
+            }
+
+            public int _ver = 2;
+            public PkiAsymmetricAlgorithm _algorithm;
+            public bool _isPrivate;
+            public byte[] _key;
+            public PkiKey Recover()
+            {
+                if (_isPrivate)
+                {
+                    return new PkiKey(PrivateKeyFactory.CreateKey(_key), _algorithm);
+                }
+                else
+                {
+                    return new PkiKey(PublicKeyFactory.CreateKey(_key), _algorithm);
+                }
             }
         }
     }

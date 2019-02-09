@@ -1,0 +1,137 @@
+@page "/account"
+
+@using Newtonsoft.Json;
+@using PKISharp.SimplePKI;
+@using ACMEBlazor.Services;
+
+@inject HttpClient http
+@inject IRepository repo
+@inject LocalStorage localStorage
+@inject AppState  app
+
+<h1>ACME Account</h1>
+
+<div>
+    (1) ToS:
+    <p><button class="btn btn-primary" onclick="@(async () => await GetTermsOfService())">Get TOS</button></p>
+    <p>ToS URL: @_tosUrl</p>
+</div>
+
+<div>
+    (2) Account:
+    <p>Contacts:</p>
+    <p><textarea cols="80" rows="5" bind="@_contacts"
+                 readonly="@(app?.Account?.Details?.Kid != null)"
+                 disabled="@(app?.Account?.Details?.Kid != null)"></textarea></p>
+    <p>Agree ToS: <input type="checkbox" bind="@_agreeTos"
+                         disabled="@(app?.Account?.Details?.Kid != null)" /></p>
+    <p><button class="btn btn-primary" disabled="@(app.Account != null)"
+                onclick="@(async () => await CreateAccount())">Create Account</button></p>
+    <p>Details:</p>
+    <ul>
+    @if (app.Account == null)
+    {
+        <li><i>No Account</i></li>
+    }
+    else
+    {
+        <li>@app.Account.Id</li>
+        <li>@app.Account.Details.Kid</li>
+        <p>Private Key:</p>
+        <p><textarea cols="80" rows="5" readonly="readonly" disabled="disabled" bind="@app.Account.SignerExport"></textarea></p>
+    }
+    </ul>
+</div>
+
+@functions {
+
+    string _tosUrl;
+    string _contacts;
+    bool _agreeTos;
+
+    protected override async Task OnInitAsync()
+    {
+        _contacts = app?.Account?.Contacts;
+        _agreeTos = app?.Account?.TosAgreed != null;
+        if (_contacts == null)
+            _contacts = "";
+        Console.WriteLine("Contacts initialized with: " + _contacts);
+
+        await Task.CompletedTask;
+    }
+
+    async Task GetTermsOfService()
+    {
+        _tosUrl = "Pending...";
+
+        var signer = new ACMESharp.Crypto.JOSE.Impl.RSJwsTool();
+
+        var acmeUrl = new Uri(Program.LetsEncryptV2StagingEndpoint);
+        http.BaseAddress = acmeUrl;
+
+        _tosUrl = "getting from: " + acmeUrl;
+
+        using (var acme = new AcmeProtocolClient(http, signer: signer))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            Console.WriteLine("Got Directory: " + dir);
+            _tosUrl = "TOS: " + dir.Meta?.TermsOfService;
+        }
+    }
+
+    async Task CreateAccount()
+    {
+        if (!_agreeTos)
+        {
+            Console.WriteLine("ERR:  You Must Agree to ToS!");
+            return;
+        }
+
+        var contactEmails = _contacts?.Split(AppState.LineSeps, StringSplitOptions.RemoveEmptyEntries)
+            ?.Select(x => x.Split('#')[0])
+            ?.Select(x => x.Trim())
+            ?.Where(x => x.Length > 0)
+            ?.ToArray();
+        if (contactEmails?.Length == 0)
+        {
+            Console.WriteLine("ERR:  At least one valid email must be specified!");
+            return;
+        }
+
+        var signer = new PkiJwsTool(256);
+        signer.Init();
+        var acmeUrl = new Uri(Program.LetsEncryptV2StagingEndpoint);
+        http.BaseAddress = acmeUrl;
+
+        using (var acme = new AcmeProtocolClient(http, signer: signer))
+        {
+            var dir = await acme.GetDirectoryAsync();
+            acme.Directory = dir;
+
+            await acme.GetNonceAsync();
+            Console.WriteLine("Initialized ACME client");
+
+            var acct = new BlazorAccount
+            {
+                TosAgreed = DateTime.Now,
+                Contacts = _contacts,
+                ContactEmails = contactEmails,
+                SignerExport = signer.Export(),
+            };
+
+            var c = contactEmails.Select(x => $"mailto:{x.Trim()}");
+            acct.Details = await acme.CreateAccountAsync(c, _agreeTos);
+
+            if (string.IsNullOrEmpty(acct.Details.Kid))
+            {
+                Console.WriteLine("Missing Account KID");
+                return;
+            }
+            Console.WriteLine("Got Account: " + acct.Details.Kid);
+
+            acct.Id = 0;
+            app.Account = acct;
+            localStorage.SetItem(AppState.AccountKey, app.Account);
+        }
+    }
+}
