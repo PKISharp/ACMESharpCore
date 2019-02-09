@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -392,30 +392,6 @@ namespace ACMESharp.MockServer.Controllers
             return dbCert.Pem;
         }
 
-        // "revoke-cert": "https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.6"
-        [HttpPost("revoke-cert")]
-        public ActionResult<bool> Revoke(string acctId,
-            [FromBody]JwsSignedPayload signedPayload)
-        {
-            if (!int.TryParse(acctId, out var acctIdNum))
-                return NotFound();
-         
-            var ph = ExtractProtectedHeader(signedPayload);
-
-            ValidateNonce(ph);
-
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
-
-            ValidateAccount(acct, signedPayload);
-
-            // TODO: do stuff? 
-
-            GenerateNonce();
-            return true;
-        }
-
         // "https://acme-staging-v02.api.letsencrypt.org/acme/authz/740KRMwcT0UrLXdUKOlgMnfNbzpSQtRaWjbyA1UgIJ4",
         /*
         // OK
@@ -548,7 +524,6 @@ namespace ACMESharp.MockServer.Controllers
 
             return dbChlng.Payload;
         }
-
 
         T ExtractPayload<T>(JwsSignedPayload signedPayload)
         {
