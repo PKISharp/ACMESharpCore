@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
 namespace ACMESharp.HTTP
@@ -19,7 +19,7 @@ namespace ACMESharp.HTTP
         /// <summary>
         /// Regex pattern to match and extract the components of an HTTP related link header.
         /// </summary>
-        public static readonly Regex LinkHeaderRegex = new Regex("<(.+)>;rel=\"(.+)\"");
+        public static readonly Regex LinkHeaderRegex = new Regex("<(.+)>;[ ]?rel=\"(.+)\"");
 
         public const string LinkHeaderFormat = "<{0}>;rel={1}";
 
