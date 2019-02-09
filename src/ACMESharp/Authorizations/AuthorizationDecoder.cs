@@ -26,10 +26,12 @@ namespace ACMESharp.Authorizations
 
             switch (challengeType)
             {
-                case "dns-01":
+                case Dns01ChallengeValidationDetails.Dns01ChallengeType:
                     return ResolveChallengeForDns01(authz, challenge, signer);
-                case "http-01":
+                case Http01ChallengeValidationDetails.Http01ChallengeType:
                     return ResolveChallengeForHttp01(authz, challenge, signer);
+                case TlsAlpn01ChallengeValidationDetails.TlsAlpn01ChallengeType:
+                    return ResolveChallengeForTlsAlpn01(authz, challenge, signer);
             }
 
             throw new NotImplementedException(
@@ -76,6 +78,21 @@ namespace ACMESharp.Authorizations
                         challenge.Token}",
                 HttpResourceContentType = Http01ChallengeValidationDetails.HttpResourceContentTypeDefault,
                 HttpResourceValue = keyAuthz,
+            };
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05
+        /// </remarks>
+        public static TlsAlpn01ChallengeValidationDetails ResolveChallengeForTlsAlpn01(
+                Authorization authz, Challenge challenge, IJwsTool signer)
+        {
+            var keyAuthz = JwsHelper.ComputeKeyAuthorization(signer, challenge.Token);
+            return new TlsAlpn01ChallengeValidationDetails
+            {
+                TokenValue = keyAuthz,
             };
         }
     }
