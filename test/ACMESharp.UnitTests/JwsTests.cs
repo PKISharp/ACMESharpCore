@@ -1,7 +1,9 @@
 using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using ACMESharp.Crypto;
+using ACMESharp.Crypto.JOSE.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ACMESharp.UnitTests
@@ -304,6 +306,49 @@ namespace ACMESharp.UnitTests
                     "p0igcN_IoypGlUPQGe77Rw";
             string sigB64uActual = CryptoHelper.Base64.UrlEncode(sigActual);
             Assert.AreEqual(sigB64uExpected, sigB64uActual);
+        }
+
+        [TestMethod]
+        public void SerDesEC()
+        {
+            var rng = RandomNumberGenerator.Create();
+            for (var i = 0; i < 1000; i++) { 
+                var original = new ESJwsTool(); // Default for ISigner
+                original.Init();
+                var rawX = new byte[8034];
+                rng.GetBytes(rawX);
+                var sigX = original.Sign(rawX);
+
+                var exported = original.Export();
+                var copy = new ESJwsTool();
+                copy.Init();
+                copy.Import(exported);
+                var verified = copy.Verify(rawX, sigX);
+
+                Assert.AreEqual(true, verified);
+            }
+        }
+
+        [TestMethod]
+        public void SerDesRSA()
+        {
+            var rng = RandomNumberGenerator.Create();
+            for (var i = 0; i < 1000; i++)
+            {
+                var original = new RSJwsTool(); // Default for ISigner
+                original.Init();
+                var rawX = new byte[8034];
+                rng.GetBytes(rawX);
+                var sigX = original.Sign(rawX);
+
+                var exported = original.Export();
+                var copy = new RSJwsTool();
+                copy.Init();
+                copy.Import(exported);
+                var verified = copy.Verify(rawX, sigX);
+
+                Assert.AreEqual(true, verified);
+            }
         }
     }
 }

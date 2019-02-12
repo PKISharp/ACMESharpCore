@@ -13,7 +13,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
     {
         private HashAlgorithm _sha;
         private RSACryptoServiceProvider _rsa;
-        private object _jwk;
+        private RSJwk _jwk;
 
         /// <summary>
         /// Specifies the size in bits of the SHA-2 hash function to use.

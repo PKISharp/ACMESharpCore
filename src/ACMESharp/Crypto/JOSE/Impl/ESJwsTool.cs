@@ -13,7 +13,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
     {
         private HashAlgorithmName _shaName;
         private ECDsa _dsa;
-        private object _jwk;
+        private ESJwk _jwk;
 
         /// <summary>
         /// Specifies the size in bits of the SHA-2 hash function to use.
