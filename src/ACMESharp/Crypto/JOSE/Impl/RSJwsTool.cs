@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
@@ -87,6 +87,20 @@ namespace ACMESharp.Crypto.JOSE.Impl
         //     }
         // }
 
+        // As per RFC 7638 Section 3, these are the *required* elements of the
+        // JWK and are sorted in lexicographic order to produce a canonical form
+        class RSJwk
+        {
+            [JsonProperty(Order = 1)]
+            public string e;
+
+            [JsonProperty(Order = 2)]
+            public string kty = "RSA";
+
+            [JsonProperty(Order = 3)]
+            public string n;
+        }
+
         public object ExportJwk(bool canonical = false)
         {
             // Note, we only produce a canonical form of the JWK
@@ -95,13 +109,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
             if (_jwk == null)
             {
                 var keyParams = _rsa.ExportParameters(false);
-                _jwk = new
+                _jwk = new RSJwk
                 {
-                    // As per RFC 7638 Section 3, these are the *required* elements of the
-                    // JWK and are sorted in lexicographic order to produce a canonical form
-
                     e = CryptoHelper.Base64.UrlEncode(keyParams.Exponent),
-                    kty = "RSA", // https://tools.ietf.org/html/rfc7518#section-6.3
                     n = CryptoHelper.Base64.UrlEncode(keyParams.Modulus),
                 };
             }
