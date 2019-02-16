@@ -13,7 +13,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
     {
         private HashAlgorithmName _shaName;
         private ECDsa _dsa;
-        private object _jwk;
+        private ESJwk _jwk;
 
         /// <summary>
         /// Specifies the size in bits of the SHA-2 hash function to use.
@@ -110,6 +110,22 @@ namespace ACMESharp.Crypto.JOSE.Impl
         //     }
         // }
 
+        // As per RFC 7638 Section 3, these are the *required* elements of the
+        // JWK and are sorted in lexicographic order to produce a canonical form
+        class ESJwk
+        {
+            [JsonProperty(Order = 1)]
+            public string crv;
+
+            [JsonProperty(Order = 2)]
+            public string kty = "EC";
+
+            [JsonProperty(Order = 3)]
+            public string x;
+
+            [JsonProperty(Order = 4)]
+            public string y;
+        }
 
         public object ExportJwk(bool canonical = false)
         {
@@ -119,13 +135,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
             if (_jwk == null)
             {
                 var keyParams = _dsa.ExportParameters(false);
-                _jwk = new
+                _jwk = new ESJwk
                 {
-                    // As per RFC 7638 Section 3, these are the *required* elements of the
-                    // JWK and are sorted in lexicographic order to produce a canonical form
-
                     crv = CurveName,
-                    kty = "EC", // https://tools.ietf.org/html/rfc7518#section-6.2
                     x = CryptoHelper.Base64.UrlEncode(keyParams.Q.X),
                     y = CryptoHelper.Base64.UrlEncode(keyParams.Q.Y),
                 };
