@@ -388,6 +388,24 @@ namespace ACMESharp.MockServer.UnitTests
         }
 
 
+        [TestMethod]
+        public async Task RevokeCertificate()
+        {
+            using (var http = _server.CreateClient())
+            {
+                var dir = await GetDir();
+                var signer = new Crypto.JOSE.Impl.RSJwsTool();
+                signer.Init();
+                using (var acme = new AcmeProtocolClient(http, dir,
+                    signer: signer))
+                {
+                    await acme.GetNonceAsync();
+                    // TODO go through the motions as the FinalizeOrder test?
+                    await acme.RevokeCertificateAsync(new byte[] { });
+                }
+            }
+        }
+
 
         private async Task<ServiceDirectory> GetDir()
         {

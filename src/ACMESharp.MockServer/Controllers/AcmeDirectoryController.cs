@@ -29,7 +29,9 @@ namespace ACMESharp.MockServer.Controllers
                         values: null, protocol: Request.Scheme),
                 NewAuthz = null,
                 KeyChange = null,
-                RevokeCert = null,
+                RevokeCert = Url.Action(nameof(AcmeController.Revoke),
+                        controller: AcmeController.ControllerRoute,
+                        values: null, protocol: Request.Scheme),
 
                 Meta = new DirectoryMeta
                 {
