@@ -616,6 +616,32 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
+        /// Revoke certificate
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.6
+        /// </remarks>
+        public async Task<bool> RevokeCertificateAsync(
+            byte[] derEncodedCertificate,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var message = new RevokeCertificateRequest
+            {
+                Certificate = CryptoHelper.Base64.UrlEncode(derEncodedCertificate),
+            };
+            var resp = await SendAcmeAsync(
+                    new Uri(_http.BaseAddress, Directory.RevokeCert),
+                    method: HttpMethod.Post,
+                    message: message,
+                    expectedStatuses: new[] { HttpStatusCode.OK },
+                    cancel: cancel);
+
+            // If OK is returned, we're all done. Otherwise general 
+            // exception handling will kick in
+            return true;
+        }
+
+        /// <summary>
         /// Generic fetch routine to retrieve raw bytes from a URL associated
         /// with an ACME endpoint.
         /// </summary>
