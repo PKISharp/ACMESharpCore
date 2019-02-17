@@ -191,7 +191,7 @@ namespace ACMESharp.Protocol
             {
                 Contact = contacts,
                 TermsOfServiceAgreed = termsOfServiceAgreed,
-                ExternalAccountBinding = (JwsSignedPayload)externalAccountBinding,
+                ExternalAccountBinding = externalAccountBinding,
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, Directory.NewAccount),
