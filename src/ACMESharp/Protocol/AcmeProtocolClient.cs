@@ -5,22 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Logging;
-using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
-using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 
 namespace ACMESharp.Protocol
 {
@@ -621,24 +617,24 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.6
         /// </remarks>
-        public async Task<bool> RevokeCertificateAsync(
+        public async Task RevokeCertificateAsync(
             byte[] derEncodedCertificate,
+            RevokeReason reason = RevokeReason.Undefined,
             CancellationToken cancel = default(CancellationToken))
         {
             var message = new RevokeCertificateRequest
             {
                 Certificate = CryptoHelper.Base64.UrlEncode(derEncodedCertificate),
+                Reason = reason
             };
+            // If OK is returned, we're all done. Otherwise general 
+            // exception handling will kick in
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, Directory.RevokeCert),
                     method: HttpMethod.Post,
                     message: message,
                     expectedStatuses: new[] { HttpStatusCode.OK },
                     cancel: cancel);
-
-            // If OK is returned, we're all done. Otherwise general 
-            // exception handling will kick in
-            return true;
         }
 
         /// <summary>

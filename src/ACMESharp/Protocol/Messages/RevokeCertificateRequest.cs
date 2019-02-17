@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using static ACMESharp.Protocol.Constants;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -12,11 +13,7 @@ namespace ACMESharp.Protocol.Messages
         [Required]
         public string Certificate { get; set; }
 
-        // Possible reasons specified here
-        // https://tools.ietf.org/html/rfc5280#section-5.3.1
-        // Not sure where best to create an enum and how to handle the (optional) 
-        // serialization of this property, so leaving it out for now
-        //[JsonProperty("reason")]
-        //public int Reason { get; set; }
+        [JsonProperty("reason")]
+        public RevokeReason Reason { get; set; } = RevokeReason.Undefined;
     }
 }
