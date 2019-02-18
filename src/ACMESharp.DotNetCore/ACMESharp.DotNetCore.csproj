@@ -20,6 +20,7 @@
       <PackageTags>pki;ssl;tls;security;certificates;letsencrypt;acme;acmesharp</PackageTags>
       <RepositoryUrl>https://github.com/PKISharp/ACMESharpCore.git</RepositoryUrl>
       <RepositoryType>git</RepositoryType>
+      <Authors>https://github.com/PKISharp/ACMESharpCore/graphs/contributors</Authors>
   </PropertyGroup>
 
   <Import Project="../../version.props" />
