@@ -2,7 +2,9 @@
   <PropertyGroup>
     <BuildNumber Condition="'$(BuildNumber)' == ''">$(APPVEYOR_BUILD_NUMBER)</BuildNumber>
     <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
-    <VersionPrefix>2.0.0.$(BuildNumber)</VersionPrefix>
+    <VersionPrefix>2.0.1.$(BuildNumber)</VersionPrefix>
+    <!--
     <VersionSuffix>beta1</VersionSuffix>
+    -->
   </PropertyGroup>
 </Project>
