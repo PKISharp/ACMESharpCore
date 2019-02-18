@@ -32,10 +32,12 @@
 * Decode Challenge details for types:
   * `dns-01`
   * `http-01`
+  * `tls-alpn-01` - initial support for [this extension](https://tools.ietf.org/html/draft-ietf-acme-tls-alpn-05) (thanks [Wouter](https://github.com/WouterTinus))
 * Answer Challenge
 * Refresh Challenge
 * Deactivate Authorization
 * Finalize Authorization (Submit CSR)
+* Revoke Certificate (thank you [Wouter](https://github.com/WouterTinus)!)
 * Cross-platform support
   * Tested on [Windows](https://ci.appveyor.com/project/ebekker/acmesharpcore/build/job/6vive79j4xprmh93/tests)
   * Tested on [Linux](https://ci.appveyor.com/project/ebekker/acmesharpcore/build/job/1a528ap82uol4bsg/tests) (Ubuntu 16.04)
