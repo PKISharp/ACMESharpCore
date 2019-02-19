@@ -71,22 +71,6 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _rsa.FromXmlString(exported);
         }
 
-        // public void Save(Stream stream)
-        // {
-        //     using (var w = new StreamWriter(stream))
-        //     {
-        //         w.Write(_rsa.ToXmlString(true));
-        //     }
-        // }
-
-        // public void Load(Stream stream)
-        // {
-        //     using (var r = new StreamReader(stream))
-        //     {
-        //         _rsa.FromXmlString(r.ReadToEnd());
-        //     }
-        // }
-
         // As per RFC 7638 Section 3, these are the *required* elements of the
         // JWK and are sorted in lexicographic order to produce a canonical form
         class RSJwk
