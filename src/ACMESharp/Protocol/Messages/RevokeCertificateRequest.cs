@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using static ACMESharp.Protocol.Constants;
+using ACMESharp.Protocol.Resources;
 
 namespace ACMESharp.Protocol.Messages
 {
