@@ -34,7 +34,6 @@ namespace ACMESharp.Protocol
 
         private bool _disposeHttpClient;
         private HttpClient _http;
-        private IJwsTool _signer;
         private ILogger _log;
 
         public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
@@ -296,7 +295,7 @@ namespace ACMESharp.Protocol
         /// Account key pair registered with the client.
         /// </summary>
         /// <remarks>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.3.5
         /// </remarks>
         public async Task<AccountDetails> ChangeAccountKeyAsync(IJwsTool newSigner,
             CancellationToken cancel = default(CancellationToken))
@@ -305,7 +304,7 @@ namespace ACMESharp.Protocol
             var message = new KeyChangeRequest
             {
                 Account = Account.Kid,
-                NewKey = newSigner.ExportJwk(),
+                OldKey = Signer.ExportJwk(),
             };
             var innerPayload = ComputeAcmeSigned(message, requUrl.ToString(),
                     signer: newSigner, includePublicKey: true, excludeNonce: true);
