@@ -71,20 +71,6 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _rsa.FromXmlString(exported);
         }
 
-        // As per RFC 7638 Section 3, these are the *required* elements of the
-        // JWK and are sorted in lexicographic order to produce a canonical form
-        class RSJwk
-        {
-            [JsonProperty(Order = 1)]
-            public string e;
-
-            [JsonProperty(Order = 2)]
-            public string kty = "RSA";
-
-            [JsonProperty(Order = 3)]
-            public string n;
-        }
-
         public object ExportJwk(bool canonical = false)
         {
             // Note, we only produce a canonical form of the JWK
@@ -106,7 +92,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
         public void ImportJwk(string jwkJson)
         {
             Init();
-            var jwk = JsonConvert.DeserializeObject<JwkExport>(jwkJson);
+            var jwk = JsonConvert.DeserializeObject<RSJwk>(jwkJson);
             var keyParams = new RSAParameters
             {
                 Exponent = CryptoHelper.Base64.UrlDecode(jwk.e),
@@ -125,16 +111,18 @@ namespace ACMESharp.Crypto.JOSE.Impl
             return _rsa.VerifyData(raw, _sha, sig);
         }
 
-        public class JwkExport
+        // As per RFC 7638 Section 3, these are the *required* elements of the
+        // JWK and are sorted in lexicographic order to produce a canonical form
+        class RSJwk
         {
-            // As per RFC 7638 Section 3, these are the *required* elements of the
-            // JWK and are sorted in lexicographic order to produce a canonical form
+            [JsonProperty(Order = 1)]
+            public string e;
 
-            public string e { get; set; }
+            [JsonProperty(Order = 2)]
+            public string kty = "RSA";
 
-            public string kty { get; set; }
-
-            public string n { get; set; }
+            [JsonProperty(Order = 3)]
+            public string n;
         }
     }
 }
