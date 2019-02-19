@@ -14,6 +14,6 @@ namespace ACMESharp.Protocol.Messages
         public string Certificate { get; set; }
 
         [JsonProperty("reason")]
-        public RevokeReason Reason { get; set; } = RevokeReason.Undefined;
+        public RevokeReason Reason { get; set; } = RevokeReason.Unspecified;
     }
 }

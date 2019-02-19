@@ -6,15 +6,16 @@ namespace ACMESharp.Protocol.Resources
     /// </summary>
     public enum RevokeReason
     {
-        Undefined = 0,
+        Unspecified = 0,
         KeyCompromise = 1,
         CaCompromise = 2,
         AffiliationChanged = 3,
         Superseded = 4,
         CessationOfOperation = 5,
         CertificateHold = 6,
+        /*Value 7 is not used*/
         RemoveFromCrl = 8,
-        PrivilidyWithdrawn = 9,
+        PrivilegeWithdrawn = 9,
         AaCompromise = 10
     }
 }

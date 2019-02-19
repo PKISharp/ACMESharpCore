@@ -619,7 +619,7 @@ namespace ACMESharp.Protocol
         /// </remarks>
         public async Task RevokeCertificateAsync(
             byte[] derEncodedCertificate,
-            RevokeReason reason = RevokeReason.Undefined,
+            RevokeReason reason = RevokeReason.Unspecified,
             CancellationToken cancel = default(CancellationToken))
         {
             var message = new RevokeCertificateRequest
