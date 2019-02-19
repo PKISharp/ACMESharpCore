@@ -20,7 +20,7 @@ namespace ACMESharp.MockServer.UnitTests
     {
         // When using the ASP.NET Core TestHost, only the URL Path is significant
         public const string DefaultServerUrl = "http://localhost/";
-        public const string RepoFilePath = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests\acme-mockserver.db";
+        public const string RepoFilePath = @".\_IGNORE\data\acme-mockserver.db";
 
         static TestServer _server;
 
@@ -29,6 +29,9 @@ namespace ACMESharp.MockServer.UnitTests
         {
             if (File.Exists(RepoFilePath))
                 File.Delete(RepoFilePath);
+            var folderPath = Path.GetFullPath(Path.GetDirectoryName(RepoFilePath));
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
 
             Environment.SetEnvironmentVariable(Startup.RepositoryFilePathEnvVar, RepoFilePath);
             var hostBuilder = new WebHostBuilder()
