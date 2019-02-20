@@ -414,7 +414,26 @@ namespace ACMESharp.IntegrationTests
             testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
             var cert = new X509Certificate2(certPemBytes);
             var certDerBytes = cert.Export(X509ContentType.Cert);
-            await Clients.Acme.RevokeCertificateAsync(certDerBytes, RevokeReason.Superseded);
+
+            await Clients.Acme.RevokeCertificateAsync(
+                certDerBytes, RevokeReason.Superseded);
+        }
+
+        [Fact]
+        [TestOrder(0_285, "SingleHttp")]
+        public async Task Test_Revoke_RevokedCertificate_ForSingleHttp()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+
+            var ex = await Assert.ThrowsAsync<AcmeProtocolException>(
+                async () => await Clients.Acme.RevokeCertificateAsync(
+                    certDerBytes, RevokeReason.Superseded));
+
+            Assert.StrictEqual(ProblemType.AlreadyRevoked, ex.ProblemType);
         }
     }
 }
