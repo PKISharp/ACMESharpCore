@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
@@ -70,7 +71,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_120, "WildDns")]
-        public void Test_Decode_OrderChallengeForDns01_ForSingleHttp()
+        public void Test_Decode_OrderChallengeForDns01_ForWildDns()
         {
             var testCtx = SetTestContext();
 
@@ -374,7 +375,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_175, "WildDns")]
-        public async Task Test_IsDeleted_OrderAnswerDnsRecords_ForMultiDns()
+        public async Task Test_IsDeleted_OrderAnswerDnsRecords_ForWildDns()
         {
             var testCtx = SetTestContext();
 
@@ -406,6 +407,18 @@ namespace ACMESharp.IntegrationTests
                 }
                 ++authzIndex;
             }
+        }
+
+        [Fact]
+        [TestOrder(0_180, "WildDns")]
+        public async Task Test_Revoke_Certificate_ForWildDns()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+            await Clients.Acme.RevokeCertificateAsync(certDerBytes, RevokeReason.Superseded);
         }
     }
 }
