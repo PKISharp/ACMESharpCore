@@ -18,8 +18,8 @@ namespace ACMESharp.MockServer.UnitTests
     [TestClass]
     public class RepoTests
     {
-        public const string LiteDbFilePath =
-            @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests\acme-repo-tests.db";
+        public const string DataFolder = @".\_IGNORE\data";
+        public const string LiteDbFilePath = DataFolder + @"\acme-repo-tests.db";
         static IRepository _repo;
 
         [ClassInitialize]

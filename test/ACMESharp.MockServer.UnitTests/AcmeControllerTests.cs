@@ -20,7 +20,8 @@ namespace ACMESharp.MockServer.UnitTests
     {
         // When using the ASP.NET Core TestHost, only the URL Path is significant
         public const string DefaultServerUrl = "http://localhost/";
-        public const string RepoFilePath = @".\_IGNORE\data\acme-mockserver.db";
+        public const string DataFolder = @".\_IGNORE\data";
+        public const string RepoFilePath = DataFolder + @"\acme-mockserver.db";
 
         static TestServer _server;
 
@@ -380,8 +381,7 @@ namespace ACMESharp.MockServer.UnitTests
                     var getResp = await acme.GetAsync(finalizedOrder.Payload.Certificate);
                     getResp.EnsureSuccessStatusCode();
 
-                    using (var fs = new FileStream(
-                            @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests\finalize-cert.pem",
+                    using (var fs = new FileStream(Path.Combine(DataFolder, "finalize-cert.pem"),
                             FileMode.Create))
                     {
                         await getResp.Content.CopyToAsync(fs);
