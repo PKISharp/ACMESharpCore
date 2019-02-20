@@ -71,7 +71,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_120, "MultiDns")]
-        public void Test_Decode_OrderChallengeForDns01_ForSingleHttp()
+        public void Test_Decode_OrderChallengeForDns01_ForMultiDns()
         {
             var testCtx = SetTestContext();
 

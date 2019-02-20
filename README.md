@@ -2,19 +2,21 @@
 
 An ACME client library for .NET Standard (Let's Encrypt)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/bvf3hiyantc3m8tv?svg=true)](https://ci.appveyor.com/project/ebekker/acmesharpcore) ![NuGet Pre Release](https://img.shields.io/nuget/vpre/ACMESharpCore.svg)
+[![AV Build status](https://ci.appveyor.com/api/projects/status/bvf3hiyantc3m8tv?svg=true)](https://ci.appveyor.com/project/ebekker/acmesharpcore)
+[![ADO Build Status](https://dev.azure.com/PKISharp/ACMESharpCore/_apis/build/status/ACMESharpCore-ASP.NET%20Core%20(.NET%20Framework)-CI?branchName=master)](https://dev.azure.com/PKISharp/ACMESharpCore/_build/latest?definitionId=2&branchName=master)
 
-
-This is a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library to .NET Standard 2.0.
-
-#### Stable Packages
+### Stable Packages
 
 | | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22) |
 |-|-|
-| [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore) | ACMESharpCore client library
+| [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore)           | ACMESharpCore client library
 | [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI) | SimplePKI library
 
-A first version of the client library has been completed with a number of useful features, check out the [library-specific README](/src/ACMESharp) for details as they develop.
+This library originated as a port of the [ACMESharp](https://github.com/ebekker/ACMESharp) client library from .NET Framework to .NET Standard 2.0.
+
+However, this rewrite is now actually more complete than the [original](https://github.com/ebekker/ACMESharp),
+including operations from the ACME specification that were left out of the original and supporting the latest
+versions of the specification.  Check out the [library-specific README](/src/ACMESharp) for details as they develop.
 
 A couple of useful examples have been [put together](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples) to demonstrate how to use the client library to implement a [CLI tool](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples/ACMECLI) and automated certificate installation for [ASP.NET Core](https://github.com/PKISharp/ACMESharpCore/tree/master/src/examples/ACMEKestrel) applications.  More are coming...
 
