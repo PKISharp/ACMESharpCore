@@ -501,6 +501,8 @@ Console.Error.WriteLine($"  IN: {psi.WorkingDirectory}");
 
             // // if (!NoColor)
             // //     ConsoleHelper.ResetColor();
+            if (!NoColor)
+                Console.ResetColor();
         }
     }
 }

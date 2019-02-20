@@ -54,7 +54,7 @@ namespace ACMESharp.IntegrationTests
             var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             Assert.NotNull(oldNames);
-            Assert.Equal(1, oldNames.Length);
+            Assert.Single(oldNames);
             Assert.NotNull(oldOrder);
             Assert.NotNull(oldOrder.OrderUrl);
 
