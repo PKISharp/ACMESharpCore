@@ -9,12 +9,11 @@ An ACME client library for .NET Standard (Let's Encrypt)
 
 | | |
 |-|-|
-|
 | **Stable Release** | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22)
 | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore)               | ACMESharpCore client library
 | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.Crypto.svg)](https://www.nuget.org/packages/ACMESharpCore.Crypto) | Crypto Support library
 | [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI)     | SimplePKI library
-|
+| | |
 | **Early Access** | Hosted on [MyGet Gallery](https://www.myget.org/gallery/acmesharp)
 | [![NuGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore)               | ACMESharpCore client library
 | [![NuGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.Crypto.svg)](https://www.nuget.org/packages/ACMESharpCore.Crypto) | Crypto Support library
