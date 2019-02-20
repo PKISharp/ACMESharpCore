@@ -48,6 +48,15 @@ namespace ACMESharp.IntegrationTests
             return null;
         }
 
+        public void ReadFrom(string saveName, out byte[] value)
+        {
+            var fromName = $"_TMP/{saveName}";
+            if (File.Exists(fromName))
+                value = File.ReadAllBytes(fromName);
+            else
+                value = null;
+        }
+
         public void SaveObject(string saveName, object o)
         {
             var json = JsonConvert.SerializeObject(o, Formatting.Indented);

@@ -100,6 +100,11 @@ namespace ACMESharp.IntegrationTests
             return State.ReadFrom($"{ComputePrefix(subseq)}-{saveName}");
         }
 
+        public void ReadFrom(string saveName, out byte[] value, int subseq = -1)
+        {
+            State.ReadFrom($"{ComputePrefix(subseq)}-{saveName}", out value);
+        }
+
         public void SaveObject(string saveName, object o, int subseq = -1)
         {
             State.SaveObject($"{ComputePrefix(subseq)}-{saveName}", o);
@@ -185,6 +190,11 @@ namespace ACMESharp.IntegrationTests
             public string GroupReadFrom(string saveName)
             {
                 return Test.ReadFrom($"{ComputeGroupPrefix()}{saveName}");
+            }
+
+            public void GroupReadFrom(string saveName, out byte[] value)
+            {
+                Test.ReadFrom($"{ComputeGroupPrefix()}{saveName}", out value);
             }
 
             public void GroupSaveObject(string saveName, object o)
