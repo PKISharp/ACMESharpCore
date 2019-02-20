@@ -12,6 +12,7 @@ using System.IO;
 using System.Collections.Generic;
 using PKISharp.SimplePKI;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ACMESharp.MockServer.UnitTests
 {
@@ -403,8 +404,59 @@ namespace ACMESharp.MockServer.UnitTests
                     signer: signer))
                 {
                     await acme.GetNonceAsync();
-                    // TODO go through the motions as the FinalizeOrder test?
-                    await acme.RevokeCertificateAsync(new byte[] { });
+                    var acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
+                    acme.Account = acct;
+
+                    var dnsIds = new[] {
+                        "foo.mock.acme2.zyborg.io",
+                        "foo-alt-1.mock.acme2.zyborg.io",
+                        "foo-alt-2.mock.acme2.zyborg.io",
+                        "foo-alt-3.mock.acme2.zyborg.io",
+                    };
+                    var order = await acme.CreateOrderAsync(dnsIds);
+                    Assert.IsNotNull(order?.OrderUrl);
+                    Assert.AreEqual(dnsIds.Length, order.Payload.Authorizations?.Length);
+                    Assert.AreEqual(dnsIds.Length, order.Payload.Identifiers?.Length);
+
+                    var authzUrl = order.Payload.Authorizations[0];
+                    var authz = await acme.GetAuthorizationDetailsAsync(authzUrl);
+                    Assert.IsNotNull(authz);
+                    Assert.IsFalse(authz.Wildcard ?? false);
+                    Assert.AreEqual(dnsIds[0], authz.Identifier.Value);
+
+                    foreach (var chlng in authz.Challenges)
+                    {
+                        var chlng2 = await acme.AnswerChallengeAsync(chlng.Url);
+                        Assert.IsNotNull(chlng2);
+                        Assert.AreEqual("valid", chlng2.Status);
+                    }
+
+                    var kpr = PkiKeyPair.GenerateRsaKeyPair(2048);
+                    var csr = new PkiCertificateSigningRequest($"cn={dnsIds[0]}", kpr,
+                            PkiHashAlgorithm.Sha256);
+                    csr.CertificateExtensions.Add(
+                            PkiCertificateExtension.CreateDnsSubjectAlternativeNames(dnsIds.Skip(1)));
+                    var csrDer = csr.ExportSigningRequest(PkiEncodingFormat.Der);
+                    
+                    var finalizedOrder = await acme.FinalizeOrderAsync(order.Payload.Finalize, csrDer);
+                    Assert.AreEqual("valid", finalizedOrder.Payload.Status);
+                    Assert.IsNotNull(finalizedOrder.Payload.Certificate);
+
+                    var getResp = await acme.GetAsync(finalizedOrder.Payload.Certificate);
+                    getResp.EnsureSuccessStatusCode();
+
+                    var certPemBytes = await getResp.Content.ReadAsByteArrayAsync();
+
+                    using (var fs = new FileStream(Path.Combine(DataFolder, "finalize-cert-beforeRevoke.pem"),
+                            FileMode.Create))
+                    {
+                        await fs.WriteAsync(certPemBytes);
+                    }
+
+                    var cert = new X509Certificate2(certPemBytes);
+                    var certDerBytes = cert.Export(X509ContentType.Cert);
+
+                    await acme.RevokeCertificateAsync(certDerBytes);
                 }
             }
         }
