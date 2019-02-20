@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Xml;
 using Newtonsoft.Json;
 
 namespace ACMESharp.Crypto.JOSE.Impl
@@ -63,12 +64,26 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
         public string Export()
         {
-            return _rsa.ToXmlString(true);
+            try
+            {
+                return _rsa.ToXmlString(true);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                return ToXmlString(_rsa, true);
+            }
         }
 
         public void Import(string exported)
         {
-            _rsa.FromXmlString(exported);
+            try
+            {
+                _rsa.FromXmlString(exported);
+            }
+            catch (PlatformNotSupportedException)
+            {
+                FromXmlString(_rsa, exported);
+            }
         }
 
         public object ExportJwk(bool canonical = false)
@@ -124,5 +139,95 @@ namespace ACMESharp.Crypto.JOSE.Impl
             [JsonProperty(Order = 3)]
             public string n;
         }
+
+
+        #region MyRsaXmlExportImport
+
+        // These are lifted and adapted from:
+        //  https://github.com/dotnet/corefx/issues/23686#issuecomment-383245291
+
+        private const string RSAExportDocRootElement = "RSAKeyValue";
+        private static void FromXmlString(RSA rsa, string xmlString)
+        {
+            RSAParameters parameters = new RSAParameters();
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlString);
+
+            if (xmlDoc.DocumentElement.Name.Equals(RSAExportDocRootElement))
+            {
+                foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+                {
+                    switch (node.Name)
+                    {
+                        case nameof(parameters.Modulus):
+                            parameters.Modulus = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.Exponent):
+                            parameters.Exponent = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.P):
+                            parameters.P = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.Q):
+                            parameters.Q = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.DP):
+                            parameters.DP = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.DQ):
+                            parameters.DQ = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.InverseQ):
+                            parameters.InverseQ = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                        case nameof(parameters.D):
+                            parameters.D = (string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText));
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Invalid XML RSA key.");
+            }
+
+            rsa.ImportParameters(parameters);
+        }
+
+        private static string ToXmlString(RSA rsa, bool includePrivateParameters)
+        {
+            RSAParameters parameters = rsa.ExportParameters(includePrivateParameters);
+
+            return string.Format("<{0}>{1}{2}{3}{4}{5}{6}{7}{8}</{0}>",
+                RSAExportDocRootElement,
+                parameters.Modulus == null ? null
+                    : $"<{nameof(parameters.Modulus)}>{Convert.ToBase64String(parameters.Modulus)}</{nameof(parameters.Modulus)}>",
+                parameters.Exponent == null ? null
+                    : $"<{nameof(parameters.Exponent)}>{Convert.ToBase64String(parameters.Exponent)}</{nameof(parameters.Exponent)}>",
+                parameters.P == null ? null
+                    : $"<{nameof(parameters.P)}>{Convert.ToBase64String(parameters.P)}</{nameof(parameters.P)}>",
+                parameters.Q == null ? null
+                    : $"<{nameof(parameters.Q)}>{Convert.ToBase64String(parameters.Q)}</{nameof(parameters.Q)}>",
+                parameters.DP == null ? null
+                    : $"<{nameof(parameters.DP)}>{Convert.ToBase64String(parameters.DP)}</{nameof(parameters.DP)}>",
+                parameters.DQ == null ? null
+                    : $"<{nameof(parameters.DQ)}>{Convert.ToBase64String(parameters.DQ)}</{nameof(parameters.DQ)}>",
+                parameters.InverseQ == null ? null
+                    : $"<{nameof(parameters.InverseQ)}>{Convert.ToBase64String(parameters.InverseQ)}</{nameof(parameters.InverseQ)}>",
+                parameters.D == null ? null
+                    : $"<{nameof(parameters.D)}>{Convert.ToBase64String(parameters.D)}</{nameof(parameters.D)}>"
+            );
+        }
+
+        #endregion // MyRsaXmlExportImport
     }
 }
