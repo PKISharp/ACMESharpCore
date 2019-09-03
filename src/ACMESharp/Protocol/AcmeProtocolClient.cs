@@ -36,18 +36,28 @@ namespace ACMESharp.Protocol
         private HttpClient _http;
         private ILogger _log;
 
+        /// <summary>
+        /// To implement Let's Encrypt protocol change per RFC 8555,
+        /// read announcement here: 
+        /// https://community.letsencrypt.org/t/acme-v2-scheduled-deprecation-of-unauthenticated-resource-gets/74380
+        /// </summary>
+        private readonly bool _usePostAsGet;
+
         public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
                 AccountDetails acct = null, IJwsTool signer = null,
                 bool disposeHttpClient = false,
-                ILogger logger = null)
+                ILogger logger = null,
+                bool usePostAsGet = false)
         {
             Init(http, dir, acct, signer, logger);
             _disposeHttpClient = disposeHttpClient;
+            _usePostAsGet = usePostAsGet;
         }
 
         public AcmeProtocolClient(Uri baseUri, ServiceDirectory dir = null,
                 AccountDetails acct = null, IJwsTool signer = null,
-                ILogger logger = null)
+                ILogger logger = null,
+                bool usePostAsGet = false)
         {
             var http = new HttpClient
             {
@@ -55,6 +65,7 @@ namespace ACMESharp.Protocol
             };
             Init(http, dir, acct, signer, logger);
             _disposeHttpClient = true;
+            _usePostAsGet = usePostAsGet;
         }
 
         private void Init(HttpClient http, ServiceDirectory dir,
@@ -133,7 +144,7 @@ namespace ACMESharp.Protocol
             var tosUrl = Directory?.Meta?.TermsOfService;
             if (tosUrl == null)
                 return (null, null, null);
-            
+
             using (var resp = await _http.GetAsync(tosUrl, cancel))
             {
                 var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
@@ -143,7 +154,7 @@ namespace ACMESharp.Protocol
                         Path.GetFileName(filename),
                         await resp.Content.ReadAsByteArrayAsync());
             }
-        }            
+        }
 
         /// <summary>
         /// Retrieves a fresh nonce to be used in subsequent communication
@@ -164,7 +175,7 @@ namespace ACMESharp.Protocol
             await SendAcmeAsync(
                     new Uri(Directory.NewNonce),
                     method: HttpMethod.Head,
-                    expectedStatuses: new[] { 
+                    expectedStatuses: new[] {
                         HttpStatusCode.OK,
                         HttpStatusCode.NoContent,
                     },
@@ -203,7 +214,7 @@ namespace ACMESharp.Protocol
             }
 
             var acct = await DecodeAccountResponseAsync(resp);
-            
+
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
                         "Account creation response does not include Location header");
@@ -352,10 +363,10 @@ namespace ACMESharp.Protocol
             DateTime? notAfter = null,
             CancellationToken cancel = default(CancellationToken))
         {
-            var message =  new CreateOrderRequest
+            var message = new CreateOrderRequest
             {
                 Identifiers = dnsIdentifiers.Select(x =>
-                        new Identifier { Type = "dns", Value = x}).ToArray(),
+                        new Identifier { Type = "dns", Value = x }).ToArray(),
 
                 // TODO: deal with dates
                 // NotBefore = notBefore?.ToString(),
@@ -389,9 +400,14 @@ namespace ACMESharp.Protocol
             OrderDetails existing = null,
             CancellationToken cancel = default(CancellationToken))
         {
+            var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
+            var message = _usePostAsGet ? "" : null;
+            var skipNonce = _usePostAsGet ? false : true;
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderUrl),
-                    skipNonce: true,
+                    method: method,
+                    message: message,
+                    skipNonce: skipNonce,
                     cancel: cancel);
 
             var order = await DecodeOrderResponseAsync(resp, existing);
@@ -404,7 +420,7 @@ namespace ACMESharp.Protocol
 
             // var coResp = JsonConvert.DeserializeObject<Order>(
             //         await resp.Content.ReadAsStringAsync());
-            
+
             // var updatedOrder = new AcmeOrder
             // {
             //     OrderUrl = resp.Headers.Location?.ToString() ?? order.OrderUrl,
@@ -462,11 +478,16 @@ namespace ACMESharp.Protocol
         public async Task<_Authorization> GetAuthorizationDetailsAsync(string authzDetailsUrl,
             CancellationToken cancel = default(CancellationToken))
         {
+            var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
+            var message = _usePostAsGet ? "" : null;
+            var skipNonce = _usePostAsGet ? false : true;
             var typedResp = await SendAcmeAsync<_Authorization>(
                     new Uri(_http.BaseAddress, authzDetailsUrl),
-                    skipNonce: true,
+                    method: method,
+                    message: message,
+                    skipNonce: skipNonce,
                     cancel: cancel);
-            
+
             return typedResp;
         }
 
@@ -485,7 +506,7 @@ namespace ACMESharp.Protocol
                     method: HttpMethod.Post,
                     message: new DeactivateAuthorizationRequest(),
                     cancel: cancel);
-            
+
             return typedResp;
         }
 
@@ -497,9 +518,14 @@ namespace ACMESharp.Protocol
         public async Task<Challenge> GetChallengeDetailsAsync(string challengeDetailsUrl,
             CancellationToken cancel = default(CancellationToken))
         {
+            var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
+            var message = _usePostAsGet ? "" : null;
+            var skipNonce = _usePostAsGet ? false : true;
             var typedResp = await SendAcmeAsync<Challenge>(
                     new Uri(_http.BaseAddress, challengeDetailsUrl),
-                    skipNonce: true,
+                    method: method,
+                    message: message,
+                    skipNonce: skipNonce,
                     cancel: cancel);
 
             return typedResp;
@@ -520,7 +546,7 @@ namespace ACMESharp.Protocol
                     // take any input data to answer the challenge
                     message: new { },
                     cancel: cancel);
-        
+
             return typedResp;
         }
 
@@ -557,7 +583,7 @@ namespace ACMESharp.Protocol
 
             // var coResp = JsonConvert.DeserializeObject<Order>(
             //         await resp.Content.ReadAsStringAsync());
-            
+
             // var newOrder = new AcmeOrder
             // {
             //     OrderUrl = resp.Headers.Location?.ToString() ?? order.OrderUrl,
@@ -718,7 +744,7 @@ namespace ACMESharp.Protocol
 
                 throw await DecodeResponseErrorAsync(resp, opName: opName);
             }
-            
+
             if (!skipNonce)
                 ExtractNextNonce(resp);
 
@@ -805,7 +831,7 @@ namespace ACMESharp.Protocol
                 Kid = acctUrl ?? existing?.Kid,
                 TosLink = tosLink ?? existing?.TosLink,
             };
-            
+
             return acct;
         }
 
@@ -924,7 +950,7 @@ namespace ACMESharp.Protocol
                 payload = ((JObject)message).ToString(Formatting.None);
             else
                 payload = JsonConvert.SerializeObject(message, Formatting.None);
-            return payload;           
+            return payload;
         }
 
         #region IDisposable Support
