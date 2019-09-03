@@ -10,6 +10,8 @@ namespace ACMESharp.MockServer.UnitTests
     [TestClass]
     public class CertificateAuthorityTests
     {
+        public const string DataFolder = @".\_IGNORE\data";
+
         [ClassInitialize]
         public static void Init(TestContext ctx)
         {
@@ -83,9 +85,8 @@ namespace ACMESharp.MockServer.UnitTests
             var crtDer = crt.Export(PkiEncodingFormat.Der);
             var crtPem = crt.Export(PkiEncodingFormat.Pem);
 
-            var pth = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests";
-            File.WriteAllBytes(pth + "\\pem_imported-rsa_signed.der.crt", crtDer);
-            File.WriteAllBytes(pth + "\\pem_imported-rsa_signed.pem.crt", crtPem);
+            File.WriteAllBytes(Path.Combine(DataFolder, "pem_imported-rsa_signed.der.crt"), crtDer);
+            File.WriteAllBytes(Path.Combine(DataFolder, "pem_imported-rsa_signed.pem.crt"), crtPem);
         }
 
         [TestMethod]
@@ -120,9 +121,8 @@ namespace ACMESharp.MockServer.UnitTests
             var crtDer = crt.Export(PkiEncodingFormat.Der);
             var crtPem = crt.Export(PkiEncodingFormat.Pem);
 
-            var pth = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests";
-            File.WriteAllBytes(pth + "\\der_imported-rsa_signed.der.crt", crtDer);
-            File.WriteAllBytes(pth + "\\der_imported-rsa_signed.pem.crt", crtPem);
+            File.WriteAllBytes(Path.Combine(DataFolder, "der_imported-rsa_signed.der.crt"), crtDer);
+            File.WriteAllBytes(Path.Combine(DataFolder, "der_imported-rsa_signed.pem.crt"), crtPem);
         }
 
         [TestMethod]
@@ -164,9 +164,8 @@ namespace ACMESharp.MockServer.UnitTests
             var crtDer = crt.Export(PkiEncodingFormat.Der);
             var crtPem = crt.Export(PkiEncodingFormat.Pem);
 
-            var pth = @"C:\local\prj\bek\ACMESharp\ACMESharpCore\test\ACMESharp.MockServer.UnitTests";
-            File.WriteAllBytes(pth + "\\pem_imported-ecdsa_signed.der.crt", crtDer);
-            File.WriteAllBytes(pth + "\\pem_imported-ecdsa_signed.pem.crt", crtPem);
+            File.WriteAllBytes(Path.Combine(DataFolder, "pem_imported-ecdsa_signed.der.crt"), crtDer);
+            File.WriteAllBytes(Path.Combine(DataFolder, "pem_imported-ecdsa_signed.pem.crt"), crtPem);
         }
     }
 }

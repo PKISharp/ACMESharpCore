@@ -5,22 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ACMESharp.Authorizations;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Logging;
-using ACMESharp.Protocol;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
-using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 
 namespace ACMESharp.Protocol
 {
@@ -38,7 +34,6 @@ namespace ACMESharp.Protocol
 
         private bool _disposeHttpClient;
         private HttpClient _http;
-        private IJwsTool _signer;
         private ILogger _log;
 
         public AcmeProtocolClient(HttpClient http, ServiceDirectory dir = null,
@@ -300,7 +295,7 @@ namespace ACMESharp.Protocol
         /// Account key pair registered with the client.
         /// </summary>
         /// <remarks>
-        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3.6
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.3.5
         /// </remarks>
         public async Task<AccountDetails> ChangeAccountKeyAsync(IJwsTool newSigner,
             CancellationToken cancel = default(CancellationToken))
@@ -309,7 +304,7 @@ namespace ACMESharp.Protocol
             var message = new KeyChangeRequest
             {
                 Account = Account.Kid,
-                NewKey = newSigner.ExportJwk(),
+                OldKey = Signer.ExportJwk(),
             };
             var innerPayload = ComputeAcmeSigned(message, requUrl.ToString(),
                     signer: newSigner, includePublicKey: true, excludeNonce: true);
@@ -613,6 +608,32 @@ namespace ACMESharp.Protocol
             {
                 return await resp.Content.ReadAsByteArrayAsync();
             }
+        }
+
+        /// <summary>
+        /// Revoke certificate
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.6
+        /// </remarks>
+        public async Task RevokeCertificateAsync(
+            byte[] derEncodedCertificate,
+            RevokeReason reason = RevokeReason.Unspecified,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var message = new RevokeCertificateRequest
+            {
+                Certificate = CryptoHelper.Base64.UrlEncode(derEncodedCertificate),
+                Reason = reason
+            };
+            // If OK is returned, we're all done. Otherwise general 
+            // exception handling will kick in
+            var resp = await SendAcmeAsync(
+                    new Uri(_http.BaseAddress, Directory.RevokeCert),
+                    method: HttpMethod.Post,
+                    message: message,
+                    expectedStatuses: new[] { HttpStatusCode.OK },
+                    cancel: cancel);
         }
 
         /// <summary>

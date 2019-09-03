@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using LiteDB;
 using Newtonsoft.Json;
 
@@ -51,6 +52,8 @@ namespace ACMESharp.MockServer.Storage.Impl
                 // DbCertificate
                 db.GetCollection<DbCertificate>()
                     .EnsureIndex(x => x.CertKey, true);
+                db.GetCollection<DbCertificate>()
+                    .EnsureIndex(x => x.Thumbprint, true);
                 db.GetCollection<DbCertificate>()
                     .EnsureIndex(x => x.OrderId);
             }
@@ -251,6 +254,23 @@ namespace ACMESharp.MockServer.Storage.Impl
             {
                 return db.GetCollection<DbCertificate>()
                     .FindOne(x => x.CertKey == certKey);
+            }
+        }
+        public DbCertificate GetCertificateByThumbprint(string thumbprint)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                return db.GetCollection<DbCertificate>()
+                    .FindOne(x => x.Thumbprint == thumbprint);
+            }
+        }
+        public DbCertificate GetCertificateByNative(byte[] certDer)
+        {
+            using (var db = new LiteDatabase(DbName))
+            {
+                var xcrt = new X509Certificate2(certDer);
+                return db.GetCollection<DbCertificate>()
+                    .FindOne(x => x.Thumbprint == xcrt.Thumbprint);
             }
         }
         public IEnumerable<DbCertificate> GetCertificatesByOrderId(int id)

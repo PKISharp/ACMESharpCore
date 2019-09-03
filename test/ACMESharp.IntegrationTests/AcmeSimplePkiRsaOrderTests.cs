@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
@@ -72,7 +73,7 @@ namespace ACMESharp.IntegrationTests
 
         [Fact]
         [TestOrder(0_120, "MultiDns")]
-        public void Test_Decode_OrderChallengeForDns01_ForSingleHttp()
+        public void Test_Decode_OrderChallengeForDns01_ForMultiDns()
         {
             var testCtx = SetTestContext();
 
@@ -418,6 +419,37 @@ namespace ACMESharp.IntegrationTests
                 }
                 ++authzIndex;
             }
+        }
+
+        [Fact]
+        [TestOrder(0_180, "MultiDns")]
+        public async Task Test_Revoke_Certificate_ForMultiDns()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+
+            await Clients.Acme.RevokeCertificateAsync(
+                certDerBytes, RevokeReason.Superseded);
+        }
+
+        [Fact]
+        [TestOrder(0_185, "MultiDns")]
+        public async Task Test_Revoke_RevokedCertificate_ForMultiDns()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+
+            var ex = await Assert.ThrowsAsync<AcmeProtocolException>(
+                async () => await Clients.Acme.RevokeCertificateAsync(
+                    certDerBytes, RevokeReason.Superseded));
+
+            Assert.StrictEqual(ProblemType.AlreadyRevoked, ex.ProblemType);
         }
     }
 }

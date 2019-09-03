@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using ACMESharp.Crypto;
@@ -345,24 +347,28 @@ namespace ACMESharp.MockServer.Controllers
             var encodedCsr = CryptoHelper.Base64.UrlDecode(requ.Csr);
 
             var crt = _ca.Sign(PkiEncodingFormat.Der, encodedCsr, PkiHashAlgorithm.Sha256);
-            byte[] crtBytes;
+            byte[] crtDerBytes;
             using (var ms = new MemoryStream())
             {
                 crt.Save(ms);
                 ms.Flush();
                 ms.Position = 0;
-                crtBytes = ms.ToArray();
+                crtDerBytes = ms.ToArray();
             }
+            var crtPemBytes = crt.Export(PkiEncodingFormat.Pem);
 
             var certKey = Guid.NewGuid().ToString();
-            var certPem = Encoding.UTF8.GetString(crt.Export(PkiEncodingFormat.Pem))
+            var certPem = Encoding.UTF8.GetString(crtPemBytes)
                     + ResolveCaCertPem();
+            var xcrt = new X509Certificate2(crtPemBytes);
+
             var dbCert = new DbCertificate
             {
                 OrderId = dbOrder.Id,
                 CertKey = certKey,
-                Native = crtBytes,
+                Native = crtDerBytes,
                 Pem = certPem,
+                Thumbprint = xcrt.Thumbprint,
             };
             _repo.SaveCertificate(dbCert);
 
@@ -390,6 +396,40 @@ namespace ACMESharp.MockServer.Controllers
                 return NotFound();
             
             return dbCert.Pem;
+        }
+
+        // "revoke-cert": "https://tools.ietf.org/html/draft-ietf-acme-acme-18#section-7.6"
+        [HttpPost("revoke-cert")]
+        public ActionResult<bool> Revoke(string acctId,
+            [FromBody]JwsSignedPayload signedPayload)
+        {
+            var ph = ExtractProtectedHeader(signedPayload);
+
+            ValidateNonce(ph);
+
+            var requ = ExtractPayload<RevokeCertificateRequest>(signedPayload);
+
+            var acct = _repo.GetAccountByKid(ph.Kid);
+            if (acct == null)
+                throw new Exception("could not resolve account");
+
+            ValidateAccount(acct, signedPayload);
+
+            var derEncodedCertificate = CryptoHelper.Base64.UrlDecode(requ.Certificate);
+            var xcrt = new X509Certificate2(derEncodedCertificate);
+
+            var dbCert = _repo.GetCertificateByNative(derEncodedCertificate);
+            if (dbCert == null)
+                return NotFound();
+
+            if (dbCert.RevokedReason != null)
+                throw new Exception("certificate already revoked");
+
+            dbCert.RevokedReason = requ.Reason;
+            _repo.SaveCertificate(dbCert);
+
+            GenerateNonce();
+            return true;
         }
 
         // "https://acme-staging-v02.api.letsencrypt.org/acme/authz/740KRMwcT0UrLXdUKOlgMnfNbzpSQtRaWjbyA1UgIJ4",
@@ -524,6 +564,7 @@ namespace ACMESharp.MockServer.Controllers
 
             return dbChlng.Payload;
         }
+
 
         T ExtractPayload<T>(JwsSignedPayload signedPayload)
         {

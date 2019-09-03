@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Authorizations;
@@ -54,7 +55,7 @@ namespace ACMESharp.IntegrationTests
             var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
             Assert.NotNull(oldNames);
-            Assert.Equal(1, oldNames.Length);
+            Assert.Single(oldNames);
             Assert.NotNull(oldOrder);
             Assert.NotNull(oldOrder.OrderUrl);
 
@@ -402,6 +403,37 @@ namespace ACMESharp.IntegrationTests
                 }
                 ++authzIndex;
             }
+        }
+
+        [Fact]
+        [TestOrder(0_280, "SingleHttp")]
+        public async Task Test_Revoke_Certificate_ForSingleHttp()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+
+            await Clients.Acme.RevokeCertificateAsync(
+                certDerBytes, RevokeReason.Superseded);
+        }
+
+        [Fact]
+        [TestOrder(0_285, "SingleHttp")]
+        public async Task Test_Revoke_RevokedCertificate_ForSingleHttp()
+        {
+            var testCtx = SetTestContext();
+
+            testCtx.GroupReadFrom("order-cert.crt", out var certPemBytes);
+            var cert = new X509Certificate2(certPemBytes);
+            var certDerBytes = cert.Export(X509ContentType.Cert);
+
+            var ex = await Assert.ThrowsAsync<AcmeProtocolException>(
+                async () => await Clients.Acme.RevokeCertificateAsync(
+                    certDerBytes, RevokeReason.Superseded));
+
+            Assert.StrictEqual(ProblemType.AlreadyRevoked, ex.ProblemType);
         }
     }
 }

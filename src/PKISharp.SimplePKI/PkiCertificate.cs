@@ -90,7 +90,6 @@ namespace PKISharp.SimplePKI
                     else
                         store.SetCertificateEntry(alias, new X509CertificateEntry(NativeCertificate));
 
-                    var chainIndex = 1;
                     if (chain != null)
                     {
                         foreach (var c in chain)

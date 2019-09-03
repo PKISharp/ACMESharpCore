@@ -94,39 +94,6 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
         }
 
-        // public void Save(Stream stream)
-        // {
-        //     using (var w = new StreamWriter(stream))
-        //     {
-        //         w.Write(_dsa.ToXmlString(true));
-        //     }
-        // }
-
-        // public void Load(Stream stream)
-        // {
-        //     using (var r = new StreamReader(stream))
-        //     {
-        //         _dsa.FromXmlString(r.ReadToEnd());
-        //     }
-        // }
-
-        // As per RFC 7638 Section 3, these are the *required* elements of the
-        // JWK and are sorted in lexicographic order to produce a canonical form
-        class ESJwk
-        {
-            [JsonProperty(Order = 1)]
-            public string crv;
-
-            [JsonProperty(Order = 2)]
-            public string kty = "EC";
-
-            [JsonProperty(Order = 3)]
-            public string x;
-
-            [JsonProperty(Order = 4)]
-            public string y;
-        }
-
         public object ExportJwk(bool canonical = false)
         {
             // Note, we only produce a canonical form of the JWK
@@ -156,6 +123,9 @@ namespace ACMESharp.Crypto.JOSE.Impl
             return _dsa.VerifyData(raw, sig, _shaName);
         }
 
+        /// <summary>
+        /// Format for an internal representation of string-based export/import.
+        /// </summary>
         class ExportDetails
         {
             public int HashSize { get; set; }
@@ -165,6 +135,23 @@ namespace ACMESharp.Crypto.JOSE.Impl
             public string X { get; set; }
 
             public string Y { get; set; }
+        }
+
+        // As per RFC 7638 Section 3, these are the *required* elements of the
+        // JWK and are sorted in lexicographic order to produce a canonical form
+        class ESJwk
+        {
+            [JsonProperty(Order = 1)]
+            public string crv;
+
+            [JsonProperty(Order = 2)]
+            public string kty = "EC";
+
+            [JsonProperty(Order = 3)]
+            public string x;
+
+            [JsonProperty(Order = 4)]
+            public string y;
         }
     }
 }

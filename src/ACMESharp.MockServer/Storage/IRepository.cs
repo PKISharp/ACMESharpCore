@@ -32,6 +32,8 @@ namespace ACMESharp.MockServer.Storage
         void SaveCertificate(DbCertificate cert);
         DbCertificate GetCertificate(int id);
         DbCertificate GetCertificateByKey(string key);
+        DbCertificate GetCertificateByThumbprint(string thumbprint);
+        DbCertificate GetCertificateByNative(byte[] certDer);
         IEnumerable<DbCertificate> GetCertificatesByOrderId(int id);
     }
 }
