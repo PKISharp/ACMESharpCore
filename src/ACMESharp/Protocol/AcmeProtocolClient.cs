@@ -675,7 +675,10 @@ namespace ACMESharp.Protocol
             CancellationToken cancel = default(CancellationToken))
         {
             var url = new Uri(_http.BaseAddress, relativeUrl);
-            var resp = await _http.GetAsync(url);
+            var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
+            var message = _usePostAsGet ? "" : null;
+            var skipNonce = _usePostAsGet ? false : true;
+            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel);
             resp.EnsureSuccessStatusCode();
             return resp;
         }

@@ -312,6 +312,24 @@ namespace ACMESharp.MockServer.Controllers
             return order.Details.Payload;
         }
 
+        [HttpPost("order/{acctId}/{orderId}")]
+        public ActionResult<Order> GetOrderPost(string acctId, string orderId, [FromBody]JwsSignedPayload signedPayload)
+        {
+            var ph = ExtractProtectedHeader(signedPayload);
+            ValidateNonce(ph);
+            var acct = _repo.GetAccountByKid(ph.Kid);
+            if (acct == null)
+                throw new Exception("could not resolve account");
+            ValidateAccount(acct, signedPayload);
+            var requ = ExtractPayload<string>(signedPayload);
+            if (requ != null)
+            {
+                return NotFound();
+            }
+            GenerateNonce();
+            return GetOrder(acctId, orderId);
+        }
+
         // "finalize": "https://acme-staging-v02.api.letsencrypt.org/acme/finalize/6294712/2084859"
         [HttpPost("finalize/{acctId}/{orderId}")]
         public ActionResult<Order> FinalizeOrder(string acctId, string orderId,
@@ -483,6 +501,24 @@ namespace ACMESharp.MockServer.Controllers
                 return NotFound();
             
             return dbAuthz.Payload;
+        }
+
+        [HttpPost("authz/{authzKey}")]
+        public ActionResult<Authorization> GetAuthorizationPost(string authzKey, [FromBody]JwsSignedPayload signedPayload)
+        {
+            var ph = ExtractProtectedHeader(signedPayload);
+            ValidateNonce(ph);
+            var acct = _repo.GetAccountByKid(ph.Kid);
+            if (acct == null)
+                throw new Exception("could not resolve account");
+            ValidateAccount(acct, signedPayload);
+            var requ = ExtractPayload<string>(signedPayload);
+            if (requ != null)
+            {
+                return NotFound();
+            }
+            GenerateNonce();
+            return GetAuthorization(authzKey);
         }
 
         [HttpGet("challenge/{authzKey}/{challengeId}")]
