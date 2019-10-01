@@ -154,8 +154,10 @@ namespace ACMESharp.MockServer.UnitTests
             }
         }
 
+        [DataRow(true)]
+        [DataRow(false)]
         [TestMethod]
-        public async Task GetAuthz()
+        public async Task GetAuthz(bool usePostAsGet)
         {
             using (var http = _server.CreateClient())
             {
@@ -163,7 +165,7 @@ namespace ACMESharp.MockServer.UnitTests
                 var signer = new Crypto.JOSE.Impl.RSJwsTool();
                 signer.Init();
                 using (var acme = new AcmeProtocolClient(http, dir,
-                    signer: signer))
+                    signer: signer, usePostAsGet: usePostAsGet))
                 {
                     await acme.GetNonceAsync();
                     var acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
@@ -254,8 +256,10 @@ namespace ACMESharp.MockServer.UnitTests
             }
         }
 
+        [DataRow(true)]
+        [DataRow(false)]
         [TestMethod]
-        public async Task GetChallenge()
+        public async Task GetChallenge(bool usePostAsGet)
         {
             using (var http = _server.CreateClient())
             {
@@ -263,7 +267,7 @@ namespace ACMESharp.MockServer.UnitTests
                 var signer = new Crypto.JOSE.Impl.RSJwsTool();
                 signer.Init();
                 using (var acme = new AcmeProtocolClient(http, dir,
-                    signer: signer))
+                    signer: signer, usePostAsGet: usePostAsGet))
                 {
                     await acme.GetNonceAsync();
                     var acct = await acme.CreateAccountAsync(new[] { "mailto:foo@bar.com" });
