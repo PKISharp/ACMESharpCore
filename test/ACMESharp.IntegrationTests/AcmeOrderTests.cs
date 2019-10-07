@@ -20,14 +20,30 @@ using Xunit.Abstractions;
 
 namespace ACMESharp.IntegrationTests
 {
+    [Collection(nameof(AcmeOrderWithPostAsGetTests))]
+    [CollectionDefinition(nameof(AcmeOrderWithPostAsGetTests))]
+    [TestOrder(0_101)]
+    public abstract class AcmeOrderWithPostAsGetTests : AcmeOrderTests
+    {
+        public AcmeOrderWithPostAsGetTests(ITestOutputHelper output,
+                StateFixture state, ClientsFixture clients, AwsFixture aws, ILogger log = null)
+            : base(output, state, clients, aws,
+                    log ?? state.Factory.CreateLogger(typeof(AcmeOrderWithPostAsGetTests).FullName))
+        {
+            _usePostAsGet = true;
+        }
+    }
+
     [Collection(nameof(AcmeOrderTests))]
     [CollectionDefinition(nameof(AcmeOrderTests))]
-    [TestOrder(0_10)]
+    [TestOrder(0_100)]
     public abstract class AcmeOrderTests : IntegrationTest,
         IClassFixture<StateFixture>,
         IClassFixture<ClientsFixture>,
         IClassFixture<AwsFixture>
     {
+        protected bool _usePostAsGet = false;
+
         public AcmeOrderTests(ITestOutputHelper output,
                 StateFixture state, ClientsFixture clients, AwsFixture aws, ILogger log = null)
             : base(state, clients)
@@ -72,7 +88,7 @@ namespace ACMESharp.IntegrationTests
             {
                 Log.LogInformation("Durable Account data does not exist -- CREATING");
 
-                Clients.Acme = new AcmeProtocolClient(Clients.Http);
+                Clients.Acme = new AcmeProtocolClient(Clients.Http, usePostAsGet: _usePostAsGet);
                 SetTestContext(); // To update the ACME client's Before/After hooks
                 await InitDirectoryAndNonce();
                 acct = await Clients.Acme.CreateAccountAsync(_contacts, true);
@@ -87,7 +103,7 @@ namespace ACMESharp.IntegrationTests
             {
                 Log.LogInformation("Found existing persisted Account data -- LOADING");
 
-                Clients.Acme = new AcmeProtocolClient(Clients.Http, acct: acct);
+                Clients.Acme = new AcmeProtocolClient(Clients.Http, acct: acct, usePostAsGet: _usePostAsGet);
                 Clients.Acme.Signer.Import(keys);
                 SetTestContext(); // To update the ACME client's Before/After hooks
                 await InitDirectoryAndNonce();
@@ -181,7 +197,7 @@ namespace ACMESharp.IntegrationTests
                     }
                     else
                     {
-                        throw new InvalidOperationException("Unhandled DNS response: " + x.ErrorMessage);
+                        throw new InvalidOperationException($"Unhandled DNS response (targetMissing={targetMissing}): {x.ErrorMessage}");
                     }
                 }
                 else

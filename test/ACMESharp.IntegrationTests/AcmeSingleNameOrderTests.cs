@@ -14,9 +14,19 @@ using Xunit.Abstractions;
 
 namespace ACMESharp.IntegrationTests
 {
+    public class AcmeSingleNameOrderWithPostAsGetTests : AcmeOrderWithPostAsGetTests
+    {
+        public AcmeSingleNameOrderWithPostAsGetTests(ITestOutputHelper output,
+                StateFixture state, ClientsFixture clients, AwsFixture aws)
+            : base(output, state, clients, aws,
+                    state.Factory.CreateLogger(typeof(AcmeSingleNameOrderWithPostAsGetTests).FullName))
+        { }
+    }
+
+
     [Collection(nameof(AcmeOrderTests))]
     [CollectionDefinition(nameof(AcmeOrderTests))]
-    [TestOrder(0_10)]
+    [TestOrder(0_100)]
     public class AcmeSingleNameOrderTests : AcmeOrderTests
     {
         public AcmeSingleNameOrderTests(ITestOutputHelper output,

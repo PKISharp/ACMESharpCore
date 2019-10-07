@@ -14,13 +14,27 @@ using Xunit.Abstractions;
 
 namespace ACMESharp.IntegrationTests
 {
+    [Collection(nameof(AcmeAccountWithPostAsGetTests))]
+    [CollectionDefinition(nameof(AcmeAccountWithPostAsGetTests))]
+    [TestOrder(0_051)]
+    public class AcmeAccountWithPostAsGetTests : AcmeAccountTests
+    {
+        public AcmeAccountWithPostAsGetTests(ITestOutputHelper output, StateFixture state, ClientsFixture clients)
+            : base(output, state, clients)
+        {
+            _usePostAsGet = true;
+        }        
+    }
+
     [Collection(nameof(AcmeAccountTests))]
     [CollectionDefinition(nameof(AcmeAccountTests))]
-    [TestOrder(0_05)]
+    [TestOrder(0_050)]
     public class AcmeAccountTests : IntegrationTest,
         IClassFixture<StateFixture>,
         IClassFixture<ClientsFixture>
     {
+        protected bool _usePostAsGet = false;
+
         public AcmeAccountTests(ITestOutputHelper output, StateFixture state, ClientsFixture clients)
             : base(state, clients)
         {
@@ -48,7 +62,7 @@ namespace ACMESharp.IntegrationTests
             {
                 BaseAddress = Clients.BaseAddress
             };
-            Clients.Acme = new AcmeProtocolClient(Clients.Http);
+            Clients.Acme = new AcmeProtocolClient(Clients.Http, usePostAsGet: _usePostAsGet);
         }
 
         [Fact]

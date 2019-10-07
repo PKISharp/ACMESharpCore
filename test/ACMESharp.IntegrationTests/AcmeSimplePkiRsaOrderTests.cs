@@ -20,7 +20,7 @@ namespace ACMESharp.IntegrationTests
 {
     [Collection(nameof(AcmeOrderTests))]
     [CollectionDefinition(nameof(AcmeOrderTests))]
-    [TestOrder(0_20)]
+    [TestOrder(0_200)]
     public class AcmeSimplePkiRsaOrderTests : AcmeOrderTests
     {
         public AcmeSimplePkiRsaOrderTests(ITestOutputHelper output,
