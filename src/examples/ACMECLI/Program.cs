@@ -116,7 +116,9 @@ namespace ACMECLI
 
         [Option(ShortName = "", Description = "Save the certificate chain and private key (PKCS12) to the named file path")]
         public string ExportPfx { get; }
-        
+
+        [Option(ShortName = "", Description = "Save the certificate chain and private key (PKCS12) with the specified password")]
+        public string ExportPfxPassword { get; }
 
 
         private string _statePath;
@@ -536,11 +538,17 @@ namespace ACMECLI
                 if (ExportPfx != null)
                 {
                     Console.WriteLine("Exporting Certificate as PKCS12...");
-                    using (var cert = new X509Certificate2(LoadRaw<byte[]>(
-                            true, Constants.AcmeOrderCertFmt, orderId)))
+                    using (var cert = new X509Certificate2(LoadRaw<byte[]>(true, Constants.AcmeOrderCertFmt, orderId)))
+                    using (var privateKey = new RSACryptoServiceProvider())
                     {
-                        await File.WriteAllBytesAsync(ExportPfx,
-                                cert.Export(X509ContentType.Pkcs12));
+                        string certKeys = default;
+                        LoadStateInto(ref certKeys, failThrow: true, Constants.AcmeOrderCertKeyFmt, orderId);
+                        var rsaParameters = JsonConvert.DeserializeObject<RSAParameters>(certKeys);
+                        privateKey.ImportParameters(rsaParameters);
+                        using(var certificateWithPrivateKey = cert.CopyWithPrivateKey(privateKey))
+                        {
+                            await File.WriteAllBytesAsync(ExportPfx, certificateWithPrivateKey.Export(X509ContentType.Pkcs12, ExportPfxPassword));
+                        }
                     }
                 }
             }
