@@ -32,7 +32,7 @@ namespace ACMEKestrel
 
         public string AccountKeyFile { get; set; }
 
-        public AccountKey AccountKey { get; set; }
+        public ExamplesAccountKey AccountKey { get; set; }
 
         public string OrderFile { get; set; }
 

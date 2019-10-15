@@ -117,7 +117,6 @@ namespace ACMECLI
         [Option(ShortName = "", Description = "Save the certificate chain and private key (PKCS12) to the named file path")]
         public string ExportPfx { get; }
 
-        [Option(ShortName = "", Description = "Save the certificate chain and private key (PKCS12) with the specified password")]
         public string ExportPfxPassword { get; }
 
 
@@ -174,7 +173,6 @@ namespace ACMECLI
             }
 
             IJwsTool accountSigner = default;
-            AccountKey accountKey = default;
             string accountKeyHash = default;
             if (LoadStateInto(ref accountKey, failThrow: false,
                     Constants.AcmeAccountKeyFile))
