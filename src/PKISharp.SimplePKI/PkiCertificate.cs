@@ -33,6 +33,16 @@ namespace PKISharp.SimplePKI
             return new BclCertificate(NativeCertificate.GetEncoded());
         }
 
+        public static PkiCertificate From(BclCertificate bclCert)
+        {
+            var derEncoding = System.Security.Cryptography.X509Certificates.X509ContentType.Cert;
+            var der = bclCert.Export(derEncoding);
+            return new PkiCertificate
+            {
+                NativeCertificate = new X509CertificateParser().ReadCertificate(der),
+            }; 
+        }
+
         public byte[] Export(PkiEncodingFormat format)
         {
             switch (format)
