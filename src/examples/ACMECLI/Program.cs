@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,17 +8,15 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ACMESharp;
 using ACMESharp.Authorizations;
-using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Protocol;
-using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
 using Examples.Common;
 using Examples.Common.PKI;
 using McMaster.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
+using PKISharp.SimplePKI;
 
 namespace ACMECLI
 {
@@ -29,7 +26,7 @@ namespace ACMECLI
         [Option(ShortName = "", Description = "Directory to store stateful information; defaults to current")]
         public string State { get; } = ".";
 
-        [Option(ShortName = "", Description = "Name of a predefined ACME CA base endpoint")]
+        [Option(ShortName = "", Description = "Name of a predefined ACME CA base endpoint (specify invalid value to see list)")]
         [AllowedValues(
             Constants.LetsEncryptName,
             Constants.LetsEncryptStagingName,
@@ -114,9 +111,11 @@ namespace ACMECLI
         [Option(ShortName = "", Description = "Save the certificate chain (PEM) to the named file path")]
         public string ExportCert { get; }
 
-        [Option(ShortName = "", Description = "Save the certificate chain and private key (PKCS12) to the named file path")]
+        [Option(ShortName = "", Description = "Save the certificate chain as PFX (PKCS12) to the named file path")]
         public string ExportPfx { get; }
-        
+
+        [Option(ShortName = "", Description = "Includes the private key to the PFX (PKCS12) and secures with specified password (use ' ' for no password)")]
+        public string ExportPfxPassword { get; }
 
 
         private string _statePath;
@@ -172,7 +171,7 @@ namespace ACMECLI
             }
 
             IJwsTool accountSigner = default;
-            AccountKey accountKey = default;
+            ExamplesAccountKey accountKey = default;
             string accountKeyHash = default;
             if (LoadStateInto(ref accountKey, failThrow: false,
                     Constants.AcmeAccountKeyFile))
@@ -213,7 +212,7 @@ namespace ACMECLI
 
                 account = await _acme.CreateAccountAsync(Email.Select(x => "mailto:" + x), AcceptTos);
                 accountSigner = _acme.Signer;
-                accountKey = new AccountKey
+                accountKey = new ExamplesAccountKey
                 {
                     KeyType = accountSigner.JwsAlg,
                     KeyExport = accountSigner.Export(),
@@ -425,6 +424,9 @@ namespace ACMECLI
                             throw new Exception("Cannot finalize Order until all Authorizations are valid");
                     }
 
+                    PkiKeyPair keyPair = null;
+                    PkiCertificateSigningRequest csr = null;
+
                     string certKeys = null;
                     byte[] certCsr = null;
 
@@ -441,22 +443,18 @@ namespace ACMECLI
                         switch (KeyAlgor)
                         {
                             case Constants.RsaKeyType:
-                                certKeys = CryptoHelper.Rsa.GenerateKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
-                                using (var rsa = CryptoHelper.Rsa.GenerateAlgorithm(certKeys))
-                                {
-                                    certCsr = CryptoHelper.Rsa.GenerateCsr(Dns, rsa);
-                                }
+                                keyPair = PkiKeyPair.GenerateRsaKeyPair(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
                                 break;
                             case Constants.EcKeyType:
-                                certKeys = CryptoHelper.Ec.GenerateKeys(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
-                                using (var ec = CryptoHelper.Ec.GenerateAlgorithm(certKeys))
-                                {
-                                    certCsr = CryptoHelper.Ec.GenerateCsr(Dns, ec);
-                                }
+                                keyPair = PkiKeyPair.GenerateEcdsaKeyPair(KeySize ?? Constants.DefaultAlgorKeySizeMap[KeyAlgor]);
                                 break;
                             default:
                                 throw new Exception($"Unknown key algorithm type [{KeyAlgor}]");
                         }
+
+                        csr = GenerateCsr(Dns, keyPair);
+                        certKeys = Save(keyPair);
+                        certCsr = csr.ExportSigningRequest(PkiEncodingFormat.Der);
 
                         SaveStateFrom(certKeys, Constants.AcmeOrderCertKeyFmt, orderId);
                         SaveStateFrom(certCsr, Constants.AcmeOrderCertCsrFmt, orderId);
@@ -535,12 +533,37 @@ namespace ACMECLI
 
                 if (ExportPfx != null)
                 {
-                    Console.WriteLine("Exporting Certificate as PKCS12...");
-                    using (var cert = new X509Certificate2(LoadRaw<byte[]>(
-                            true, Constants.AcmeOrderCertFmt, orderId)))
+                    Console.WriteLine("Exporting Certificate as PFX (PKCS12)...");
+
+                    PkiKey privateKey = null;
+                    var pfxPassword = ExportPfxPassword;
+                    if (pfxPassword != null)
                     {
-                        await File.WriteAllBytesAsync(ExportPfx,
-                                cert.Export(X509ContentType.Pkcs12));
+                        Console.WriteLine("...including private key in export");
+                        string certKeys = default;
+                        LoadStateInto(ref certKeys, failThrow: true,
+                            Constants.AcmeOrderCertKeyFmt, orderId);
+                        var keyPair = Load(certKeys);
+                        privateKey = keyPair.PrivateKey;
+                        if (pfxPassword == " ")
+                        {
+                            Console.WriteLine("...WITH NO PASSWORD");
+                            pfxPassword = null;
+                        }
+                        else
+                        {
+                            Console.WriteLine("...securing with password");
+                        }
+                    }
+
+                    using (var cert = new X509Certificate2(LoadRaw<byte[]>(true, Constants.AcmeOrderCertFmt, orderId)))
+                    {
+                        var pkiCert = PkiCertificate.From(cert);
+                        var pfx = pkiCert.Export(PkiArchiveFormat.Pkcs12,
+                            privateKey: privateKey,
+                            password: pfxPassword?.ToCharArray());
+
+                        await File.WriteAllBytesAsync(ExportPfx, pfx);
                     }
                 }
             }
@@ -574,7 +597,8 @@ namespace ACMECLI
                 while (true)
                 {
                     string err = null;
-                    var dnsValues = (await DnsUtil.LookupRecordAsync(dnsCd.DnsRecordType, dnsCd.DnsRecordName)).Select(x => x.Trim('"'));
+                    var lookup = await DnsUtil.LookupRecordAsync(dnsCd.DnsRecordType, dnsCd.DnsRecordName);
+                    var dnsValues = lookup?.Select(x => x.Trim('"'));
                     if (dnsValues == null)
                     {
                         err = "Could not resolve *any* DNS entries for Challenge record name";
@@ -756,6 +780,36 @@ namespace ACMECLI
                 var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(value));
                 return BitConverter.ToString(hash).Replace("-", "");
             }
+        }
+
+        private string Save(PkiKeyPair keyPair)
+        {
+            using (var ms = new MemoryStream())
+            {
+                keyPair.Save(ms);
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
+
+        private PkiKeyPair Load(string b64)
+        {
+            using (var ms = new MemoryStream(Convert.FromBase64String(b64)))
+            {
+                return PkiKeyPair.Load(ms);
+            }
+        }
+
+        private PkiCertificateSigningRequest GenerateCsr(IEnumerable<string> dnsNames,
+            PkiKeyPair keyPair)
+        {
+            var firstDns = dnsNames.First();
+            var csr = new PkiCertificateSigningRequest($"CN={firstDns}", keyPair,
+                PkiHashAlgorithm.Sha256);
+
+            csr.CertificateExtensions.Add(
+                PkiCertificateExtension.CreateDnsSubjectAlternativeNames(dnsNames));
+
+            return csr;
         }
     }
 }

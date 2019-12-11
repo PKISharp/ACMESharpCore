@@ -5,7 +5,7 @@ using ACMESharp.Crypto.JOSE;
 
 namespace Examples.Common.PKI
 {
-    public class AccountKey
+    public class ExamplesAccountKey
     {
         public string KeyType { get; set; }
         public string KeyExport { get; set; }
