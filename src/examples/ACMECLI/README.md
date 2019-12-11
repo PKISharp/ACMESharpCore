@@ -26,29 +26,31 @@ The tool provides for the following parameters and options:
 Usage: ACMECLI [options]
 
 Options:
-  --state <STATE>                    Directory to store stateful information; defaults to current
-  --ca-name <CA_NAME>                Name of a predefined ACME CA base endpoint
-  --ca-url <CA_URL>                  Full URL of an ACME CA endpoint; this option overrides CaName
-  --refresh-dir                      Flag indicates to refresh the current cached ACME Directory of service endpoints for the target CA
-  --email <EMAIL>                    One or more emails to be registered as account contact info (can be repeated)
-  --accept-tos                        Flag indicates that you agree to CA's terms of service
-  --dns <DNS>                        One or more DNS names to include in the cert; the first is primary subject name, subsequent are subject alternative names (can be repeated)
-  --refresh-order                    Flag indicates to refresh the state of pending ACME Order
-  --challenge-type <CHALLENGE_TYPE>  Indicates that only one specific Challenge type should be handled
-  --refresh-challenges               Flag indicates to refresh the state of the Challenges of the pending ACME Order
-  --test-challenges                  Flag indicates to check if the Challenges have been handled correctly
-  --wait-for-test:<WAIT_FOR_TEST>    Flag indicates to wait until Challenge tests are successfully validated, optionally override the default timeout of 300 (seconds)
-  --answer-challenges                Flag indicates to submit Answers to pending Challenges
-  --wait-for-authz:<WAIT_FOR_AUTHZ>  Flag indicates to wait until Authorizations become Valid, optionally override the default timeout of 300 (seconds)
-  --finalize                         Flag indicates to finalize the pending ACME Order
-  --key-algor <KEY_ALGOR>            Indicates the encryption algorithm of certificate keys, defaults to RSA
-  --key-size <KEY_SIZE>              Indicates the encryption algorithm key size, defaults to 2048 (RSA) or 256 (EC)
-  --regenerate-csr                   Flag indicates to regenerate a certificate key pair and CSR
-  --refresh-cert                     Flag indicates to refresh the local cache of an issued certificate
-  --wait-for-cert:<WAIT_FOR_CERT>    Flag indicates to wait until Certificate is available, optionally override the default timeout of 300 (seconds)
-  --export-cert <EXPORT_CERT>        Save the certificate chain (PEM) to the named file path
-  --export-pfx <EXPORT_PFX>          Save the certificate chain and private key (PKCS12) to the named file path
-  -?|-h|--help                       Show help information
+  --state <STATE>                              Directory to store stateful information; defaults to current
+  --ca-name <CA_NAME>                          Name of a predefined ACME CA base endpoint (specify invalid value to see list)
+  --ca-url <CA_URL>                            Full URL of an ACME CA endpoint; this option overrides CaName
+  --refresh-dir                                Flag indicates to refresh the current cached ACME Directory of service endpoints for the target CA
+  --email <EMAIL>                              One or more emails to be registered as account contact info (can be repeated)
+  --accept-tos                                 Flag indicates that you agree to CA's terms of service
+  --dns <DNS>                                  One or more DNS names to include in the cert; the first is primary subject name, subsequent are subject alternative names (can be repeated)
+  --name-server <NAME_SERVER>                  One or more DNS name servers to be used to resolve host entries, such as during testing (can be repeated)
+  --refresh-order                              Flag indicates to refresh the state of pending ACME Order
+  --challenge-type <CHALLENGE_TYPE>            Indicates that only one specific Challenge type should be handled
+  --refresh-challenges                         Flag indicates to refresh the state of the Challenges of the pending ACME Order
+  --test-challenges                            Flag indicates to check if the Challenges have been handled correctly
+  --wait-for-test[:<WAIT_FOR_TEST>]            Flag indicates to wait until Challenge tests are successfully validated, optionally override the default timeout of 300 (seconds)
+  --answer-challenges                          Flag indicates to submit Answers to pending Challenges
+  --wait-for-authz[:<WAIT_FOR_AUTHZ>]          Flag indicates to wait until Authorizations become Valid, optionally override the default timeout of 300 (seconds)
+  --finalize                                   Flag indicates to finalize the pending ACME Order
+  --key-algor <KEY_ALGOR>                      Indicates the encryption algorithm of certificate keys, defaults to RSA
+  --key-size <KEY_SIZE>                        Indicates the encryption algorithm key size, defaults to 2048 (RSA) or 256 (EC)
+  --regenerate-csr                             Flag indicates to regenerate a certificate key pair and CSR
+  --refresh-cert                               Flag indicates to refresh the local cache of an issued certificate
+  --wait-for-cert[:<WAIT_FOR_CERT>]            Flag indicates to wait until Certificate is available, optionally override the default timeout of 300 (seconds)
+  --export-cert <EXPORT_CERT>                  Save the certificate chain (PEM) to the named file path
+  --export-pfx <EXPORT_PFX>                    Save the certificate chain as PFX (PKCS12) to the named file path
+  --export-pfx-password <EXPORT_PFX_PASSWORD>  Includes the private key to the PFX (PKCS12) and secures with specified password (use ' ' for no password)
+  -?|-h|--help                                 Show help information
 ```
 
 You can invoke it piecemeal and complete each step independently or you can combine all the
@@ -94,9 +96,9 @@ private key and generate the CSR to submit to the CA.
 ```
 
 Finally, save the complete certificate chain and corresponding
-private key to a PKCS#12 format file.
+private key to a PKCS#12 format file with NO password.
 ```shell
-> acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --export-pfx mycertificate.pfx
+> acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --export-pfx mycertificate.pfx --export-pfx-password " "
 ```
 ## Invoke in _One Fell Swoop_
 
@@ -107,7 +109,7 @@ either the ACME CA or from your actions, i.e. by completing the Challenges.
 ```shell
 ## In this case all the DNS Identifiers are wildcards, so the
 ## CA will only issue DNS type Challenges as per the ACME spec
-> acmecli --email jane.doe@example.com --email john.doe@email.com --accept-tos --dns *.example.com --dns *.example.net --test-challenges --wait-for-test:600 --answer-challenges --wait-for-authz --finalize --key-algor ec --key-size 256 --wait-for-cert --export-cert my-example.pem --export-pfx my-example.pfx
+> acmecli --email jane.doe@example.com --email john.doe@email.com --accept-tos --dns *.example.com --dns *.example.net --test-challenges --wait-for-test:600 --answer-challenges --wait-for-authz --finalize --key-algor ec --key-size 256 --wait-for-cert --export-cert my-example.pem --export-pfx my-example.pfx --export-pfx-password " "
 ```
 
 With the single command above:

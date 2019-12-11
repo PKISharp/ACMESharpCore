@@ -59,7 +59,7 @@ namespace ACMEKestrel
 
             (_, _state.ServiceDirectory) = Load<ServiceDirectory>(_state.ServiceDirectoryFile);
             (_, _state.Account) = Load<AccountDetails>(_state.AccountFile);
-            (_, _state.AccountKey) = Load<AccountKey>(_state.AccountKeyFile);
+            (_, _state.AccountKey) = Load<ExamplesAccountKey>(_state.AccountKeyFile);
             (_, _state.Order) = Load<OrderDetails>(_state.OrderFile);
             (_, _state.Authorizations) = Load<Dictionary<string, Authorization>>(
                     _state.AuthorizationsFile);
@@ -153,7 +153,7 @@ namespace ACMEKestrel
                 _state.Account = await acme.CreateAccountAsync(
                         contacts: contacts,
                         termsOfServiceAgreed: _options.AcceptTermsOfService);
-                _state.AccountKey = new AccountKey
+                _state.AccountKey = new ExamplesAccountKey
                 {
                     KeyType = acme.Signer.JwsAlg,
                     KeyExport = acme.Signer.Export(),
