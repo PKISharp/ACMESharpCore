@@ -15,8 +15,6 @@ namespace ACMESharp.Protocol.Resources
 
         public object Key { get; set; }
 
-        [JsonProperty("contact", Required = Required.Always)]
-        [Required, MinLength(1)]
         public string[] Contact { get; set; }
 
         public string Status { get; set; }
