@@ -7,11 +7,28 @@ trigger:
 - master
 
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    arguments: 'test/ACMESharp.MockServer.UnitTests/ACMESharp.MockServer.UnitTests.csproj -c $(buildConfiguration)'
+    
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    arguments: 'test/ACMESharp.UnitTests/ACMESharp.UnitTests.csproj -c $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    arguments: 'ACMESharpCore.sln -c $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/AcmeSharpCore-publish'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
