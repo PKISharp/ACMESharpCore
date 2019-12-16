@@ -9,15 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.22.3" />
-    <PackageReference Include="AWSSDK.Route53" Version="3.3.11" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.18.2" />
-    <PackageReference Include="DnsClient" Version="1.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.104.5" />
+    <PackageReference Include="AWSSDK.Route53" Version="3.3.102.58" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.110" />
+    <PackageReference Include="DnsClient" Version="1.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="2.0.0-dev-00023" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
 

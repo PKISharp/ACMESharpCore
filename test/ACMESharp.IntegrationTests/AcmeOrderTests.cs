@@ -13,6 +13,7 @@ using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
 using ACMESharp.Testing.Xunit;
 using DnsClient;
+using DnsClient.Protocol;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Xunit;
@@ -202,7 +203,8 @@ namespace ACMESharp.IntegrationTests
                 }
                 else
                 {
-                    var dnsVal = x.AllRecords?.FirstOrDefault()?.RecordToString().Trim('"');
+                    var dnsRec = x.AllRecords?.FirstOrDefault() as TxtRecord;
+                    var dnsVal = string.Join(" ", dnsRec.EscapedText.Select(p => "\"" + p + "\"")).Trim().Trim('"');
 
                     if (!string.IsNullOrEmpty(dnsVal))
                     {
