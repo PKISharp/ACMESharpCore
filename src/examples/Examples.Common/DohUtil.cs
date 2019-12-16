@@ -85,7 +85,7 @@ namespace Examples.Common
             var response = await Client.QueryAsync(name, Makaretu.Dns.DnsType.CNAME);
             return response.Answers
                     .OfType<Makaretu.Dns.CNAMERecord>()
-                    .Select(x => x.Target);
+                    .Select(x => x.Target.ToString());
         }
     }
 }
