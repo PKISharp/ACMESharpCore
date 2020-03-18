@@ -565,6 +565,7 @@ namespace ACMESharp.Protocol
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderFinalizeUrl),
+                    expectedStatuses: new[] { HttpStatusCode.OK, HttpStatusCode.Created },
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel);
