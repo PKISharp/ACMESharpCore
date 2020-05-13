@@ -145,14 +145,21 @@ namespace ACMESharp.Protocol
             if (tosUrl == null)
                 return (null, null, null);
 
-            using (var resp = await _http.GetAsync(tosUrl, cancel))
+            try
             {
-                var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
-                if (string.IsNullOrEmpty(filename))
-                    filename = new Uri(tosUrl).AbsolutePath;
-                return (resp.Content.Headers.ContentType,
-                        Path.GetFileName(filename),
-                        await resp.Content.ReadAsByteArrayAsync());
+                using (var resp = await _http.GetAsync(tosUrl, cancel))
+                {
+                    var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
+                    if (string.IsNullOrEmpty(filename))
+                        filename = new Uri(tosUrl).AbsolutePath;
+                    return (resp.Content.Headers.ContentType,
+                            Path.GetFileName(filename),
+                            await resp.Content.ReadAsByteArrayAsync());
+                }
+            } 
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving terms of service from {tosUrl}", ex);
             }
         }
 
