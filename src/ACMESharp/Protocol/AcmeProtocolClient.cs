@@ -376,7 +376,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, Directory.NewOrder),
                     method: HttpMethod.Post,
                     message: message,
-                    expectedStatuses: new[] { HttpStatusCode.Created },
+                    expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
                     cancel: cancel);
 
             var order = await DecodeOrderResponseAsync(resp);
