@@ -35,18 +35,21 @@ namespace ACMESharp.Protocol
         {
             _problem = problem;
             var problemType = _problem?.Type;
-
             if (!string.IsNullOrEmpty(problemType))
             {
                 if (problemType.StartsWith(Problem.StandardProblemTypeNamespace))
                 {
-                    ProblemType = (ProblemType)Enum.Parse(typeof(ProblemType), problemType.Substring(
-                            Problem.StandardProblemTypeNamespace.Length), true);
+                    if (Enum.TryParse(
+                        problemType.Substring(Problem.StandardProblemTypeNamespace.Length), 
+                        out ProblemType pt))
+                    {
+                        ProblemType = pt;
+                    };
                 }
             }
         }
 
-        public ProblemType ProblemType { get; private set; }
+        public ProblemType ProblemType { get; private set; } = ProblemType.Unknown;
 
         public string ProblemTypeRaw => _problem?.Type;
 
