@@ -145,14 +145,21 @@ namespace ACMESharp.Protocol
             if (tosUrl == null)
                 return (null, null, null);
 
-            using (var resp = await _http.GetAsync(tosUrl, cancel))
+            try
             {
-                var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
-                if (string.IsNullOrEmpty(filename))
-                    filename = new Uri(tosUrl).AbsolutePath;
-                return (resp.Content.Headers.ContentType,
-                        Path.GetFileName(filename),
-                        await resp.Content.ReadAsByteArrayAsync());
+                using (var resp = await _http.GetAsync(tosUrl, cancel))
+                {
+                    var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
+                    if (string.IsNullOrEmpty(filename))
+                        filename = new Uri(tosUrl).AbsolutePath;
+                    return (resp.Content.Headers.ContentType,
+                            Path.GetFileName(filename),
+                            await resp.Content.ReadAsByteArrayAsync());
+                }
+            } 
+            catch (Exception ex)
+            {
+                throw new Exception($"Error retrieving terms of service from {tosUrl}", ex);
             }
         }
 
@@ -375,7 +382,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, Directory.NewOrder),
                     method: HttpMethod.Post,
                     message: message,
-                    expectedStatuses: new[] { HttpStatusCode.Created },
+                    expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
                     cancel: cancel);
 
             var order = await DecodeOrderResponseAsync(resp);
@@ -564,6 +571,7 @@ namespace ACMESharp.Protocol
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderFinalizeUrl),
+                    expectedStatuses: new[] { HttpStatusCode.OK, HttpStatusCode.Created },
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel);

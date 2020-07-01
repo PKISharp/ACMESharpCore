@@ -24,7 +24,7 @@ namespace Examples.Common.PKI
             if (KeyType.StartsWith("RS"))
             {
                 var tool = new ACMESharp.Crypto.JOSE.Impl.RSJwsTool();
-                tool.KeySize = int.Parse(KeyType.Substring(2));
+                tool.HashSize = int.Parse(KeyType.Substring(2));
                 tool.Init();
                 tool.Import(KeyExport);
                 return tool;

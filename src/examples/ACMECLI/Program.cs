@@ -185,7 +185,7 @@ namespace ACMECLI
             }
 
             _http = new HttpClient { BaseAddress = new Uri(url), };
-            _acme = new AcmeProtocolClient(_http, acmeDir, account, accountSigner);
+            _acme = new AcmeProtocolClient(_http, acmeDir, account, accountSigner, usePostAsGet: true);
             if (acmeDir == null || RefreshDir)
             {
                 Console.WriteLine("Refreshing Service Directory");
@@ -509,7 +509,7 @@ namespace ACMECLI
                 if (RefreshCert || !StateExists(Constants.AcmeOrderCertFmt, orderId))
                 {
                     Console.WriteLine("Fetching Certificate...");
-                    var certResp = await _http.GetAsync(order.Payload.Certificate);
+                    var certResp = await _acme.GetAsync(order.Payload.Certificate);
                     certResp.EnsureSuccessStatusCode();
                     using (var ras = await certResp.Content.ReadAsStreamAsync())
                     {
