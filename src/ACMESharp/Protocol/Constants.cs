@@ -11,6 +11,14 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
+        /// Date Time format used by ACME <c>notBefore</c> and <c>notAfter</c>
+        /// fields, as defined by
+        /// <see cref="https://tools.ietf.org/html/rfc3339">RFC3339</see> and
+        /// <see cref="https://tools.ietf.org/html/rfc3339#ref-ISO8601">ISO 8601</see>.
+        /// </summary>
+        public const string Rfc3339DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.fffK";
+
+        /// <summary>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-6.1
         /// </summary>
         /// <remarks>
