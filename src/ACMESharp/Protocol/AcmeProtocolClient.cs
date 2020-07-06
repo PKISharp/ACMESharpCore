@@ -375,9 +375,8 @@ namespace ACMESharp.Protocol
                 Identifiers = dnsIdentifiers.Select(x =>
                         new Identifier { Type = "dns", Value = x }).ToArray(),
 
-                // TODO: deal with dates
-                // NotBefore = notBefore?.ToString(),
-                // NotAfter = notAfter?.ToString(),
+                NotBefore = notBefore?.ToString(Constants.Rfc3339DateTimeFormat),
+                NotAfter = notAfter?.ToString(Constants.Rfc3339DateTimeFormat),
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, Directory.NewOrder),
