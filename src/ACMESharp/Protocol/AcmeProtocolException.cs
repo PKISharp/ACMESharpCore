@@ -41,6 +41,7 @@ namespace ACMESharp.Protocol
                 {
                     if (Enum.TryParse(
                         problemType.Substring(Problem.StandardProblemTypeNamespace.Length), 
+                        true,
                         out ProblemType pt))
                     {
                         ProblemType = pt;
