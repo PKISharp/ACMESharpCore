@@ -194,7 +194,8 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </remarks>
-        public async Task<AccountDetails> CreateAccountAsync(IEnumerable<string> contacts,
+        public async Task<AccountDetails> CreateAccountAsync(
+            IEnumerable<string> contacts = null,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
             bool throwOnExistingAccount = false,
