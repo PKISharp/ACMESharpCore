@@ -24,3 +24,57 @@ jobs:
             
             - name: Build
               run: dotnet build --configuration Release --no-restore
+
+            - name: Integration Tests
+              env:
+                TEST_BUCKET_NAME: ${{ secrets.TEST_BUCKET_NAME }}
+                TEST_HOSTED_ZONE_ID: ${{ secrets.TEST_HOSTED_ZONE_ID }}
+                TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+                TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+              shell: pwsh
+              run: |
+                $configRoot      = "./test/ACMESharp.IntegrationTests/config"
+                $configOutRoot   = [System.IO.Path]::Combine($configRoot, "_IGNORE")
+                $configTemplates = [System.IO.Path]::Combine($configRoot, "template-*")
+                $configValues    = [System.Environment]::GetEnvironmentVariables()
+
+                if (-not (Test-Path -PathType Container $configOutRoot)) {
+                    mkdir $configOutRoot
+                }
+
+                ## For each config template, do a @@ENV_VAR@@ substitution
+                ## as we write out the realized template to the config dir
+                foreach ($f in (dir $configTemplates)) {
+                    $fOut = $f.FullName -replace '[\\/]template-','/_IGNORE/'
+                    $fBody = [System.IO.File]::ReadAllText($f.FullName)
+                    foreach ($k in $configValues.Keys) {
+                        $fBody = $fBody -replace "@@$k@@",$configValues[$k]
+                    }
+                    [System.IO.File]::WriteAllText("$($fOut)", $fBody)
+                }
+
+                Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+                #if ($isLinux) {
+                #    & sudo pwsh -C "Install-Module AWSPowerShell.NetCore -Force"
+                #}
+                #else {
+                #    Install-Module AWSPowerShell.NetCore -Force
+                #}
+                Install-Module AWSPowerShell.NetCore -Force
+                Import-Module AWSPowerShell.NetCore -Force
+                Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
+
+                #dotnet msbuild /t:clean
+                #dotnet msbuild /t:restore
+                #dotnet msbuild /t:build
+                #dotnet msbuild /t:publish
+
+                #dotnet pack src/ACMESharp
+                #dotnet pack src/ACMESharp.DotNetCore
+                #dotnet pack src/ACMESharp.MockServer
+                #dotnet pack src/PKISharp.SimplePKI
+
+                dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
+                dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
+                dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
+                dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
