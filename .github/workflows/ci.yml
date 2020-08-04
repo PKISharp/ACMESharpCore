@@ -8,7 +8,11 @@ on:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                os: ['ubuntu-latest', 'windows-latest']
+
+        runs-on: ${{ matrix.os }}
     
         steps:
             - name: Checkout latest
@@ -60,6 +64,7 @@ jobs:
                 #else {
                 #    Install-Module AWSPowerShell.NetCore -Force
                 #}
+
                 Install-Module AWSPowerShell.NetCore -Force
                 Import-Module AWSPowerShell.NetCore -Force
                 Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
@@ -75,6 +80,6 @@ jobs:
                 #dotnet pack src/PKISharp.SimplePKI
 
                 dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
-                #dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
-                #dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
+                dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
+                dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
                 dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
