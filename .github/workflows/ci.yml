@@ -83,13 +83,16 @@ jobs:
             ## distinguish, isolate and navigate the results
 
             - name: Test - Unit Tests
-              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
+              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.UnitTests
 
             - name: Test - MockServer Unit Tests
-              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
+              shell: pwsh
+              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.MockServer.UnitTests
 
             - name: Test - SimplePKI Unit Tests
-              run:  dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
-              
+              shell: pwsh
+              run: dotnet test --no-restore --verbosity normal ./test/PKISharp.SimplePKI.UnitTests
+
             - name: Test - Integration Tests
-              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
+              shell: pwsh
+              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
