@@ -156,7 +156,7 @@ namespace ACMESharp.Protocol
                             Path.GetFileName(filename),
                             await resp.Content.ReadAsByteArrayAsync());
                 }
-            } 
+            }
             catch (Exception ex)
             {
                 throw new Exception($"Error retrieving terms of service from {tosUrl}", ex);
@@ -357,7 +357,7 @@ namespace ACMESharp.Protocol
 
         /// <summary>
         /// Creates a new Order for a Certificate which will contain one or more
-        /// DNS Identifiers.  The first Identifier will be treated as the primary
+        /// Identifiers.  The first Identifier will be treated as the primary
         /// subject of the certificate, and any optional subsequent Identifiers
         /// will be treated as Subject Alterative Name (SAN) entries.
         /// </summary>
@@ -365,16 +365,14 @@ namespace ACMESharp.Protocol
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.3
         /// </remarks>
-        public async Task<OrderDetails> CreateOrderAsync(IEnumerable<string> dnsIdentifiers,
+        public async Task<OrderDetails> CreateOrderAsync(IEnumerable<Identifier> identifiers,
             DateTime? notBefore = null,
             DateTime? notAfter = null,
             CancellationToken cancel = default(CancellationToken))
         {
             var message = new CreateOrderRequest
             {
-                Identifiers = dnsIdentifiers.Select(x =>
-                        new Identifier { Type = "dns", Value = x }).ToArray(),
-
+                Identifiers = identifiers.ToArray(),
                 NotBefore = notBefore?.ToString(Constants.Rfc3339DateTimeFormat),
                 NotAfter = notAfter?.ToString(Constants.Rfc3339DateTimeFormat),
             };
@@ -388,6 +386,13 @@ namespace ACMESharp.Protocol
             var order = await DecodeOrderResponseAsync(resp);
             return order;
         }
+
+        public Task<OrderDetails> CreateOrderAsync(IEnumerable<string> dnsIdentifiers,
+            DateTime? notBefore = null,
+            DateTime? notAfter = null,
+            CancellationToken cancel = default(CancellationToken)) => CreateOrderAsync(
+                dnsIdentifiers.Select(dns => new Identifier() { Type = "dns", Value = dns }).ToArray(),
+                notBefore, notAfter, cancel);
 
         /// <summary>
         /// Retrieves the current status and details of an existing Order.
