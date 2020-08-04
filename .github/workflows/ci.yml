@@ -105,11 +105,7 @@ jobs:
 
             - name: Test - Integration Tests
               id: integrationTests
-              if: |
-                ${{ !cancelled()
-                    && steps.unitTests.outcome == 'success'
-                    && steps.mockServerUnitTests.outcome == 'success'
-                    && steps.simplePkiUnitTests.outcome == 'success' }}
+              if: ${{ !cancelled() && steps.unitTests.outcome == 'success' && steps.mockServerUnitTests.outcome == 'success' && steps.simplePkiUnitTests.outcome == 'success' }}
               shell: pwsh
               run: |
                 ipmo GitHubActions
