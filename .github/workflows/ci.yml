@@ -14,17 +14,10 @@ jobs:
             - name: Checkout latest
               uses: actions/checkout@v2
 
-            ## Install older SDK for greater backward compatibility when running tests
             - name: Setup .NET Core
               uses: actions/setup-dotnet@v1
               with:
                 dotnet-version: 2.1.*
-
-            ## Install newer SDK for better tooling
-            - name: Setup .NET Core
-              uses: actions/setup-dotnet@v1
-              with:
-                dotnet-version: 3.1.*
                 
             - name: Install dependencies
               run: dotnet restore
@@ -82,6 +75,6 @@ jobs:
                 #dotnet pack src/PKISharp.SimplePKI
 
                 dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
-                dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
-                dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
+                #dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
+                #dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
                 dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
