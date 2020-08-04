@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ACMEAvalon">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="OO">
+                
+            </MenuItem>
+        </Menu>
+        
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" Margin="16" DockPanel.Dock="Left">
+            <TextBlock Grid.Column="0" Grid.Row="0">Rotation</TextBlock>
+            <Slider Name="rotation" Maximum="360" Grid.Column="1" Grid.Row="0"/>
+        </Grid>
+
+        <Grid ColumnDefinitions="auto,*" RowDefinitions="auto,auto,*" Margin="10">
+            
+            <!--<Label>Name: </Label>-->
+            <TextBox Grid.Column="1" Margin="0,0,0,10" />
+            <!--<Label Grid.Row="1">E-mail: </Label>-->
+            <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" />
+            <!--<Label Grid.Row="2">Comment: </Label>-->
+            <TextBox Grid.Row="2" Grid.Column="1" AcceptsReturn="True" />
+        </Grid>
+   </DockPanel>
+</Window>
