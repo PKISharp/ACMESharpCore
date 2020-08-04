@@ -1,4 +1,4 @@
-version: 2.0.0.{build}
+version: 2.0.1.{build}
 image:
 - Ubuntu
 - Visual Studio 2017 Preview
@@ -87,8 +87,10 @@ install:
         & sudo apt-get update
         & sudo apt-get install -y dotnet-sdk-2.1
 
+        ## Need to make sure we skip any EULA prompts (thanks wasapl!) as per:
+        ##    https://help.appveyor.com/discussions/problems/15080-ubuntu-image-setup-stops-install-of-msodbcsql17
         Write-Information "Upgrading *ALL* local packages..."
-        & sudo apt-get upgrade -y
+        & sudo ACCEPT_EULA=Y apt-get -y upgrade
 
         ## Unfortunately Ubuntu 16.04 does NOT offer OpenSSL 1.1 as a
         ## standard package so we need to install it oursevles, as per:
@@ -107,9 +109,16 @@ install:
     }
 
 
+    $dotnetVersFull = (dotnet --version)
+
+    if ($dotnetVersFull -match '-[A-Za-z]') {
+        Write-Warning "Found PREVIEW version of .NET Core ($dotnetVersFull), hopefully won't BREAK things"
+        $dotnetVersFull = $dotnetVersFull -replace '-[A-Za-z].*',''
+    }
+
     $dotnetVersWant = [version]('2.1.300')
 
-    $dotnetVersCurr = [version](dotnet --version)
+    $dotnetVersCurr = [version]$dotnetVersFull
 
     if ($dotnetVersCurr -lt $dotnetVersWant) {
         throw "Wrong Version of .NET Core! ($dotnetVersCurr < $dotnetVersWant)"
@@ -180,10 +189,14 @@ build_script:
 
     dotnet pack src/ACMESharp.DotNetCore
 
+    dotnet pack src/ACMESharp.MockServer
+
     dotnet pack src/PKISharp.SimplePKI
 test_script:
 - ps: >-
     dotnet test .\test\ACMESharp.UnitTests
+
+    dotnet test .\test\ACMESharp.MockServer.UnitTests
 
     dotnet test .\test\ACMESharp.IntegrationTests
 
