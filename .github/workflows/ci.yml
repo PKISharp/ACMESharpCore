@@ -29,7 +29,7 @@ jobs:
             - name: Build
               run: dotnet build --configuration Release --no-restore
 
-            - name: Integration Tests
+            - name: Prepare for Tests
               env:
                 TEST_BUCKET_NAME: ${{ secrets.TEST_BUCKET_NAME }}
                 TEST_HOSTED_ZONE_ID: ${{ secrets.TEST_HOSTED_ZONE_ID }}
@@ -79,7 +79,17 @@ jobs:
                 #dotnet pack src/ACMESharp.MockServer
                 #dotnet pack src/PKISharp.SimplePKI
 
-                dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
-                dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
-                dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
-                dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
+            ## These are each separated out so we can better
+            ## distinguish, isolate and navigate the results
+
+            - name: Test - Unit Tests
+              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.UnitTests
+
+            - name: Test - MockServer Unit Tests
+              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.MockServer.UnitTests
+
+            - name: Test - SimplePKI Unit Tests
+              run:  dotnet test --no-restore --verbosity normal .\test\PKISharp.SimplePKI.UnitTests
+              
+            - name: Test - Integration Tests
+              run:  dotnet test --no-restore --verbosity normal .\test\ACMESharp.IntegrationTests
