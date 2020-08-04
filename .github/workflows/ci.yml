@@ -81,18 +81,33 @@ jobs:
 
             ## These are each separated out so we can better
             ## distinguish, isolate and navigate the results
+            ## and each will always execute regardless of the
+            ## result of any preceding test as long as
 
             - name: Test - Unit Tests
+              id: unitTests
+              if: ${{ !cancelled() }}
+              shell: pwsh
               run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.UnitTests
 
-            - name: Test - MockServer Unit Tests
-              shell: pwsh
-              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.MockServer.UnitTests
-
             - name: Test - SimplePKI Unit Tests
+              id: simplePkiUnitTests
+              if: ${{ !cancelled() }}
               shell: pwsh
               run: dotnet test --no-restore --verbosity normal ./test/PKISharp.SimplePKI.UnitTests
 
+            - name: Test - MockServer Unit Tests
+              id: mockServerUnitTests
+              if: ${{ !cancelled() }}
+              shell: pwsh
+              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.MockServer.UnitTests
+
             - name: Test - Integration Tests
+              id: integrationTests
+              if: |
+                ${{ !cancelled()
+                    && steps.unitTests.outcome == 'success'
+                    && steps.mockServerUnitTests.outcome == 'success'
+                    && steps.simplePkiUnitTests.outcome == 'success' }}
               shell: pwsh
               run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
