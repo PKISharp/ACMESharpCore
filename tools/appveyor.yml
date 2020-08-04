@@ -93,7 +93,7 @@ install:
         & sudo ACCEPT_EULA=Y apt-get -y upgrade
 
         ## Unfortunately Ubuntu 16.04 does NOT offer OpenSSL 1.1 as a
-        ## standard package so we need to install it oursevles, as per:
+        ## standard package so we need to install it ourselves, as per:
         ##    https://stackoverflow.com/a/44789238/5428506
         pushd ..
         wget https://www.openssl.org/source/openssl-1.1.0g.tar.gz

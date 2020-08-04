@@ -68,6 +68,7 @@ Create a new Account; this will dump the Account details afterwards
 
 Create a new Order with a primary DNS and 2 alternates; this will dump
 the details for how to handle each Challenge response using the DNS method
+
 ```shell
 > acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --challenge-type dns-01
 ```
@@ -79,27 +80,32 @@ the expected response -- you may have to wait a bit before the
 DNS TTL values expire and the correct response (or any response)
 is finally returned from a DNS query. You can use the tool to confirm
 the Challenge has been implemented
+
 ```shell
 > acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --challenge-type dns-01 --test-challenges
 ```
 
 Now it's time to submit the Challenge answers so that the ACME CA can test
 them authorize your account to create certificates with associated DNS names.
+
 ```shell
 > acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --answer-challenges
 ```
 
 Now we finalize the Order -- this will also create a new
 private key and generate the CSR to submit to the CA.
+
 ```shell
 > acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --finalize
 ```
 
 Finally, save the complete certificate chain and corresponding
 private key to a PKCS#12 format file with NO password.
+
 ```shell
 > acmecli --dns myapp.example.com --dns myapp-0.example.com --dns myapp-1.example.com --export-pfx mycertificate.pfx --export-pfx-password " "
 ```
+
 ## Invoke in _One Fell Swoop_
 
 Alternatively, you can invoke the tool once with some additional options that indicate
