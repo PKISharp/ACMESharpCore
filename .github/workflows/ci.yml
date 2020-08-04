@@ -65,6 +65,7 @@ jobs:
                 #    Install-Module AWSPowerShell.NetCore -Force
                 #}
 
+                Install-Module GitHubActions -Force
                 Install-Module AWSPowerShell.NetCore -Force
                 Import-Module AWSPowerShell.NetCore -Force
                 Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
@@ -110,4 +111,11 @@ jobs:
                     && steps.mockServerUnitTests.outcome == 'success'
                     && steps.simplePkiUnitTests.outcome == 'success' }}
               shell: pwsh
-              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
+              run: |
+                ipmo GitHubActions
+                Write-ActionInfo "Results of preceding Tests:"
+                Write-ActionInfo "  * unitTests..............: ${{ steps.unitTests.outcome }}"
+                Write-ActionInfo "  * mockServerUnitTests....: ${{ steps.mockServerUnitTests.outcome }}"
+                Write-ActionInfo "  * simplePkiUnitTests.....: ${{ steps.simplePkiUnitTests.outcome }}"
+
+                dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
