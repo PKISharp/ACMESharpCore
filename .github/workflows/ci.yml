@@ -12,15 +12,15 @@ jobs:
     
         steps:
             - name: Checkout latest
-            uses: actions/checkout@v2
+              uses: actions/checkout@v2
 
             - name: Setup .NET Core
-            uses: actions/setup-dotnet@v1
-            with:
+              uses: actions/setup-dotnet@v1
+              with:
                 dotnet-version: 3.1.*
                 
             - name: Install dependencies
-            run: dotnet restore
+              run: dotnet restore
             
             - name: Build
-            run: dotnet build --configuration Release --no-restore
+              run: dotnet build --configuration Release --no-restore
