@@ -18,8 +18,10 @@ namespace ACMESharp.MockServer.UnitTests
     [TestClass]
     public class RepoTests
     {
-        public const string DataFolder = @".\_IGNORE\data";
-        public const string LiteDbFilePath = DataFolder + @"\acme-repo-tests.db";
+        private static readonly char S = Path.DirectorySeparatorChar;
+
+        public static readonly string DataFolder = $@".{S}_IGNORE{S}data";
+        public static readonly string LiteDbFilePath = DataFolder + $@"{S}acme-repo-tests.db";
         static IRepository _repo;
 
         [ClassInitialize]
