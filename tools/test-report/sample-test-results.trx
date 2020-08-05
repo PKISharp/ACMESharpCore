@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="632439a8-6fd2-490c-bdf1-a913df23d1be" name="ebekker@EZS-001388 2020-08-04 23:30:03" runUser="EZSHIELD\ebekker"
+         xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2020-08-04T23:30:03.6997384-04:00" queuing="2020-08-04T23:30:03.6997404-04:00" start="2020-08-04T23:29:43.8676181-04:00" finish="2020-08-04T23:31:12.1776276-04:00" />
+  <TestSettings name="default" id="06553f41-a9ad-40ef-9d8d-cdcffba61cad">
+    <Deployment runDeploymentRoot="ebekker_EZS-001388_2020-08-04_23_30_03" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="cb537244-a2a0-48de-a2c9-8f6c4cc1afe3" testId="47f44031-ef62-4da7-92d9-69fc40cd7770" testName="CreateAndExportEcdsaCsr (384,Sha256)" computerName="EZS-001388" duration="00:00:00.5552387" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="cb537244-a2a0-48de-a2c9-8f6c4cc1afe3" />
+    <UnitTestResult executionId="03eac436-4bc8-42a9-9413-e3a54e2aff09" testId="f0911e9a-2955-46e9-874c-d922b36a0be9" testName="ExportSelfSignedPemChain (Rsa,2048)" computerName="EZS-001388" duration="00:00:01.6105963" startTime="2020-08-04T23:30:33.2299417-04:00" endTime="2020-08-04T23:30:35.6868366-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="03eac436-4bc8-42a9-9413-e3a54e2aff09" />
+    <UnitTestResult executionId="c83258db-f4e5-4083-a724-03aa70182278" testId="eafdf035-7538-445e-abeb-5afc31f72f95" testName="CreateRsaKeyPair (2048)" computerName="EZS-001388" duration="00:00:01.1866164" startTime="2020-08-04T23:30:37.8551722-04:00" endTime="2020-08-04T23:31:10.1809310-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c83258db-f4e5-4083-a724-03aa70182278" />
+    <UnitTestResult executionId="fdae33dd-7579-46ea-bd90-941942797ad7" testId="efcb2dfa-5d92-45d8-98d3-d7b0f3f4a806" testName="CreateEcdsaKeyPair (256)" computerName="EZS-001388" duration="00:00:00.2581378" startTime="2020-08-04T23:31:10.9706166-04:00" endTime="2020-08-04T23:31:11.7797698-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fdae33dd-7579-46ea-bd90-941942797ad7" />
+    <UnitTestResult executionId="a46fffb3-4b19-4e6e-9941-4f68d432b5c3" testId="bf949c0b-7e25-429c-859d-bdb01bf9c829" testName="CreateAndExportRsaCsr (2048,Sha256)" computerName="EZS-001388" duration="00:00:01.2476606" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a46fffb3-4b19-4e6e-9941-4f68d432b5c3" />
+    <UnitTestResult executionId="02b753c0-4406-4a4d-84ba-933f83d25cb6" testId="c6a73f80-03a4-405d-83f6-3b64d3359af6" testName="CreateAndExportEcdsaSansCsr (384,Sha512)" computerName="EZS-001388" duration="00:00:00.5273155" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="02b753c0-4406-4a4d-84ba-933f83d25cb6" />
+    <UnitTestResult executionId="1f62cacc-7906-4a53-a3b8-0853c434d99e" testId="76b92b9a-1cda-44f3-802b-7685c34dd81e" testName="ExportImportCsr (Rsa,2048,Der)" computerName="EZS-001388" duration="00:00:01.3644040" startTime="2020-08-04T23:30:25.3829116-04:00" endTime="2020-08-04T23:30:26.7480874-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1f62cacc-7906-4a53-a3b8-0853c434d99e">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.AreNotEqual failed. Expected any value except:&lt;CN=foo.example.com&gt;. Actual:&lt;CN=foo.example.com&gt;. </Message>
+          <StackTrace>   at PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests.ExportImportCsr(PkiAsymmetricAlgorithm algor, Int32 bits, PkiEncodingFormat format) in C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\PkiCertificateSigningRequestTests.cs:line 284&#xD;
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="aa8b5704-7318-45f2-beae-596d2c89eb1d" testId="a04083ca-fbd5-41cd-9f4f-7bc0492fc97c" testName="ExportSelfSignedPemChain (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.8458158" startTime="2020-08-04T23:30:33.2299417-04:00" endTime="2020-08-04T23:30:35.6868366-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="aa8b5704-7318-45f2-beae-596d2c89eb1d" />
+    <UnitTestResult executionId="7c413747-5e84-4feb-8710-93b4f8e966b8" testId="dc65c16c-18ca-4672-9f65-9e3d1080b1f2" testName="CreateAndExportEcdsaCsr (256,Sha512)" computerName="EZS-001388" duration="00:00:00.4434356" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7c413747-5e84-4feb-8710-93b4f8e966b8" />
+    <UnitTestResult executionId="7e696264-6b54-4674-8d98-412eae810b89" testId="9296c42e-1194-4a29-9e4f-0b24473f8f39" testName="ExportSelfSignedCert (Rsa,2048)" computerName="EZS-001388" duration="00:00:00.8173371" startTime="2020-08-04T23:30:26.7481181-04:00" endTime="2020-08-04T23:30:27.9431148-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7e696264-6b54-4674-8d98-412eae810b89" />
+    <UnitTestResult executionId="1b0ac8ce-93d4-4053-ba06-212426e142ac" testId="9a291bd0-6673-4616-ba2a-41bfee4fa3e1" testName="ExportSignedPkcs12 (Rsa,2048)" computerName="EZS-001388" duration="00:00:02.1064399" startTime="2020-08-04T23:30:30.7225755-04:00" endTime="2020-08-04T23:30:33.2291652-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1b0ac8ce-93d4-4053-ba06-212426e142ac" />
+    <UnitTestResult executionId="96fde1f6-f393-467a-ab86-54fa7c97f13f" testId="ab4e7bb2-7bfa-465b-9435-178752a4c8b1" testName="CreateEcdsaKeyPair (224)" computerName="EZS-001388" duration="00:00:00.2997058" startTime="2020-08-04T23:31:10.9706166-04:00" endTime="2020-08-04T23:31:11.7797698-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="96fde1f6-f393-467a-ab86-54fa7c97f13f" />
+    <UnitTestResult executionId="2f1c21ac-6672-433a-b2a9-a1c8b71b19a7" testId="30589b97-6598-4f2b-9f96-451994156302" testName="CreateAndExportRsaSansCsr (1024,Sha512)" computerName="EZS-001388" duration="00:00:00.4364699" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2f1c21ac-6672-433a-b2a9-a1c8b71b19a7" />
+    <UnitTestResult executionId="f01177a3-9144-48ef-8f69-7d7ac599ef1c" testId="fe68af98-7434-43be-88bb-81179b163819" testName="CreateAndExportRsaCsr (1024,Sha256)" computerName="EZS-001388" duration="00:00:00.9421907" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f01177a3-9144-48ef-8f69-7d7ac599ef1c" />
+    <UnitTestResult executionId="6dc21ff5-884b-45a2-ba21-f6bbbe7cb367" testId="7c93592c-9ca4-439e-8567-6114100e6a5f" testName="CreateAndExportRsaSansCsr (1024,Sha256)" computerName="EZS-001388" duration="00:00:00.5107973" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6dc21ff5-884b-45a2-ba21-f6bbbe7cb367" />
+    <UnitTestResult executionId="accd3ec2-d776-4421-bcbe-ad8b60739dd0" testId="9bf3eb06-38c8-4724-8042-5af34847b647" testName="CreateAndExportRsaCsr (2048,Sha512)" computerName="EZS-001388" duration="00:00:00.7916418" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="accd3ec2-d776-4421-bcbe-ad8b60739dd0" />
+    <UnitTestResult executionId="e4071dc5-93bc-4fa2-98ac-f16640c9d719" testId="9352f570-3c7a-4345-98e1-f6519c2a5bfb" testName="CreateAndExportEcdsaCsr (256,Sha256)" computerName="EZS-001388" duration="00:00:00.4223549" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e4071dc5-93bc-4fa2-98ac-f16640c9d719" />
+    <UnitTestResult executionId="9e083d53-70e9-4e27-8dc1-ba52b08bad25" testId="40f0e9c7-1f60-4f8c-9321-e33bcee32703" testName="SaveLoadKeyPair (Rsa,2048)" computerName="EZS-001388" duration="00:00:00.2148930" startTime="2020-08-04T23:31:11.7798043-04:00" endTime="2020-08-04T23:31:12.0049819-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9e083d53-70e9-4e27-8dc1-ba52b08bad25" />
+    <UnitTestResult executionId="eb236b26-a19a-42e8-b9db-ffac4079a172" testId="186dfbe0-9400-440a-a94b-1b12c10381f2" testName="CreateAndExportRsaSansCsr (2048,Sha256)" computerName="EZS-001388" duration="00:00:02.3072033" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb236b26-a19a-42e8-b9db-ffac4079a172" />
+    <UnitTestResult executionId="fee5c9d3-4eee-4707-b545-8b33736f31c1" testId="74db4a3c-9272-45d8-8026-43fa55f7d8a7" testName="SaveLoadKeyPair (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.0100120" startTime="2020-08-04T23:31:11.7798043-04:00" endTime="2020-08-04T23:31:12.0049819-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fee5c9d3-4eee-4707-b545-8b33736f31c1" />
+    <UnitTestResult executionId="ac7035b9-56be-4a57-a4cc-b891178604e9" testId="7f1644aa-269a-4d1d-92c9-5ef56ed40da0" testName="CreateAndExportEcdsaSansCsr (224,Sha512)" computerName="EZS-001388" duration="00:00:00.3771354" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ac7035b9-56be-4a57-a4cc-b891178604e9" />
+    <UnitTestResult executionId="d8ea3c71-84d6-486f-97c3-11e4cf36eef8" testId="037d9409-ded7-49d8-857f-3c99cdf0ebba" testName="ExportSelfSignedPkcs12 (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.4795390" startTime="2020-08-04T23:30:29.6632242-04:00" endTime="2020-08-04T23:30:30.7225185-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d8ea3c71-84d6-486f-97c3-11e4cf36eef8" />
+    <UnitTestResult executionId="0fac0e3e-a848-4ee8-9edc-282a3daf25c4" testId="1a3a6e5e-7b71-4ea2-995c-08b1af413dab" testName="ExportSelfSignedCert (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.3772701" startTime="2020-08-04T23:30:26.7481181-04:00" endTime="2020-08-04T23:30:27.9431148-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0fac0e3e-a848-4ee8-9edc-282a3daf25c4" />
+    <UnitTestResult executionId="4f8dc5c3-522e-48dd-8ab9-678091308c60" testId="70f6b58d-f7da-420a-ad42-9a96f23c1a68" testName="SaveLoadCertificate (Rsa,2048)" computerName="EZS-001388" duration="00:00:02.1580375" startTime="2020-08-04T23:30:35.6874402-04:00" endTime="2020-08-04T23:30:37.8545586-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4f8dc5c3-522e-48dd-8ab9-678091308c60" />
+    <UnitTestResult executionId="1def6814-c45b-4cf8-95f8-bc1cd447427e" testId="3a71ae27-f7af-42f4-a3fc-f7e0a370b270" testName="SaveLoadCsr (Rsa,2048)" computerName="EZS-001388" duration="00:00:03.7253136" startTime="2020-08-04T23:30:21.6240102-04:00" endTime="2020-08-04T23:30:25.3791356-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1def6814-c45b-4cf8-95f8-bc1cd447427e" />
+    <UnitTestResult executionId="17dcc305-c5e8-4cfe-9971-890bbaacb0c7" testId="fcf97049-5e0f-4f48-9b71-1ad19ec5eedb" testName="CreateAndExportRsaCsr (4096,Sha512)" computerName="EZS-001388" duration="00:00:05.0348594" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="17dcc305-c5e8-4cfe-9971-890bbaacb0c7" />
+    <UnitTestResult executionId="90911a9f-221a-468f-940f-624003ac3808" testId="89bcb7a5-4457-4b9f-b2d9-bb6979d6744f" testName="CreateAndExportEcdsaCsr (224,Sha512)" computerName="EZS-001388" duration="00:00:00.4055914" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="90911a9f-221a-468f-940f-624003ac3808" />
+    <UnitTestResult executionId="a93138a0-51eb-4d9d-b44e-27047658920b" testId="702f7db5-07bd-46c1-81e4-4b50f705f379" testName="CreateAndExportEcdsaSansCsr (384,Sha256)" computerName="EZS-001388" duration="00:00:00.4069213" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a93138a0-51eb-4d9d-b44e-27047658920b" />
+    <UnitTestResult executionId="2a409020-c988-418f-b707-8057bb40cd48" testId="47d749a7-89ca-4ea2-9eb3-f463ef1f6024" testName="CreateAndExportEcdsaCsr (224,Sha256)" computerName="EZS-001388" duration="00:00:00.4938630" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a409020-c988-418f-b707-8057bb40cd48" />
+    <UnitTestResult executionId="9e8f40b2-9dc3-4c46-97fb-e1aa3c441f32" testId="94dd0282-4407-46d1-b93c-fbaa10c47189" testName="CreateAndExportRsaSansCsr (4096,Sha256)" computerName="EZS-001388" duration="00:00:04.1093388" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9e8f40b2-9dc3-4c46-97fb-e1aa3c441f32" />
+    <UnitTestResult executionId="c365cdaa-3cfa-4ea6-b537-23c11143bc6b" testId="31ebc06a-5d9c-4ced-a2ed-92619d921fe7" testName="CreateAndExportEcdsaSansCsr (224,Sha256)" computerName="EZS-001388" duration="00:00:00.4074769" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c365cdaa-3cfa-4ea6-b537-23c11143bc6b" />
+    <UnitTestResult executionId="85b705e8-f545-4050-9177-89b420b8eeef" testId="60521eae-8846-4272-a4e2-aacff4686061" testName="CreateAndExportRsaSansCsr (4096,Sha512)" computerName="EZS-001388" duration="00:00:04.3416540" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="85b705e8-f545-4050-9177-89b420b8eeef" />
+    <UnitTestResult executionId="88034421-9fcb-40be-9f1c-092131316fb5" testId="e1bce511-b519-434a-9bf3-90c643e1bb15" testName="ExportSignedPkcs12 (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.3995436" startTime="2020-08-04T23:30:30.7225755-04:00" endTime="2020-08-04T23:30:33.2291652-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="88034421-9fcb-40be-9f1c-092131316fb5" />
+    <UnitTestResult executionId="6ac93904-b89d-4532-98fb-d385d385ceb8" testId="5734871a-6a8b-4f48-ba83-8157d31914e4" testName="SaveLoadCertificate (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.0086380" startTime="2020-08-04T23:30:35.6874402-04:00" endTime="2020-08-04T23:30:37.8545586-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ac93904-b89d-4532-98fb-d385d385ceb8" />
+    <UnitTestResult executionId="4e3a6224-de20-4f56-a73a-7aa0c1d81938" testId="9ca225d9-7599-4fe9-8fe9-16bf49f7451e" testName="CreateAndExportEcdsaSansCsr (256,Sha512)" computerName="EZS-001388" duration="00:00:00.4675894" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4e3a6224-de20-4f56-a73a-7aa0c1d81938" />
+    <UnitTestResult executionId="545664d1-4521-424c-9531-02e3b92d06d4" testId="440757a0-fc4c-4d3c-971f-11f34cab5bb2" testName="CreateRsaKeyPair (4096)" computerName="EZS-001388" duration="00:00:30.6288364" startTime="2020-08-04T23:30:37.8551722-04:00" endTime="2020-08-04T23:31:10.1809310-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="545664d1-4521-424c-9531-02e3b92d06d4" />
+    <UnitTestResult executionId="7629fedd-fcce-48ca-9471-bf7dffed41e6" testId="8e2fc936-5e6f-4909-a99f-cd178f3c192a" testName="CreateAndExportEcdsaSansCsr (256,Sha256)" computerName="EZS-001388" duration="00:00:00.3648858" startTime="2020-08-04T23:30:19.0715580-04:00" endTime="2020-08-04T23:30:21.6233278-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7629fedd-fcce-48ca-9471-bf7dffed41e6" />
+    <UnitTestResult executionId="4ff31523-59ef-4e26-8a93-fd2d51c15d10" testId="693ace13-9c71-49f3-944c-1a5696f410d3" testName="ExportRsaKeyPairWithPassword (2048)" computerName="EZS-001388" duration="00:00:00.7886831" startTime="2020-08-04T23:31:10.1816531-04:00" endTime="2020-08-04T23:31:10.9705875-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ff31523-59ef-4e26-8a93-fd2d51c15d10" />
+    <UnitTestResult executionId="bd864a6b-d960-43bc-99e7-672ba71d41a1" testId="8897c686-a956-40c6-8ec5-6a88c445eb1a" testName="CreateAndExportRsaCsr (1024,Sha512)" computerName="EZS-001388" duration="00:00:00.4957368" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="bd864a6b-d960-43bc-99e7-672ba71d41a1" />
+    <UnitTestResult executionId="7b8f1071-42cd-49de-a206-c497b9c52db3" testId="06b2dad4-51e3-41ec-982d-b74a46bd4875" testName="ExportSignedCert (Rsa,2048)" computerName="EZS-001388" duration="00:00:01.3532194" startTime="2020-08-04T23:30:27.9431420-04:00" endTime="2020-08-04T23:30:29.6631942-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7b8f1071-42cd-49de-a206-c497b9c52db3" />
+    <UnitTestResult executionId="ffcfb202-4303-41e1-94a9-ce0be29c1446" testId="2531ebc6-9824-4429-b166-6da51d74e175" testName="ExportSignedCert (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.3665812" startTime="2020-08-04T23:30:27.9431420-04:00" endTime="2020-08-04T23:30:29.6631942-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ffcfb202-4303-41e1-94a9-ce0be29c1446" />
+    <UnitTestResult executionId="1cc8382d-b095-46a7-b842-14cebf525bd8" testId="deb46920-3eb8-45ee-aac7-ff6c04d0c9a5" testName="SaveLoadCsr (Ecdsa,256)" computerName="EZS-001388" duration="00:00:00.0295567" startTime="2020-08-04T23:30:21.6240102-04:00" endTime="2020-08-04T23:30:25.3791356-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1cc8382d-b095-46a7-b842-14cebf525bd8" />
+    <UnitTestResult executionId="af5c9225-7b84-46f5-8c24-ba38e80df224" testId="b7e7e04d-f63c-415a-8def-848da6b3fe05" testName="CreateAndExportRsaSansCsr (2048,Sha512)" computerName="EZS-001388" duration="00:00:00.8885551" startTime="2020-08-04T23:30:03.6535850-04:00" endTime="2020-08-04T23:30:16.2482461-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="af5c9225-7b84-46f5-8c24-ba38e80df224" />
+    <UnitTestResult executionId="e1edbf31-dcc8-4bf3-8a61-cf32aa6f13bf" testId="5ac7a0f5-de23-4bc9-896e-7b77a8c5e3eb" testName="CreateRsaKeyPair (1024)" computerName="EZS-001388" duration="00:00:00.5095741" startTime="2020-08-04T23:30:37.8551722-04:00" endTime="2020-08-04T23:31:10.1809310-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e1edbf31-dcc8-4bf3-8a61-cf32aa6f13bf" />
+    <UnitTestResult executionId="148143bd-13b6-4ac3-b5e5-c0d4a3ab5fcb" testId="f657222c-c000-430b-9273-5bd3e8dc303d" testName="CreateEcdsaKeyPair (384)" computerName="EZS-001388" duration="00:00:00.2510330" startTime="2020-08-04T23:31:10.9706166-04:00" endTime="2020-08-04T23:31:11.7797698-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="148143bd-13b6-4ac3-b5e5-c0d4a3ab5fcb" />
+    <UnitTestResult executionId="697759fa-092a-49aa-888e-ccb76f32ea22" testId="6b407dec-4dd8-4dda-a88e-25ff1d325062" testName="CreateAndExportRsaCsr (4096,Sha256)" computerName="EZS-001388" duration="00:00:09.6932983" startTime="2020-08-04T23:29:45.3574617-04:00" endTime="2020-08-04T23:30:03.6204783-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="697759fa-092a-49aa-888e-ccb76f32ea22" />
+    <UnitTestResult executionId="1e2744a2-4ebe-49ee-863b-58ea8516eac6" testId="ca910876-9f89-4695-b878-3d661ca8fe54" testName="CreateAndExportEcdsaCsr (384,Sha512)" computerName="EZS-001388" duration="00:00:00.5003765" startTime="2020-08-04T23:30:16.2494142-04:00" endTime="2020-08-04T23:30:19.0708741-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1e2744a2-4ebe-49ee-863b-58ea8516eac6" />
+    <UnitTestResult executionId="da10b8b1-2c58-48ad-b69c-0d623112a71b" testId="bbd953a4-363b-4c67-942a-55c5909ddd4d" testName="ExportSelfSignedPkcs12 (Rsa,2048)" computerName="EZS-001388" duration="00:00:00.5794512" startTime="2020-08-04T23:30:29.6632242-04:00" endTime="2020-08-04T23:30:30.7225185-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da10b8b1-2c58-48ad-b69c-0d623112a71b" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="CreateEcdsaKeyPair (224)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="ab4e7bb2-7bfa-465b-9435-178752a4c8b1">
+      <Execution id="96fde1f6-f393-467a-ab86-54fa7c97f13f" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateEcdsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedPkcs12 (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="037d9409-ded7-49d8-857f-3c99cdf0ebba">
+      <Execution id="d8ea3c71-84d6-486f-97c3-11e4cf36eef8" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedPkcs12" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (4096,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="94dd0282-4407-46d1-b93c-fbaa10c47189">
+      <Execution id="9e8f40b2-9dc3-4c46-97fb-e1aa3c441f32" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateEcdsaKeyPair (256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="efcb2dfa-5d92-45d8-98d3-d7b0f3f4a806">
+      <Execution id="fdae33dd-7579-46ea-bd90-941942797ad7" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateEcdsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="ExportSignedCert (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="2531ebc6-9824-4429-b166-6da51d74e175">
+      <Execution id="ffcfb202-4303-41e1-94a9-ce0be29c1446" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSignedCert" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (256,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="8e2fc936-5e6f-4909-a99f-cd178f3c192a">
+      <Execution id="7629fedd-fcce-48ca-9471-bf7dffed41e6" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (4096,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="fcf97049-5e0f-4f48-9b71-1ad19ec5eedb">
+      <Execution id="17dcc305-c5e8-4cfe-9971-890bbaacb0c7" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="ExportSignedPkcs12 (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="e1bce511-b519-434a-9bf3-90c643e1bb15">
+      <Execution id="88034421-9fcb-40be-9f1c-092131316fb5" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSignedPkcs12" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (384,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="c6a73f80-03a4-405d-83f6-3b64d3359af6">
+      <Execution id="02b753c0-4406-4a4d-84ba-933f83d25cb6" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (2048,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="186dfbe0-9400-440a-a94b-1b12c10381f2">
+      <Execution id="eb236b26-a19a-42e8-b9db-ffac4079a172" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="ExportRsaKeyPairWithPassword (2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="693ace13-9c71-49f3-944c-1a5696f410d3">
+      <Execution id="4ff31523-59ef-4e26-8a93-fd2d51c15d10" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="ExportRsaKeyPairWithPassword" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (384,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="47f44031-ef62-4da7-92d9-69fc40cd7770">
+      <Execution id="cb537244-a2a0-48de-a2c9-8f6c4cc1afe3" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (2048,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="9bf3eb06-38c8-4724-8042-5af34847b647">
+      <Execution id="accd3ec2-d776-4421-bcbe-ad8b60739dd0" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (256,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="9352f570-3c7a-4345-98e1-f6519c2a5bfb">
+      <Execution id="e4071dc5-93bc-4fa2-98ac-f16640c9d719" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (224,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="7f1644aa-269a-4d1d-92c9-5ef56ed40da0">
+      <Execution id="ac7035b9-56be-4a57-a4cc-b891178604e9" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateRsaKeyPair (1024)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="5ac7a0f5-de23-4bc9-896e-7b77a8c5e3eb">
+      <Execution id="e1edbf31-dcc8-4bf3-8a61-cf32aa6f13bf" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateRsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="SaveLoadCertificate (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="70f6b58d-f7da-420a-ad42-9a96f23c1a68">
+      <Execution id="4f8dc5c3-522e-48dd-8ab9-678091308c60" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="SaveLoadCertificate" />
+    </UnitTest>
+    <UnitTest name="ExportSignedPkcs12 (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="9a291bd0-6673-4616-ba2a-41bfee4fa3e1">
+      <Execution id="1b0ac8ce-93d4-4053-ba06-212426e142ac" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSignedPkcs12" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (384,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="702f7db5-07bd-46c1-81e4-4b50f705f379">
+      <Execution id="a93138a0-51eb-4d9d-b44e-27047658920b" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (4096,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="6b407dec-4dd8-4dda-a88e-25ff1d325062">
+      <Execution id="697759fa-092a-49aa-888e-ccb76f32ea22" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedPemChain (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="a04083ca-fbd5-41cd-9f4f-7bc0492fc97c">
+      <Execution id="aa8b5704-7318-45f2-beae-596d2c89eb1d" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedPemChain" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (4096,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="60521eae-8846-4272-a4e2-aacff4686061">
+      <Execution id="85b705e8-f545-4050-9177-89b420b8eeef" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (2048,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="bf949c0b-7e25-429c-859d-bdb01bf9c829">
+      <Execution id="a46fffb3-4b19-4e6e-9941-4f68d432b5c3" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="ExportImportCsr (Rsa,2048,Der)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="76b92b9a-1cda-44f3-802b-7685c34dd81e">
+      <Execution id="1f62cacc-7906-4a53-a3b8-0853c434d99e" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="ExportImportCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (1024,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="8897c686-a956-40c6-8ec5-6a88c445eb1a">
+      <Execution id="bd864a6b-d960-43bc-99e7-672ba71d41a1" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedCert (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="9296c42e-1194-4a29-9e4f-0b24473f8f39">
+      <Execution id="7e696264-6b54-4674-8d98-412eae810b89" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedCert" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (256,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="dc65c16c-18ca-4672-9f65-9e3d1080b1f2">
+      <Execution id="7c413747-5e84-4feb-8710-93b4f8e966b8" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedPemChain (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="f0911e9a-2955-46e9-874c-d922b36a0be9">
+      <Execution id="03eac436-4bc8-42a9-9413-e3a54e2aff09" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedPemChain" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaCsr (1024,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="fe68af98-7434-43be-88bb-81179b163819">
+      <Execution id="f01177a3-9144-48ef-8f69-7d7ac599ef1c" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateRsaKeyPair (4096)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="440757a0-fc4c-4d3c-971f-11f34cab5bb2">
+      <Execution id="545664d1-4521-424c-9531-02e3b92d06d4" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateRsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (256,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="9ca225d9-7599-4fe9-8fe9-16bf49f7451e">
+      <Execution id="4e3a6224-de20-4f56-a73a-7aa0c1d81938" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="ExportSignedCert (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="06b2dad4-51e3-41ec-982d-b74a46bd4875">
+      <Execution id="7b8f1071-42cd-49de-a206-c497b9c52db3" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSignedCert" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaSansCsr (224,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="31ebc06a-5d9c-4ced-a2ed-92619d921fe7">
+      <Execution id="c365cdaa-3cfa-4ea6-b537-23c11143bc6b" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (224,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="89bcb7a5-4457-4b9f-b2d9-bb6979d6744f">
+      <Execution id="90911a9f-221a-468f-940f-624003ac3808" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (1024,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="30589b97-6598-4f2b-9f96-451994156302">
+      <Execution id="2f1c21ac-6672-433a-b2a9-a1c8b71b19a7" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="SaveLoadCsr (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="deb46920-3eb8-45ee-aac7-ff6c04d0c9a5">
+      <Execution id="1cc8382d-b095-46a7-b842-14cebf525bd8" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="SaveLoadCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (224,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="47d749a7-89ca-4ea2-9eb3-f463ef1f6024">
+      <Execution id="2a409020-c988-418f-b707-8057bb40cd48" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (1024,Sha256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="7c93592c-9ca4-439e-8567-6114100e6a5f">
+      <Execution id="6dc21ff5-884b-45a2-ba21-f6bbbe7cb367" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="CreateEcdsaKeyPair (384)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="f657222c-c000-430b-9273-5bd3e8dc303d">
+      <Execution id="148143bd-13b6-4ac3-b5e5-c0d4a3ab5fcb" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateEcdsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportEcdsaCsr (384,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="ca910876-9f89-4695-b878-3d661ca8fe54">
+      <Execution id="1e2744a2-4ebe-49ee-863b-58ea8516eac6" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportEcdsaCsr" />
+    </UnitTest>
+    <UnitTest name="CreateRsaKeyPair (2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="eafdf035-7538-445e-abeb-5afc31f72f95">
+      <Execution id="c83258db-f4e5-4083-a724-03aa70182278" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="CreateRsaKeyPair" />
+    </UnitTest>
+    <UnitTest name="CreateAndExportRsaSansCsr (2048,Sha512)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="b7e7e04d-f63c-415a-8def-848da6b3fe05">
+      <Execution id="af5c9225-7b84-46f5-8c24-ba38e80df224" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="CreateAndExportRsaSansCsr" />
+    </UnitTest>
+    <UnitTest name="SaveLoadKeyPair (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="40f0e9c7-1f60-4f8c-9321-e33bcee32703">
+      <Execution id="9e083d53-70e9-4e27-8dc1-ba52b08bad25" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="SaveLoadKeyPair" />
+    </UnitTest>
+    <UnitTest name="SaveLoadCertificate (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="5734871a-6a8b-4f48-ba83-8157d31914e4">
+      <Execution id="6ac93904-b89d-4532-98fb-d385d385ceb8" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="SaveLoadCertificate" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedCert (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="1a3a6e5e-7b71-4ea2-995c-08b1af413dab">
+      <Execution id="0fac0e3e-a848-4ee8-9edc-282a3daf25c4" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedCert" />
+    </UnitTest>
+    <UnitTest name="SaveLoadKeyPair (Ecdsa,256)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="74db4a3c-9272-45d8-8026-43fa55f7d8a7">
+      <Execution id="fee5c9d3-4eee-4707-b545-8b33736f31c1" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiKeyTests" name="SaveLoadKeyPair" />
+    </UnitTest>
+    <UnitTest name="ExportSelfSignedPkcs12 (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="bbd953a4-363b-4c67-942a-55c5909ddd4d">
+      <Execution id="da10b8b1-2c58-48ad-b69c-0d623112a71b" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateTests" name="ExportSelfSignedPkcs12" />
+    </UnitTest>
+    <UnitTest name="SaveLoadCsr (Rsa,2048)" storage="c:\local\prj\bek\acmesharp\acmesharpcore\test\pkisharp.simplepki.unittests\bin\debug\netcoreapp2.1\pkisharp.simplepki.unittests.dll" id="3a71ae27-f7af-42f4-a3fc-f7e0a370b270">
+      <Execution id="1def6814-c45b-4cf8-95f8-bc1cd447427e" />
+      <TestMethod codeBase="C:\local\prj\bek\ACMESharp\ACMESharpCore\test\PKISharp.SimplePKI.UnitTests\bin\Debug\netcoreapp2.1\PKISharp.SimplePKI.UnitTests.dll" adapterTypeName="executor://mstestadapter/v2" className="PKISharp.SimplePKI.UnitTests.PkiCertificateSigningRequestTests" name="SaveLoadCsr" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="47f44031-ef62-4da7-92d9-69fc40cd7770" executionId="cb537244-a2a0-48de-a2c9-8f6c4cc1afe3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f0911e9a-2955-46e9-874c-d922b36a0be9" executionId="03eac436-4bc8-42a9-9413-e3a54e2aff09" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eafdf035-7538-445e-abeb-5afc31f72f95" executionId="c83258db-f4e5-4083-a724-03aa70182278" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="efcb2dfa-5d92-45d8-98d3-d7b0f3f4a806" executionId="fdae33dd-7579-46ea-bd90-941942797ad7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bf949c0b-7e25-429c-859d-bdb01bf9c829" executionId="a46fffb3-4b19-4e6e-9941-4f68d432b5c3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c6a73f80-03a4-405d-83f6-3b64d3359af6" executionId="02b753c0-4406-4a4d-84ba-933f83d25cb6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="76b92b9a-1cda-44f3-802b-7685c34dd81e" executionId="1f62cacc-7906-4a53-a3b8-0853c434d99e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a04083ca-fbd5-41cd-9f4f-7bc0492fc97c" executionId="aa8b5704-7318-45f2-beae-596d2c89eb1d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dc65c16c-18ca-4672-9f65-9e3d1080b1f2" executionId="7c413747-5e84-4feb-8710-93b4f8e966b8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9296c42e-1194-4a29-9e4f-0b24473f8f39" executionId="7e696264-6b54-4674-8d98-412eae810b89" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9a291bd0-6673-4616-ba2a-41bfee4fa3e1" executionId="1b0ac8ce-93d4-4053-ba06-212426e142ac" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ab4e7bb2-7bfa-465b-9435-178752a4c8b1" executionId="96fde1f6-f393-467a-ab86-54fa7c97f13f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="30589b97-6598-4f2b-9f96-451994156302" executionId="2f1c21ac-6672-433a-b2a9-a1c8b71b19a7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fe68af98-7434-43be-88bb-81179b163819" executionId="f01177a3-9144-48ef-8f69-7d7ac599ef1c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7c93592c-9ca4-439e-8567-6114100e6a5f" executionId="6dc21ff5-884b-45a2-ba21-f6bbbe7cb367" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9bf3eb06-38c8-4724-8042-5af34847b647" executionId="accd3ec2-d776-4421-bcbe-ad8b60739dd0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9352f570-3c7a-4345-98e1-f6519c2a5bfb" executionId="e4071dc5-93bc-4fa2-98ac-f16640c9d719" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="40f0e9c7-1f60-4f8c-9321-e33bcee32703" executionId="9e083d53-70e9-4e27-8dc1-ba52b08bad25" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="186dfbe0-9400-440a-a94b-1b12c10381f2" executionId="eb236b26-a19a-42e8-b9db-ffac4079a172" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="74db4a3c-9272-45d8-8026-43fa55f7d8a7" executionId="fee5c9d3-4eee-4707-b545-8b33736f31c1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7f1644aa-269a-4d1d-92c9-5ef56ed40da0" executionId="ac7035b9-56be-4a57-a4cc-b891178604e9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="037d9409-ded7-49d8-857f-3c99cdf0ebba" executionId="d8ea3c71-84d6-486f-97c3-11e4cf36eef8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1a3a6e5e-7b71-4ea2-995c-08b1af413dab" executionId="0fac0e3e-a848-4ee8-9edc-282a3daf25c4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="70f6b58d-f7da-420a-ad42-9a96f23c1a68" executionId="4f8dc5c3-522e-48dd-8ab9-678091308c60" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3a71ae27-f7af-42f4-a3fc-f7e0a370b270" executionId="1def6814-c45b-4cf8-95f8-bc1cd447427e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fcf97049-5e0f-4f48-9b71-1ad19ec5eedb" executionId="17dcc305-c5e8-4cfe-9971-890bbaacb0c7" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="89bcb7a5-4457-4b9f-b2d9-bb6979d6744f" executionId="90911a9f-221a-468f-940f-624003ac3808" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="702f7db5-07bd-46c1-81e4-4b50f705f379" executionId="a93138a0-51eb-4d9d-b44e-27047658920b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="47d749a7-89ca-4ea2-9eb3-f463ef1f6024" executionId="2a409020-c988-418f-b707-8057bb40cd48" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="94dd0282-4407-46d1-b93c-fbaa10c47189" executionId="9e8f40b2-9dc3-4c46-97fb-e1aa3c441f32" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="31ebc06a-5d9c-4ced-a2ed-92619d921fe7" executionId="c365cdaa-3cfa-4ea6-b537-23c11143bc6b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="60521eae-8846-4272-a4e2-aacff4686061" executionId="85b705e8-f545-4050-9177-89b420b8eeef" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e1bce511-b519-434a-9bf3-90c643e1bb15" executionId="88034421-9fcb-40be-9f1c-092131316fb5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5734871a-6a8b-4f48-ba83-8157d31914e4" executionId="6ac93904-b89d-4532-98fb-d385d385ceb8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9ca225d9-7599-4fe9-8fe9-16bf49f7451e" executionId="4e3a6224-de20-4f56-a73a-7aa0c1d81938" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="440757a0-fc4c-4d3c-971f-11f34cab5bb2" executionId="545664d1-4521-424c-9531-02e3b92d06d4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8e2fc936-5e6f-4909-a99f-cd178f3c192a" executionId="7629fedd-fcce-48ca-9471-bf7dffed41e6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="693ace13-9c71-49f3-944c-1a5696f410d3" executionId="4ff31523-59ef-4e26-8a93-fd2d51c15d10" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8897c686-a956-40c6-8ec5-6a88c445eb1a" executionId="bd864a6b-d960-43bc-99e7-672ba71d41a1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="06b2dad4-51e3-41ec-982d-b74a46bd4875" executionId="7b8f1071-42cd-49de-a206-c497b9c52db3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2531ebc6-9824-4429-b166-6da51d74e175" executionId="ffcfb202-4303-41e1-94a9-ce0be29c1446" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="deb46920-3eb8-45ee-aac7-ff6c04d0c9a5" executionId="1cc8382d-b095-46a7-b842-14cebf525bd8" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b7e7e04d-f63c-415a-8def-848da6b3fe05" executionId="af5c9225-7b84-46f5-8c24-ba38e80df224" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5ac7a0f5-de23-4bc9-896e-7b77a8c5e3eb" executionId="e1edbf31-dcc8-4bf3-8a61-cf32aa6f13bf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f657222c-c000-430b-9273-5bd3e8dc303d" executionId="148143bd-13b6-4ac3-b5e5-c0d4a3ab5fcb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="6b407dec-4dd8-4dda-a88e-25ff1d325062" executionId="697759fa-092a-49aa-888e-ccb76f32ea22" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ca910876-9f89-4695-b878-3d661ca8fe54" executionId="1e2744a2-4ebe-49ee-863b-58ea8516eac6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bbd953a4-363b-4c67-942a-55c5909ddd4d" executionId="da10b8b1-2c58-48ad-b69c-0d623112a71b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="48" executed="48" passed="47" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+</TestRun>
