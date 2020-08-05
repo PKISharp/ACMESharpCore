@@ -91,7 +91,9 @@ jobs:
               id: unitTests
               if: ${{ !cancelled() }}
               shell: pwsh
-              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.UnitTests
+              run: |
+                dotnet test --no-restore --verbosity normal --results-directory _gh-tests --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
+                ./tools/test-report/trx2md.ps1 -trxFile ./test/ACMESharp.UnitTests/_gh_tests/_gh_tests.trx -Verbose
 
             - name: Test - SimplePKI Unit Tests
               id: simplePkiUnitTests
