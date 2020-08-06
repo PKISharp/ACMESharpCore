@@ -75,8 +75,9 @@ jobs:
               run: |
                 dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
                 dir ./_IGNORE -Recurse | select FullName
-                dir ./test/ACMESharp.UnitTests -Recurse | select FullName
+                dir ./test/ACMESharp.UnitTests -Recurse | select { $_.FullName.Substring(50) }
                 ./tools/test-report/trx2md.ps1 -trxFile ./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.trx -Verbose
+                $reportData = [System.IO.File]::ReadAllText("$PWD/./test/ACMESharp.UnitTests/_IGNORE/_gh_tests.md")
 
                 ipmo GitHubActions
                 $gist_token = $env:GIST_TOKEN
@@ -116,7 +117,6 @@ jobs:
 
                 ## Isolate the first Gist with a file matching the expected metadata name
                 $reportGist = $listGists | Where-Object { $_.files.$reportGistName } | Select-Object -First 1
-                $reportData = [System.IO.File]::ReadAllText("$PWD/./test/ACMESharp.UnitTests/_gh_tests/_gh_tests.md")
 
                 if ($reportGist) {
                     Write-ActionInfo "Found the TEST_REPORT!"
