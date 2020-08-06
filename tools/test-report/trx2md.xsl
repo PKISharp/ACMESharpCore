@@ -132,9 +132,9 @@ Expand the following summaries for more details:
 &lt;details&gt;
     &lt;summary&gt;Test Method Details:&lt;/summary&gt;
 
-* Code Base: `<xsl:value-of select="trx:TestMethod/@codeBase" />`
+* Code Base:  `<xsl:value-of select="trx:TestMethod/@codeBase" />`
 * Class Name: `<xsl:value-of select="trx:TestMethod/@className" />`
-* Method Name: `<xsl:value-of select="trx:TestMethod/@name" />`
+* Method Name:  `<xsl:value-of select="trx:TestMethod/@name" />`
 
 &lt;/details&gt;
 

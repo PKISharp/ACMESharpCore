@@ -99,8 +99,8 @@ jobs:
                 Write-ActionInfo "Resolved Repository Name.....: [$repo_name]"
                 Write-ActionInfo "Resolved Workflow............: [$workflow_name]"
                 
-                $reportGistName = "TEST_REPORT:$repo_name"
-                Write-ActionInfo "Resolved TEST_REPORT Gist Name.....: [$reportGistName]"
+                $reportGistName = "TESTS_REPORT:$($repo_name).md"
+                Write-ActionInfo "Resolved TESTS_REPORT Gist Name.....: [$reportGistName]"
 
                 $gistsApiUrl = "https://api.github.com/gists"
                 $apiHeaders = @{
@@ -119,25 +119,25 @@ jobs:
                 $reportGist = $listGists | Where-Object { $_.files.$reportGistName } | Select-Object -First 1
 
                 if ($reportGist) {
-                    Write-ActionInfo "Found the TEST_REPORT!"
+                    Write-ActionInfo "Found the TESTS_REPORT!"
 
                     $reportDataRawUrl = $reportGist.files.$reportGistName.raw_url
-                    Write-ActionInfo "Fetching TEST_REPORT content from Raw Url"
+                    Write-ActionInfo "Fetching TESTS_REPORT content from Raw Url"
 
                     $reportDataRawResp = Invoke-WebRequest -Headers $apiHeaders -Uri $reportDataRawUrl
                     $reportDataContent = $reportDataRawResp.Content
                     if (-not $reportData) {
-                        Write-ActionWarning "TEST_REPORT content seems to be missing"
+                        Write-ActionWarning "TESTS_REPORT content seems to be missing"
                         Write-ActionWarning "[$($reportGist.files.$reportGistName)]"
                         Write-ActionWarning "[$reportDataContent]"
                     }
                     else {
-                        Write-Information "Got existing TEST_REPORT"
+                        Write-Information "Got existing TESTS_REPORT"
                     }
                 }
 
                 if (-not $reportGist) {
-                    Write-ActionInfo "Creating initial TEST_REPORT Gist"
+                    Write-ActionInfo "Creating initial TESTS_REPORT Gist"
                     $createGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $gistsApiUrl -Method Post -Body (@{
                         public = $false
                         files = @{
@@ -151,7 +151,7 @@ jobs:
                     Write-ActionInfo "Create Response: $createGistResp"
                 }
                 else {
-                    Write-ActionInfo "Updating TEST_REPORT Gist"
+                    Write-ActionInfo "Updating TESTS_REPORT Gist"
                     $updateGistUrl = "$gistsApiUrl/$($reportGist.id)"
                     $updateGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $updateGistUrl -Method Patch -Body (@{
                         files = @{
