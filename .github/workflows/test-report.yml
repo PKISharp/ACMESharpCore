@@ -76,7 +76,7 @@ jobs:
                 dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
                 dir ./_IGNORE -Recurse | select FullName
                 dir ./test/ACMESharp.UnitTests -Recurse | select FullName
-                ./tools/test-report/trx2md.ps1 -trxFile ./_IGNORE/_gh-tests.trx -Verbose
+                ./tools/test-report/trx2md.ps1 -trxFile ./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.trx -Verbose
 
                 ipmo GitHubActions
                 $gist_token = $env:GIST_TOKEN
