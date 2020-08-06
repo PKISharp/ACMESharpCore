@@ -67,55 +67,13 @@ jobs:
                 Import-Module AWSPowerShell.NetCore -Force
                 Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
 
-
-            - name: Test Annotations
-              shell: pwsh
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: |
-                $ghToken = $env:GITHUB_TOKEN
-                ipmo GitHubActions
-                $ctx = Get-ActionContext
-                $repo = Get-ActionRepo
-
-                Write-ActionInfo "Resolving REF"
-                $ref = $ctx.Sha
-                if ($ctx.EventName -eq 'pull_request') {
-                    Write-ActionInfo "Resolving PR REF"
-                    $ref = $ctx.Payload.pull_request.head.sha
-                    if (-not $ref) {
-                        Write-ActionInfo "Resolving PR REF as AFTER"
-                        $ref = $ctx.Payload.after
-                    }
-                }
-                if (-not $ref) {
-                    Write-ActionError "Failed to resolve REF"
-                    exit 1
-                }
-
-                Write-ActionInfo "Adding Check Run"
-                $url = 'https://api.github.com/repos/PKISharp/ACMESharpCore/check-runs'
-                $hdr = @{
-                    Accept = 'application/vnd.github.antiope-preview+json'
-                    Authorization = "token $ghToken"
-                }
-                Invoke-WebRequest -Headers $hdr $url -Method Post -Body (@{
-                    name       = 'TESTS_REPORT_TEST'
-                    head_sha   = $ref
-                    status     = 'completed'
-                    conclusion = 'neutral'
-                    output     = @{
-                        title   = 'First Check Run'
-                        summary = 'This is the **FIRST** check run'
-                    }
-                } | ConvertTo-Json)
-
             - name: Test - Unit Tests
               id: unitTests
               if: ${{ !cancelled() }}
               shell: pwsh
               env:
                 GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                 dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
                 dir ./_IGNORE -Recurse | select FullName
@@ -207,3 +165,42 @@ jobs:
 
                     Write-ActionInfo "Update Response: $updateGistResp"
                 }
+
+                ## Publishing in GH Workflow
+
+                $ghToken = $env:GITHUB_TOKEN
+                $ctx = Get-ActionContext
+                $repo = Get-ActionRepo
+
+                Write-ActionInfo "Resolving REF"
+                $ref = $ctx.Sha
+                if ($ctx.EventName -eq 'pull_request') {
+                    Write-ActionInfo "Resolving PR REF"
+                    $ref = $ctx.Payload.pull_request.head.sha
+                    if (-not $ref) {
+                        Write-ActionInfo "Resolving PR REF as AFTER"
+                        $ref = $ctx.Payload.after
+                    }
+                }
+                if (-not $ref) {
+                    Write-ActionError "Failed to resolve REF"
+                    exit 1
+                }
+
+                Write-ActionInfo "Adding Check Run"
+                $url = 'https://api.github.com/repos/PKISharp/ACMESharpCore/check-runs'
+                $hdr = @{
+                    Accept = 'application/vnd.github.antiope-preview+json'
+                    Authorization = "token $ghToken"
+                }
+                Invoke-WebRequest -Headers $hdr $url -Method Post -Body (@{
+                    name       = 'TESTS: ACMESharp.UnitTests'
+                    head_sha   = $ref
+                    status     = 'completed'
+                    conclusion = 'neutral'
+                    output     = @{
+                        title   = 'Test Run:  ACMESharp.UnitTests'
+                        summary = 'This run completed at `${[datetime]::Now}`'.
+                        text    = $reportData
+                    }
+                } | ConvertTo-Json)
