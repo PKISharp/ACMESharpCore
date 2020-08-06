@@ -200,7 +200,7 @@ jobs:
                     conclusion = 'neutral'
                     output     = @{
                         title   = 'Test Run:  ACMESharp.UnitTests'
-                        summary = 'This run completed at `${[datetime]::Now}`'.
+                        summary = 'This run completed at `${[datetime]::Now}`'
                         text    = $reportData
                     }
                 } | ConvertTo-Json)
