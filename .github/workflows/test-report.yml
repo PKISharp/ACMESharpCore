@@ -77,7 +77,7 @@ jobs:
                 dir ./_IGNORE -Recurse | select FullName
                 dir ./test/ACMESharp.UnitTests -Recurse | select { $_.FullName.Substring(50) }
                 ./tools/test-report/trx2md.ps1 -trxFile ./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.trx -Verbose
-                $reportData = [System.IO.File]::ReadAllText("$PWD/./test/ACMESharp.UnitTests/_IGNORE/_gh_tests.md")
+                $reportData = [System.IO.File]::ReadAllText("$PWD/./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.md")
 
                 ipmo GitHubActions
                 $gist_token = $env:GIST_TOKEN
