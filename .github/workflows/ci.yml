@@ -29,7 +29,7 @@ jobs:
                 Import-Module GitHubActions
 
                 $matrix_os = $env:MATRIX_OS
-                $matrix_os = if ([string]::IsNullOrWhiteSpace($matrix_os)) {'unknown'}
+                if ([string]::IsNullOrWhiteSpace($matrix_os)) { $matrix_os = 'unknown' }
                 $os_label = $matrix_os.Split('-')[0]
                 
                 Write-ActionInfo "Resolved `$env:OS_LABEL as [$os_label]"
