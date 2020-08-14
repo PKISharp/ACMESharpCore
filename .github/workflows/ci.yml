@@ -22,7 +22,7 @@ jobs:
               shell: pwsh
               env:
                 MATRIX_OS: ${{ matrix.os }}
-              run:
+              run: |
                 Install-Module GitHubActions -Force
                 Install-Module AWSPowerShell.NetCore -Force
 
@@ -51,6 +51,7 @@ jobs:
               run: dotnet build --configuration Release --no-restore
 
             - name: Prepare for Tests
+              id: prep_tests
               env:
                 TEST_BUCKET_NAME: ${{ secrets.TEST_BUCKET_NAME }}
                 TEST_HOSTED_ZONE_ID: ${{ secrets.TEST_HOSTED_ZONE_ID }}
@@ -140,7 +141,7 @@ jobs:
 
             - name: Test - Unit Tests
               id: unit_tests
-              if: ${{ !cancelled() }}
+              if: ${{ !cancelled() && steps.prep_tests.outcome == 'success' }}
               uses: zyborg/dotnet-tests-report@v0
               with:
                 project_path: ./test/ACMESharp.UnitTests
@@ -153,7 +154,7 @@ jobs:
       
             - name: Test - SimplePKI Unit Tests
               id: simplepki_unit_tests
-              if: ${{ !cancelled() }}
+              if: ${{ !cancelled() && steps.prep_tests.outcome == 'success' }}
               uses: zyborg/dotnet-tests-report@v0
               with:
                 project_path: ./test/PKISharp.SimplePKI.UnitTests
@@ -166,7 +167,7 @@ jobs:
 
             - name: Test - MockServer Unit Tests
               id: mockserver_unit_tests
-              if: ${{ !cancelled() }}
+              if: ${{ !cancelled() && steps.prep_tests.outcome == 'success' }}
               uses: zyborg/dotnet-tests-report@v0
               with:
                 project_path: ./test/ACMESharp.MockServer.UnitTests
@@ -178,7 +179,7 @@ jobs:
                 gist_token: ${{ secrets.GIST_TOKEN }}
 
             - name: Unit Test Results Dump
-              if: ${{ !cancelled() }}
+              if: ${{ !cancelled() && steps.prep_tests.outcome == 'success' }}
               continue-on-error: true
               shell: pwsh
               run: |

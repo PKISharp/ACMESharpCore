@@ -1,11 +1,12 @@
 name: Test Report
 
 on:
-    push:
-        branches:
-        - master
-        - github-workflow
-        - github-workflow-checks
+    workflow_dispatch:
+    # push:
+    #     branches:
+    #     - master
+    #     - github-workflow
+    #     - github-workflow-checks
 
 jobs:
     build:
