@@ -17,6 +17,25 @@ jobs:
         runs-on: ${{ matrix.os }}
     
         steps:
+            - name: Prep CI
+              id: prep_ci
+              shell: pwsh
+              env:
+                MATRIX_OS: ${{ matrix.os }}
+              run:
+                Install-Module GitHubActions -Force
+                Install-Module AWSPowerShell.NetCore -Force
+
+                Import-Module GitHubActions
+
+                $matrix_os = $env:MATRIX_OS
+                $matrix_os = if ([string]::IsNullOrWhiteSpace($matrix_os)) {'unknown'}
+                $os_label = $matrix_os.Split('-')[0]
+                
+                Write-ActionInfo "Resolved `$env:OS_LABEL as [$os_label]"
+                Set-ActionVariable -Name OS_LABEL -Value $os_label
+                Set-ActionOutput   -Name os_label -Value $os_label
+
             - name: Checkout latest
               uses: actions/checkout@v2
 
@@ -67,8 +86,6 @@ jobs:
                 #    Install-Module AWSPowerShell.NetCore -Force
                 #}
 
-                Install-Module GitHubActions -Force
-                Install-Module AWSPowerShell.NetCore -Force
                 Import-Module AWSPowerShell.NetCore -Force
                 Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
 
@@ -87,36 +104,100 @@ jobs:
             ## and each will always execute regardless of the
             ## result of any preceding test as long as
 
-            - name: Test - Unit Tests
-              id: unitTests
-              if: ${{ !cancelled() }}
-              shell: pwsh
-              run: |
-                dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
-                #./tools/test-report/trx2md.ps1 -trxFile ./_IGNORE/_gh-tests.trx -Verbose
+            #- name: Test - Unit Tests
+            #  id: unitTests
+            #  if: ${{ !cancelled() }}
+            #  shell: pwsh
+            #  run: |
+            #    dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
+            #    #./tools/test-report/trx2md.ps1 -trxFile ./_IGNORE/_gh-tests.trx -Verbose
 
-            - name: Test - SimplePKI Unit Tests
-              id: simplePkiUnitTests
+            #- name: Test - SimplePKI Unit Tests
+            #  id: simplePkiUnitTests
+            #  if: ${{ !cancelled() }}
+            #  shell: pwsh
+            #  run: dotnet test --no-restore --verbosity normal ./test/PKISharp.SimplePKI.UnitTests
+
+            #- name: Test - MockServer Unit Tests
+            #  id: mockServerUnitTests
+            #  if: ${{ !cancelled() }}
+            #  shell: pwsh
+            #  run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.MockServer.UnitTests
+
+            #- name: Test - Integration Tests
+            #  id: integrationTests
+            #  if: ${{ !cancelled() && steps.unitTests.outcome == 'success' && steps.mockServerUnitTests.outcome == 'success' && steps.simplePkiUnitTests.outcome == 'success' }}
+            #  continue-on-error: true
+            #  shell: pwsh
+            #  run: |
+            #    ipmo GitHubActions
+            #    Write-ActionInfo "Results of preceding Tests:"
+            #    Write-ActionInfo "  * unitTests..............: ${{ steps.unitTests.outcome }}"
+            #    Write-ActionInfo "  * mockServerUnitTests....: ${{ steps.mockServerUnitTests.outcome }}"
+            #    Write-ActionInfo "  * simplePkiUnitTests.....: ${{ steps.simplePkiUnitTests.outcome }}"
+
+            #    dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
+
+            - name: Test - Unit Tests
+              id: unit_tests
               if: ${{ !cancelled() }}
-              shell: pwsh
-              run: dotnet test --no-restore --verbosity normal ./test/PKISharp.SimplePKI.UnitTests
+              uses: zyborg/dotnet-tests-report@v0
+              with:
+                project_path: ./test/ACMESharp.UnitTests
+                no_restore: true
+                report_name: unit_tests_${{ steps.prep_ci.outputs.os_label }}
+                report_title: ACMESharp Core - Base Unit Tests
+                gist_name: acmesharpcore-unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
+                gist_badge_label: 'Base Unit Tests: %Counters_passed%/%Counters_total%'
+                gist_token: ${{ secrets.GIST_TOKEN }}
+      
+            - name: Test - SimplePKI Unit Tests
+              id: simplepki_unit_tests
+              if: ${{ !cancelled() }}
+              uses: zyborg/dotnet-tests-report@v0
+              with:
+                project_path: ./test/PKISharp.SimplePKI.UnitTests
+                no_restore: true
+                report_name: simplepki_unit_tests_${{ steps.prep_ci.outputs.os_label }}
+                report_title: ACMESharp Core - SimplePKI Unit Tests
+                gist_name: acmesharpcore-simplepki_unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
+                gist_badge_label: 'SimplePKI Unit Tests: %Counters_passed%/%Counters_total%'
+                gist_token: ${{ secrets.GIST_TOKEN }}
 
             - name: Test - MockServer Unit Tests
-              id: mockServerUnitTests
+              id: mockserver_unit_tests
               if: ${{ !cancelled() }}
-              shell: pwsh
-              run: dotnet test --no-restore --verbosity normal ./test/ACMESharp.MockServer.UnitTests
+              uses: zyborg/dotnet-tests-report@v0
+              with:
+                project_path: ./test/ACMESharp.MockServer.UnitTests
+                no_restore: true
+                report_name: mockserver_unit_tests_${{ steps.prep_ci.outputs.os_label }}
+                report_title: ACMESharp Core - MockServer Unit Tests
+                gist_name: acmesharpcore-mockserver_unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
+                gist_badge_label: 'MockServer Unit Tests: %Counters_passed%/%Counters_total%'
+                gist_token: ${{ secrets.GIST_TOKEN }}
 
-            - name: Test - Integration Tests
-              id: integrationTests
-              if: ${{ !cancelled() && steps.unitTests.outcome == 'success' && steps.mockServerUnitTests.outcome == 'success' && steps.simplePkiUnitTests.outcome == 'success' }}
+            - name: Unit Test Results Dump
+              if: ${{ !cancelled() }}
               continue-on-error: true
               shell: pwsh
               run: |
                 ipmo GitHubActions
                 Write-ActionInfo "Results of preceding Tests:"
-                Write-ActionInfo "  * unitTests..............: ${{ steps.unitTests.outcome }}"
-                Write-ActionInfo "  * mockServerUnitTests....: ${{ steps.mockServerUnitTests.outcome }}"
-                Write-ActionInfo "  * simplePkiUnitTests.....: ${{ steps.simplePkiUnitTests.outcome }}"
+                Write-ActionInfo "  * unit_tests...............: ${{ steps.unit_tests.outcome }}"
+                Write-ActionInfo "  * simplepki_unit_tests.....: ${{ steps.simplepki_unit_tests.outcome }}"
+                Write-ActionInfo "  * mockserver_unit_tests....: ${{ steps.mockserver_unit_tests.outcome }}"
 
-                dotnet test --no-restore --verbosity normal ./test/ACMESharp.IntegrationTests
+            - name: Test - Integration Tests
+              id: integration_tests
+              if: ${{ !cancelled() && steps.unit_tests.outcome == 'success' && steps.simplepki_unit_tests.outcome == 'success' && steps.mockserver_unit_tests.outcome == 'success' }}
+              continue-on-error: true
+              uses: zyborg/dotnet-tests-report@v0
+              with:
+                project_path: ./test/ACMESharp.IntegrationTests
+                no_restore: true
+                report_name: integration_tests_${{ steps.prep_ci.outputs.os_label }}
+                report_title: ACMESharp Core - Integration Tests
+                gist_name: acmesharpcore-integration_tests-${{ steps.prep_ci.outputs.os_label }}.md
+                gist_badge_label: 'Base Unit Tests: %Counters_passed%/%Counters_total%'
+                gist_token: ${{ secrets.GIST_TOKEN }}
