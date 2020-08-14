@@ -45,7 +45,7 @@ jobs:
                 dotnet-version: 2.1.*
                 
             - name: Install dependencies
-             run: dotnet restore
+              run: dotnet restore
             
             - name: Build
               run: dotnet build --configuration Release --no-restore
