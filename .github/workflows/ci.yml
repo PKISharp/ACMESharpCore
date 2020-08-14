@@ -44,12 +44,12 @@ jobs:
               with:
                 dotnet-version: 2.1.*
                 
-            #- name: Install dependencies
-            #  run: dotnet restore
+            - name: Install dependencies
+             run: dotnet restore
             
             - name: Build
-              #run: dotnet build --configuration Release --no-restore
-              run: dotnet build --configuration Release
+              run: dotnet build --configuration Release --no-restore
+              #run: dotnet build --configuration Release
 
             - name: Prepare for Tests
               id: prep_tests
@@ -149,6 +149,7 @@ jobs:
                 no_restore: true
                 report_name: unit_tests_${{ steps.prep_ci.outputs.os_label }}
                 report_title: ACMESharp Core - Base Unit Tests
+                github_token: ${{ secrets.GITHUB_TOKEN }}
                 gist_name: acmesharpcore-unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
                 gist_badge_label: 'Base Unit Tests: %Counters_passed%/%Counters_total%'
                 gist_token: ${{ secrets.GIST_TOKEN }}
@@ -162,6 +163,7 @@ jobs:
                 no_restore: true
                 report_name: simplepki_unit_tests_${{ steps.prep_ci.outputs.os_label }}
                 report_title: ACMESharp Core - SimplePKI Unit Tests
+                github_token: ${{ secrets.GITHUB_TOKEN }}
                 gist_name: acmesharpcore-simplepki_unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
                 gist_badge_label: 'SimplePKI Unit Tests: %Counters_passed%/%Counters_total%'
                 gist_token: ${{ secrets.GIST_TOKEN }}
@@ -175,6 +177,7 @@ jobs:
                 no_restore: true
                 report_name: mockserver_unit_tests_${{ steps.prep_ci.outputs.os_label }}
                 report_title: ACMESharp Core - MockServer Unit Tests
+                github_token: ${{ secrets.GITHUB_TOKEN }}
                 gist_name: acmesharpcore-mockserver_unit_tests-${{ steps.prep_ci.outputs.os_label }}.md
                 gist_badge_label: 'MockServer Unit Tests: %Counters_passed%/%Counters_total%'
                 gist_token: ${{ secrets.GIST_TOKEN }}
@@ -193,13 +196,13 @@ jobs:
             - name: Test - Integration Tests
               id: integration_tests
               if: ${{ !cancelled() && steps.unit_tests.outcome == 'success' && steps.simplepki_unit_tests.outcome == 'success' && steps.mockserver_unit_tests.outcome == 'success' }}
-              continue-on-error: true
               uses: zyborg/dotnet-tests-report@v0
               with:
                 project_path: ./test/ACMESharp.IntegrationTests
                 no_restore: true
                 report_name: integration_tests_${{ steps.prep_ci.outputs.os_label }}
                 report_title: ACMESharp Core - Integration Tests
+                github_token: ${{ secrets.GITHUB_TOKEN }}
                 gist_name: acmesharpcore-integration_tests-${{ steps.prep_ci.outputs.os_label }}.md
                 gist_badge_label: 'Base Unit Tests: %Counters_passed%/%Counters_total%'
                 gist_token: ${{ secrets.GIST_TOKEN }}
