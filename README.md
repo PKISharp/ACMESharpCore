@@ -9,16 +9,6 @@ An ACME client library for .NET Standard (Let's Encrypt)
 [![ADO Build Status](https://dev.azure.com/PKISharp/ACMESharpCore/_apis/build/status/ACMESharpCore-ASP.NET%20Core%20(.NET%20Framework)-CI?branchName=master)](https://dev.azure.com/PKISharp/ACMESharpCore/_build/latest?definitionId=2&branchName=master)
 -->
 
-## Packages
-
-| Component | Stable Release | Early Access |
-|-|-|-|
-| | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22) | Hosted on [MyGet Gallery](https://www.myget.org/gallery/acmesharp)
-| ACMESharpCore client library | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.svg)](https://www.myget.org/feed/acmesharp/package/nuget/ACMESharpCore)
-| Crypto Support library | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.Crypto.svg)](https://www.nuget.org/packages/ACMESharpCore.Crypto) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.Crypto.svg)](https://www.myget.org/feed/acmesharp/package/nuget/ACMESharpCore.Crypto)
-| SimplePKI library | [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/PKISharp.SimplePKI.svg)](https://www.myget.org/feed/acmesharp/package/nuget/PKISharp.SimplePKI)
-
-
 ## Tests
 
 | Component/Test Type | Linux | Windows |
@@ -27,6 +17,15 @@ An ACME client library for .NET Standard (Let's Encrypt)
 | SimplePKI Unit Tests |[![Test](https://gist.github.com/ebekker/51e6ff56691ffc0f9711c03e0881075d/raw/d818c129979426f9fd0f1357ebe1f9f9eabcf08d/acmesharpcore-simplepki_unit_tests-ubuntu.md_badge.svg)](https://gist.github.com/ebekker/51e6ff56691ffc0f9711c03e0881075d) | [![Test](https://gist.github.com/ebekker/a4f43f8b87fc2ea76c81e87f9485e93f/raw/08c366d095a3ab8a19082aafea0967bf96264a30/acmesharpcore-simplepki_unit_tests-windows.md_badge.svg)](https://gist.github.com/ebekker/a4f43f8b87fc2ea76c81e87f9485e93f) |
 | MockServer Unit Tess |[![Test](https://gist.github.com/ebekker/1710122c8142afca6d17baa949337b26/raw/4cc3ef38ce1aec888335c7ddcc881bb623037c49/acmesharpcore-mockserver_unit_tests-ubuntu.md_badge.svg)](https://gist.github.com/ebekker/1710122c8142afca6d17baa949337b26) | [![Test](https://gist.github.com/ebekker/f0cf60ccad4b402729657dc3ffb3a0b0/raw/9d7e199f7dbdb44e5df1c4be873fe57f292d8d31/acmesharpcore-mockserver_unit_tests-windows.md_badge.svg)](https://gist.github.com/ebekker/f0cf60ccad4b402729657dc3ffb3a0b0) |
 | Integration Tests | [![Test](https://gist.github.com/ebekker/e0e7c1cc484fb0f306453f920b6c6afc/raw/4d2629679bd42c24c2055750d1cca033facf0cc4/acmesharpcore-integration_tests-ubuntu.md_badge.svg)](https://gist.github.com/ebekker/e0e7c1cc484fb0f306453f920b6c6afc) | [![Test](https://gist.githubusercontent.com/ebekker/97a5714f0f4a70cefe832be7aa190765/raw/acmesharpcore-integration_tests-windows.md_badge.svg)](https://gist.githubusercontent.com/ebekker/97a5714f0f4a70cefe832be7aa190765)
+
+## Packages
+
+| Component | Stable Release | Early Access |
+|-|-|-|
+| | Hosted on the [NuGet Gallery](https://www.nuget.org/packages?q=Tags%3A%22acmesharp%22) | Hosted on [MyGet Gallery](https://www.myget.org/gallery/acmesharp)
+| ACMESharpCore client library | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.svg)](https://www.nuget.org/packages/ACMESharpCore) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.svg)](https://www.myget.org/feed/acmesharp/package/nuget/ACMESharpCore)
+| Crypto Support library | [![NuGet](https://img.shields.io/nuget/v/ACMESharpCore.Crypto.svg)](https://www.nuget.org/packages/ACMESharpCore.Crypto) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/ACMESharpCore.Crypto.svg)](https://www.myget.org/feed/acmesharp/package/nuget/ACMESharpCore.Crypto)
+| SimplePKI library | [![NuGet](https://img.shields.io/nuget/v/PKISharp.SimplePKI.svg)](https://www.nuget.org/packages/PKISharp.SimplePKI) | [![MyGet](https://img.shields.io/myget/acmesharp/vpre/PKISharp.SimplePKI.svg)](https://www.myget.org/feed/acmesharp/package/nuget/PKISharp.SimplePKI)
 
 ## Overview
 
