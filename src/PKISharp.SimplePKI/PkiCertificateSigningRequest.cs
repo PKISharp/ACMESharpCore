@@ -245,10 +245,16 @@ namespace PKISharp.SimplePKI
         public PkiCertificate CreateCa(DateTimeOffset notBefore, DateTimeOffset notAfter)
         {
             var name = new X509Name(SubjectName);
-            var snum = Org.BouncyCastle.Utilities.BigIntegers.CreateRandomInRange(
+            var snumInt = Org.BouncyCastle.Utilities.BigIntegers.CreateRandomInRange(
                             BigInteger.One, BigInteger.ValueOf(long.MaxValue),
-                            new SecureRandom()).ToByteArrayUnsigned();
-            
+                            new SecureRandom());
+
+            // TODO: for some reason, on Linux this was returning negative???
+            if (snumInt.SignValue <= 0)
+                snumInt = snumInt.Negate();
+
+            var snum = snumInt.ToByteArrayUnsigned();
+
             // Key Usage:
             //    Digital Signature, Certificate Signing, Off-line CRL Signing, CRL Signing (86)
             

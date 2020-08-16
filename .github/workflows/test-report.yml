@@ -1,0 +1,207 @@
+name: Test Report
+
+on:
+    workflow_dispatch:
+    # push:
+    #     branches:
+    #     - master
+    #     - github-workflow
+    #     - github-workflow-checks
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                os:
+                    - 'ubuntu-latest'
+#                    - 'windows-latest'
+
+        runs-on: ${{ matrix.os }}
+    
+        steps:
+            - name: Checkout latest
+              uses: actions/checkout@v2
+
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v1
+              with:
+                dotnet-version: 2.1.*
+                
+            - name: Install dependencies
+              run: dotnet restore
+            
+            - name: Build
+              run: dotnet build --configuration Release --no-restore
+
+            - name: Prepare for Tests
+              env:
+                TEST_BUCKET_NAME: ${{ secrets.TEST_BUCKET_NAME }}
+                TEST_HOSTED_ZONE_ID: ${{ secrets.TEST_HOSTED_ZONE_ID }}
+                TEST_AWS_ACCESS_KEY: ${{ secrets.TEST_AWS_ACCESS_KEY }}
+                TEST_AWS_SECRET_KEY: ${{ secrets.TEST_AWS_SECRET_KEY }}
+              shell: pwsh
+              run: |
+                $configRoot      = "./test/ACMESharp.IntegrationTests/config"
+                $configOutRoot   = [System.IO.Path]::Combine($configRoot, "_IGNORE")
+                $configTemplates = [System.IO.Path]::Combine($configRoot, "template-*")
+                $configValues    = [System.Environment]::GetEnvironmentVariables()
+
+                if (-not (Test-Path -PathType Container $configOutRoot)) {
+                    mkdir $configOutRoot
+                }
+
+                ## For each config template, do a @@ENV_VAR@@ substitution
+                ## as we write out the realized template to the config dir
+                foreach ($f in (dir $configTemplates)) {
+                    $fOut = $f.FullName -replace '[\\/]template-','/_IGNORE/'
+                    $fBody = [System.IO.File]::ReadAllText($f.FullName)
+                    foreach ($k in $configValues.Keys) {
+                        $fBody = $fBody -replace "@@$k@@",$configValues[$k]
+                    }
+                    [System.IO.File]::WriteAllText("$($fOut)", $fBody)
+                }
+
+                Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+                Install-Module GitHubActions -Force
+                Install-Module AWSPowerShell.NetCore -Force
+                Import-Module AWSPowerShell.NetCore -Force
+                Set-AWSCredential -StoreAs acmesharp-tests -AccessKey $env:TEST_AWS_ACCESS_KEY -SecretKey $env:TEST_AWS_SECRET_KEY
+
+            - name: Test - Unit Tests
+              id: unitTests
+              if: ${{ !cancelled() }}
+              shell: pwsh
+              env:
+                GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                dotnet test --no-restore --verbosity normal --results-directory ./_IGNORE --logger "trx;LogFileName=_gh-tests.trx" ./test/ACMESharp.UnitTests
+                dir ./_IGNORE -Recurse | select FullName
+                dir ./test/ACMESharp.UnitTests -Recurse | select { $_.FullName.Substring(50) }
+                ./tools/test-report/trx2md.ps1 -trxFile ./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.trx -Verbose
+                $reportData = [System.IO.File]::ReadAllText("$PWD/./test/ACMESharp.UnitTests/_IGNORE/_gh-tests.md")
+
+                ipmo GitHubActions
+                $gist_token = $env:GIST_TOKEN
+
+                $repo_full_name = Get-ActionInput repo_full_name
+                $workflow_name  = Get-ActionInput workflow_name
+
+                if (-not $repo_name) {
+                    $repo_full_name = $env:GITHUB_REPOSITORY
+                }
+                if (-not $workflow_name) {
+                    $workflow_name = $env:GITHUB_WORKFLOW
+                }
+
+                ($repo_owner, $repo_name) = $repo_full_name -split '/'
+
+                Write-ActionInfo "Resolved Repository..........: [$repo_full_name]"
+                Write-ActionInfo "Resolved Repository Owner....: [$repo_owner]"
+                Write-ActionInfo "Resolved Repository Name.....: [$repo_name]"
+                Write-ActionInfo "Resolved Workflow............: [$workflow_name]"
+                
+                $reportGistName = "TESTS_REPORT:$($repo_name).md"
+                Write-ActionInfo "Resolved TESTS_REPORT Gist Name.....: [$reportGistName]"
+
+                $gistsApiUrl = "https://api.github.com/gists"
+                $apiHeaders = @{
+                    Accept        = "application/vnd.github.v2+json"
+                    Authorization = "token $gist_token"
+                }
+
+                ## Request all Gists for the current user
+                $listGistsResp = Invoke-WebRequest -Headers $apiHeaders -Uri $gistsApiUrl
+
+                ## Parse response content as JSON
+                $listGists = $listGistsResp.Content | ConvertFrom-Json -AsHashtable
+                Write-ActionInfo "Got [$($listGists.Count)] Gists for current account"
+
+                ## Isolate the first Gist with a file matching the expected metadata name
+                $reportGist = $listGists | Where-Object { $_.files.$reportGistName } | Select-Object -First 1
+
+                if ($reportGist) {
+                    Write-ActionInfo "Found the TESTS_REPORT!"
+
+                    $reportDataRawUrl = $reportGist.files.$reportGistName.raw_url
+                    Write-ActionInfo "Fetching TESTS_REPORT content from Raw Url"
+
+                    $reportDataRawResp = Invoke-WebRequest -Headers $apiHeaders -Uri $reportDataRawUrl
+                    $reportDataContent = $reportDataRawResp.Content
+                    if (-not $reportData) {
+                        Write-ActionWarning "TESTS_REPORT content seems to be missing"
+                        Write-ActionWarning "[$($reportGist.files.$reportGistName)]"
+                        Write-ActionWarning "[$reportDataContent]"
+                    }
+                    else {
+                        Write-Information "Got existing TESTS_REPORT"
+                    }
+                }
+
+                if (-not $reportGist) {
+                    Write-ActionInfo "Creating initial TESTS_REPORT Gist"
+                    $createGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $gistsApiUrl -Method Post -Body (@{
+                        public = $false
+                        files = @{
+                            $reportGistName = @{
+                                content = $reportData
+                            }
+                        }
+                    } | ConvertTo-Json)
+                    $createGist = $createGistResp.Content | ConvertFrom-Json -AsHashtable
+                    $reportGist = $createGist
+                    Write-ActionInfo "Create Response: $createGistResp"
+                }
+                else {
+                    Write-ActionInfo "Updating TESTS_REPORT Gist"
+                    $updateGistUrl = "$gistsApiUrl/$($reportGist.id)"
+                    $updateGistResp = Invoke-WebRequest -Headers $apiHeaders -Uri $updateGistUrl -Method Patch -Body (@{
+                        files = @{
+                            $reportGistName = @{
+                                content = $reportData
+                            }
+                        }
+                    } | ConvertTo-Json)
+
+                    Write-ActionInfo "Update Response: $updateGistResp"
+                }
+
+                ## Publishing in GH Workflow
+
+                $ghToken = $env:GITHUB_TOKEN
+                $ctx = Get-ActionContext
+                $repo = Get-ActionRepo
+
+                Write-ActionInfo "Resolving REF"
+                $ref = $ctx.Sha
+                if ($ctx.EventName -eq 'pull_request') {
+                    Write-ActionInfo "Resolving PR REF"
+                    $ref = $ctx.Payload.pull_request.head.sha
+                    if (-not $ref) {
+                        Write-ActionInfo "Resolving PR REF as AFTER"
+                        $ref = $ctx.Payload.after
+                    }
+                }
+                if (-not $ref) {
+                    Write-ActionError "Failed to resolve REF"
+                    exit 1
+                }
+
+                Write-ActionInfo "Adding Check Run"
+                $url = 'https://api.github.com/repos/PKISharp/ACMESharpCore/check-runs'
+                $hdr = @{
+                    Accept = 'application/vnd.github.antiope-preview+json'
+                    Authorization = "token $ghToken"
+                }
+                Invoke-WebRequest -Headers $hdr $url -Method Post -Body (@{
+                    name       = 'TESTS: ACMESharp.UnitTests'
+                    head_sha   = $ref
+                    status     = 'completed'
+                    conclusion = 'neutral'
+                    output     = @{
+                        title   = 'Test Run:  ACMESharp.UnitTests'
+                        summary = 'This run completed at `${[datetime]::Now}`'
+                        text    = $reportData
+                    }
+                } | ConvertTo-Json)

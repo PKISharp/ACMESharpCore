@@ -10,7 +10,9 @@ namespace ACMESharp.MockServer.UnitTests
     [TestClass]
     public class CertificateAuthorityTests
     {
-        public const string DataFolder = @".\_IGNORE\data";
+        private static readonly char S = Path.DirectorySeparatorChar;
+        public static readonly string DataFolder = $@".{S}_IGNORE{S}data";
+
 
         [ClassInitialize]
         public static void Init(TestContext ctx)

@@ -19,10 +19,12 @@ namespace ACMESharp.MockServer.UnitTests
     [TestClass]
     public class AcmeControllerTests
     {
+        private static readonly char S = Path.DirectorySeparatorChar;
+
         // When using the ASP.NET Core TestHost, only the URL Path is significant
         public const string DefaultServerUrl = "http://localhost/";
-        public const string DataFolder = @".\_IGNORE\data";
-        public const string RepoFilePath = DataFolder + @"\acme-mockserver.db";
+        public static readonly string DataFolder = $@".{S}_IGNORE{S}data";
+        public static readonly string RepoFilePath = DataFolder + $@"{S}acme-mockserver.db";
 
         static TestServer _server;
 

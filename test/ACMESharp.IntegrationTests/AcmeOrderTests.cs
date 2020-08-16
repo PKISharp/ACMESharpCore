@@ -42,7 +42,9 @@ namespace ACMESharp.IntegrationTests
         IClassFixture<ClientsFixture>,
         IClassFixture<AwsFixture>
     {
-        protected bool _usePostAsGet = false;
+        // Our test site (Let's Encrypt Stage)
+        // no longer supports any other option
+        protected bool _usePostAsGet = true; // false;
 
         public AcmeOrderTests(ITestOutputHelper output,
                 StateFixture state, ClientsFixture clients, AwsFixture aws, ILogger log = null)

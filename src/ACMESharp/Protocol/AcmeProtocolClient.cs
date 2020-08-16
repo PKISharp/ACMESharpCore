@@ -691,6 +691,27 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
+        /// Generic fetch routine to retrieve raw bytes from a URL associated
+        /// with an ACME endpoint.
+        /// </summary>
+        /// <param name="relativeUrl">The URL to fetch which may be relative to the ACME
+        ///         endpoint associated with this client instance</param>
+        /// <param name="cancel">Optional cancellation token</param>
+        /// <returns>A tuple containing the content type and the raw content bytes</returns>
+        public async Task<byte[]> GetByteArrayAsync(
+            string relativeUrl,
+            CancellationToken cancel = default(CancellationToken))
+        {
+            var url = new Uri(_http.BaseAddress, relativeUrl);
+            var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
+            var message = _usePostAsGet ? "" : null;
+            var skipNonce = _usePostAsGet ? false : true;
+            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel);
+            resp.EnsureSuccessStatusCode();
+            return await resp.Content.ReadAsByteArrayAsync();
+        }
+
+        /// <summary>
         /// The workhorse routine for submitting HTTP requests using ACME protocol
         /// semantics and activating pre- and post-submission event hooks.
         /// </summary>

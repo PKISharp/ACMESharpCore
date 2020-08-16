@@ -33,7 +33,9 @@ namespace ACMESharp.IntegrationTests
         IClassFixture<StateFixture>,
         IClassFixture<ClientsFixture>
     {
-        protected bool _usePostAsGet = false;
+        // Our test site (Let's Encrypt Stage)
+        // no longer supports any other option
+        protected bool _usePostAsGet = true; // false;
 
         public AcmeAccountTests(ITestOutputHelper output, StateFixture state, ClientsFixture clients)
             : base(state, clients)
