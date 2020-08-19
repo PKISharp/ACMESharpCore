@@ -387,6 +387,16 @@ namespace ACMESharp.Protocol
             return order;
         }
 
+        /// <summary>
+        /// Creates a new Order for a Certificate which will contain one or more
+        /// DNS Identifiers.  The first DNS Identifier will be treated as the primary
+        /// subject of the certificate, and any optional subsequent Identifiers
+        /// will be treated as Subject Alterative Name (SAN) entries.
+        /// </summary>
+        /// <remarks>
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.4
+        /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.1.3
+        /// </remarks>
         public Task<OrderDetails> CreateOrderAsync(IEnumerable<string> dnsIdentifiers,
             DateTime? notBefore = null,
             DateTime? notAfter = null,
