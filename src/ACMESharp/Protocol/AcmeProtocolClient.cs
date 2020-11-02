@@ -645,6 +645,28 @@ namespace ACMESharp.Protocol
         }
 
         /// <summary>
+        /// Get ACME certificate including metadata
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        public async Task<AcmeCertificate> GetOrderCertificateExAsync(
+            OrderDetails order,
+            CancellationToken cancel = default)
+        {
+            using (var resp = await GetAsync(order.Payload.Certificate, cancel))
+            {
+                var ret = new AcmeCertificate();
+                if (resp.Headers.TryGetValues("Link", out var linkValues))
+                {
+                    ret.Links = new HTTP.LinkCollection(linkValues);
+                }
+                ret.Certificate = await resp.Content.ReadAsByteArrayAsync();
+                return ret;
+            }
+        }
+
+        /// <summary>
         /// Revoke certificate
         /// </summary>
         /// <remarks>
