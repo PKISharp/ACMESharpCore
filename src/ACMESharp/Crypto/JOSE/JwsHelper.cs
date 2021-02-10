@@ -91,7 +91,7 @@ namespace ACMESharp.Crypto.JOSE
                 object protectedHeaders = null, object unprotectedHeaders = null)
         {
             var jwsFlatJS = SignFlatJsonAsObject(sigFunc, payload, protectedHeaders, unprotectedHeaders);
-            return JsonConvert.SerializeObject(jwsFlatJS, Formatting.Indented);
+            return JsonConvert.SerializeObject(jwsFlatJS);
         }
 
         /// <summary>
