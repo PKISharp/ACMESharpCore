@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+
 using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Resources
@@ -16,5 +17,8 @@ namespace ACMESharp.Protocol.Resources
 
         [JsonProperty("status")]
         public int? Status { get; set; }
+
+        [JsonProperty("subproblems")]
+        public Problem[] Subproblems { get; set; }
     }
 }

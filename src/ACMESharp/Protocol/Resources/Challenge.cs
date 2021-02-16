@@ -46,7 +46,7 @@ namespace ACMESharp.Protocol.Resources
         /// errors can be indicated by using subproblems Section 6.6.1.
         /// </summary>
         [JsonProperty("error")]
-        public object Error { get; set; }
+        public Problem Error { get; set; }
 
         [JsonProperty("token")]
         public string Token { get; set; }
