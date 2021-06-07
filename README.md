@@ -2,6 +2,8 @@
 
 An ACME client library for .NET Standard (Let's Encrypt)
 
+:star: I appreciate your star, it helps me decide to which OSS projects I should allocate my spare time.
+
 ![CI](https://github.com/PKISharp/ACMESharpCore/workflows/CI/badge.svg)
 
 <!--
