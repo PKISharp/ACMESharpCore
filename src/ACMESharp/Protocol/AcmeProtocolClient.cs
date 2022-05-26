@@ -194,7 +194,8 @@ namespace ACMESharp.Protocol
         /// <remarks>
         /// https://tools.ietf.org/html/draft-ietf-acme-acme-12#section-7.3
         /// </remarks>
-        public async Task<AccountDetails> CreateAccountAsync(IEnumerable<string> contacts,
+        public async Task<AccountDetails> CreateAccountAsync(
+            IEnumerable<string> contacts = null,
             bool termsOfServiceAgreed = false,
             object externalAccountBinding = null,
             bool throwOnExistingAccount = false,
@@ -655,6 +656,28 @@ namespace ACMESharp.Protocol
             using (var resp = await GetAsync(order.Payload.Certificate, cancel))
             {
                 return await resp.Content.ReadAsByteArrayAsync();
+            }
+        }
+
+        /// <summary>
+        /// Get ACME certificate including metadata
+        /// </summary>
+        /// <param name="order"></param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        public async Task<AcmeCertificate> GetOrderCertificateExAsync(
+            OrderDetails order,
+            CancellationToken cancel = default)
+        {
+            using (var resp = await GetAsync(order.Payload.Certificate, cancel))
+            {
+                var ret = new AcmeCertificate();
+                if (resp.Headers.TryGetValues("Link", out var linkValues))
+                {
+                    ret.Links = new HTTP.LinkCollection(linkValues);
+                }
+                ret.Certificate = await resp.Content.ReadAsByteArrayAsync();
+                return ret;
             }
         }
 

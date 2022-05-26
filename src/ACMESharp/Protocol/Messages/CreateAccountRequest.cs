@@ -10,8 +10,7 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class CreateAccountRequest
     {
-        [JsonProperty("contact", Required = Required.Always)]
-        [Required, MinLength(1)]
+        [JsonProperty("contact", NullValueHandling=NullValueHandling.Ignore)]
         public IEnumerable<string> Contact { get; set; }
 
         [JsonProperty("termsOfServiceAgreed", NullValueHandling=NullValueHandling.Ignore)]
