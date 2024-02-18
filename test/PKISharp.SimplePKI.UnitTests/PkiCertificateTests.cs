@@ -162,13 +162,21 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pfxWithKey, cert.Export(PkiArchiveFormat.Pkcs12,
                     keys.PrivateKey));
 
-            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxSansKey} -passin pass:"))
+            Console.WriteLine($"pfxSansKey: {pfxSansKey}");
+            string openSslCmdPfxNoKey = $"pkcs12 -legacy -info -in {pfxSansKey} -passin pass:";
+            Console.WriteLine($"openSslCmdPfxNoKey: {openSslCmdPfxNoKey}");
+
+            using (var proc = OpenSsl.Start(openSslCmdPfxNoKey))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
+            Console.WriteLine($"pfxWithKey: {pfxWithKey}");
+            string openSslCmdPfxWithKey = $"pkcs12 -legacy -info -in {pfxWithKey} -passin pass: -nokeys";
+            Console.WriteLine($"openSslCmdPfxWithKey: {openSslCmdPfxWithKey}");
+
+            using (var proc = OpenSsl.Start(openSslCmdPfxWithKey))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
@@ -184,6 +192,7 @@ namespace PKISharp.SimplePKI.UnitTests
                 Assert.IsNotNull(certWithKey.PrivateKey);
         }
 
+        
         [TestMethod]
         [DataRow(PkiAsymmetricAlgorithm.Rsa, 2048)]
         [DataRow(PkiAsymmetricAlgorithm.Ecdsa, 256)]
@@ -228,13 +237,13 @@ namespace PKISharp.SimplePKI.UnitTests
             File.WriteAllBytes(pfxWithKey, subjCert.Export(PkiArchiveFormat.Pkcs12,
                     subjKeys.PrivateKey, new[] { isurCert }));
 
-            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxSansKey} -passin pass:"))
+            using (var proc = OpenSsl.Start($"pkcs12 -legacy -info -in {pfxSansKey} -passin pass:"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);
             }
 
-            using (var proc = OpenSsl.Start($"pkcs12 -info -in {pfxWithKey} -passin pass: -nokeys"))
+            using (var proc = OpenSsl.Start($"pkcs12 -legacy -info -in {pfxWithKey} -passin pass: -nokeys"))
             {
                 proc.WaitForExit();
                 Assert.AreEqual(0, proc.ExitCode);

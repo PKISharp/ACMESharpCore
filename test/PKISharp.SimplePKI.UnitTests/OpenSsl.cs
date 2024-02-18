@@ -9,14 +9,21 @@ namespace PKISharp.SimplePKI.UnitTests
 
         public static Process Start(string arguments)
         {
+            ProcessStartInfo psi = new ProcessStartInfo();
+            psi.Arguments = arguments;
+            psi.EnvironmentVariables.Add("OPENSSL_MODULES", "C:\\Program Files\\OpenSSL\\bin");
             if (File.Exists(OpenSslLightPath))
             {
-                return Process.Start(OpenSslLightPath, arguments);
+                psi.FileName = OpenSslLightPath;
+
             }
             else
             {
-                return Process.Start("openssl", arguments);
+                psi.FileName = "openssl";
             }
-        }       
+
+            return Process.Start(psi);
+
+        }
     }
 }
