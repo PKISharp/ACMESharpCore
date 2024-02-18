@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- VSTest:  https://github.com/microsoft/vstest/ -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <!-- MSTest v2:  https://github.com/microsoft/testfx -->
-    <PackageReference Include="MSTest.TestAdapter" Version="1.3.0-beta2" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.3.0-beta2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.2.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
