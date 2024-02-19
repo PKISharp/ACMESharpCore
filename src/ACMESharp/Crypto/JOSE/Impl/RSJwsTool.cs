@@ -61,6 +61,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             _rsa = null;
             _sha?.Dispose();
             _sha = null;
+            GC.SuppressFinalize(this);
         }
 
         public string Export()
@@ -148,7 +149,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
         //  https://github.com/dotnet/corefx/issues/23686#issuecomment-383245291
 
         private const string RSAExportDocRootElement = "RSAKeyValue";
-        private static void FromXmlString(RSA rsa, string xmlString)
+        private static void FromXmlString(RSACryptoServiceProvider rsa, string xmlString)
         {
             RSAParameters parameters = new RSAParameters();
 
@@ -204,7 +205,7 @@ namespace ACMESharp.Crypto.JOSE.Impl
             rsa.ImportParameters(parameters);
         }
 
-        private static string ToXmlString(RSA rsa, bool includePrivateParameters)
+        private static string ToXmlString(RSACryptoServiceProvider rsa, bool includePrivateParameters)
         {
             RSAParameters parameters = rsa.ExportParameters(includePrivateParameters);
 
