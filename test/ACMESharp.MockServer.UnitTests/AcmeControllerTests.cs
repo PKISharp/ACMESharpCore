@@ -1,18 +1,17 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using ACMESharp.Protocol;
+using ACMESharp.Protocol.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net;
-using ACMESharp.Protocol;
-using System;
-using ACMESharp.Protocol.Resources;
-using System.IO;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PKISharp.SimplePKI;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ACMESharp.MockServer.UnitTests
 {

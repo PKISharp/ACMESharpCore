@@ -1,8 +1,7 @@
-using System.Text.Json;
 using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ACMESharp.Crypto.JOSE
 {

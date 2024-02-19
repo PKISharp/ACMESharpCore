@@ -1,13 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.Route53;
 using Amazon.Route53.Model;
 using Amazon.Runtime;
-using Amazon.Runtime.CredentialManagement;
-using Amazon.S3;
 
 namespace ACMESharp.IntegrationTests
 {

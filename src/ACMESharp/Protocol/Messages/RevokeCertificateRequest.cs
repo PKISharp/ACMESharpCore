@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using ACMESharp.Protocol.Resources;
 using System.Text.Json.Serialization;
+using ACMESharp.Protocol.Resources;
 
 namespace ACMESharp.Protocol.Messages
 {

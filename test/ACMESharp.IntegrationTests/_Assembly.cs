@@ -7,7 +7,7 @@ using Xunit;
 
 [assembly: CollectionBehavior(
     CollectionBehavior.CollectionPerClass
-  //CollectionBehavior.CollectionPerAssembly
-  //,MaxParallelThreads = n
-    ,DisableTestParallelization = true
+    //CollectionBehavior.CollectionPerAssembly
+    //,MaxParallelThreads = n
+    , DisableTestParallelization = true
 )]

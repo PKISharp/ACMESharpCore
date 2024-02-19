@@ -1,9 +1,8 @@
 using System;
-using System.IO;
 using System.Security.Cryptography;
-using System.Xml;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -155,36 +154,36 @@ namespace ACMESharp.Crypto.JOSE.Impl
                     switch (node.Name)
                     {
                         case nameof(parameters.Modulus):
-                            parameters.Modulus = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.Modulus = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.Exponent):
-                            parameters.Exponent = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.Exponent = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.P):
-                            parameters.P = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.P = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.Q):
-                            parameters.Q = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.Q = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.DP):
-                            parameters.DP = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.DP = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.DQ):
-                            parameters.DQ = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.DQ = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.InverseQ):
-                            parameters.InverseQ = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.InverseQ = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                         case nameof(parameters.D):
-                            parameters.D = (string.IsNullOrEmpty(node.InnerText)
-                                ? null : Convert.FromBase64String(node.InnerText));
+                            parameters.D = string.IsNullOrEmpty(node.InnerText)
+                                ? null : Convert.FromBase64String(node.InnerText);
                             break;
                     }
                 }

@@ -1,17 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net;
-using ACMESharp.Protocol;
-using System;
-using ACMESharp.Protocol.Resources;
-using ACMESharp.MockServer.Storage;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
+using ACMESharp.MockServer.Storage;
+using ACMESharp.Protocol;
+using ACMESharp.Protocol.Resources;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ACMESharp.MockServer.UnitTests
 {

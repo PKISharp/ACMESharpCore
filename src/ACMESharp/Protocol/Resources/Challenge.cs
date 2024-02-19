@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ACMESharp.Protocol.Resources
 {
     public class Challenge

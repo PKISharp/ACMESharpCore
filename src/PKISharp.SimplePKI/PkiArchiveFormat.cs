@@ -1,6 +1,6 @@
 namespace PKISharp.SimplePKI
 {
-   public enum PkiArchiveFormat
+    public enum PkiArchiveFormat
     {
         Unknown = 0,
 

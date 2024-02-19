@@ -1,11 +1,9 @@
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
-using Microsoft.Extensions.Logging;
 
 namespace ACMESharp.IntegrationTests
 {

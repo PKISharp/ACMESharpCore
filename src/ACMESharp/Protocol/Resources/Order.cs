@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using ACMESharp.Protocol.Resources;
 
 namespace ACMESharp.Protocol.Resources
 {

@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Security.Cryptography;
 using System.Xml.Serialization;
 using Org.BouncyCastle.Asn1.Nist;
 using Org.BouncyCastle.Crypto;
@@ -250,14 +249,14 @@ namespace PKISharp.SimplePKI
 
             int i = rLength;
             while ((i > 0)
-                    && (derSignature[(offset + 2 + rLength) - i] == 0))
+                    && (derSignature[offset + 2 + rLength - i] == 0))
                 i--;
 
             byte sLength = derSignature[offset + 2 + rLength + 1];
 
             int j = sLength;
             while ((j > 0)
-                    && (derSignature[(offset + 2 + rLength + 2 + sLength) - j] == 0))
+                    && (derSignature[offset + 2 + rLength + 2 + sLength - j] == 0))
                 j--;
 
             int rawLen = Math.Max(i, j);
@@ -273,8 +272,8 @@ namespace PKISharp.SimplePKI
 
             byte[] concatSignature = new byte[2 * rawLen];
 
-            Array.Copy(derSignature, (offset + 2 + rLength) - i, concatSignature, rawLen - i, i);
-            Array.Copy(derSignature, (offset + 2 + rLength + 2 + sLength) - j, concatSignature, 2 * rawLen - j, j);
+            Array.Copy(derSignature, offset + 2 + rLength - i, concatSignature, rawLen - i, i);
+            Array.Copy(derSignature, offset + 2 + rLength + 2 + sLength - j, concatSignature, (2 * rawLen) - j, j);
 
             return concatSignature;
         }

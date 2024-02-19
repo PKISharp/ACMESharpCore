@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using ACMESharp.Crypto;
@@ -13,7 +14,6 @@ using ACMESharp.Logging;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 
 namespace ACMESharp.Protocol

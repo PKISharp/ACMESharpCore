@@ -2,12 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Crypto.JOSE.Impl;
@@ -21,64 +18,64 @@ using PKISharp.SimplePKI;
 
 namespace ACMESharp.MockServer.Controllers
 {
-// Sample Directory:
-// {
-//   "Directory": "/directory",
-//   "NewNonce": "https://acme-staging-v02.api.letsencrypt.org/acme/new-nonce",
-//   "NewAccount": "https://acme-staging-v02.api.letsencrypt.org/acme/new-acct",
-//   "NewOrder": "https://acme-staging-v02.api.letsencrypt.org/acme/new-order",
-//   "NewAuthz": null,
-//   "RevokeCert": "https://acme-staging-v02.api.letsencrypt.org/acme/revoke-cert",
-//   "KeyChange": "https://acme-staging-v02.api.letsencrypt.org/acme/key-change",
-//   "Meta": {
-//     "TermsOfService": "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf",
-//     "Website": "https://letsencrypt.org/docs/staging-environment/",
-//     "CaaIdentities": [
-//       "letsencrypt.org"
-//     ],
-//     "ExternalAccountRequired": null
-//   }
-// }
+    // Sample Directory:
+    // {
+    //   "Directory": "/directory",
+    //   "NewNonce": "https://acme-staging-v02.api.letsencrypt.org/acme/new-nonce",
+    //   "NewAccount": "https://acme-staging-v02.api.letsencrypt.org/acme/new-acct",
+    //   "NewOrder": "https://acme-staging-v02.api.letsencrypt.org/acme/new-order",
+    //   "NewAuthz": null,
+    //   "RevokeCert": "https://acme-staging-v02.api.letsencrypt.org/acme/revoke-cert",
+    //   "KeyChange": "https://acme-staging-v02.api.letsencrypt.org/acme/key-change",
+    //   "Meta": {
+    //     "TermsOfService": "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf",
+    //     "Website": "https://letsencrypt.org/docs/staging-environment/",
+    //     "CaaIdentities": [
+    //       "letsencrypt.org"
+    //     ],
+    //     "ExternalAccountRequired": null
+    //   }
+    // }
 
-// Sample Order Response:
-// Created
-// Server: nginx
-// Boulder-Requester: 6294712
-// Location: https://acme-staging-v02.api.letsencrypt.org/acme/order/6294712/2084859
-// Replay-Nonce: FUrj6pGWocJoAUTr85N6ukDW_KliS75MdDcmZllaQgk
-// X-Frame-Options: DENY
-// Strict-Transport-Security: max-age=604800
-// Cache-Control: no-store, no-cache, max-age=0
-// Pragma: no-cache
-// Date: Fri, 15 Jun 2018 21:06:12 GMT
-// Connection: keep-alive
-// Content-Type: application/json
-// Content-Length: 815
-// Expires: Fri, 15 Jun 2018 21:06:12 GMT
-// {
-//   "status": "pending",
-//   "expires": "2018-06-22T21:06:12Z",
-//   "identifiers": [
-//     {
-//       "type": "dns",
-//       "value": "8b-15-d9-10-57-1st.integtests.acme2.zyborg.io"
-//     },
-//     {
-//       "type": "dns",
-//       "value": "8b-2e-54-44-17-3rd.integtests.acme2.zyborg.io"
-//     },
-//     {
-//       "type": "dns",
-//       "value": "9d-d6-29-43-84-2nd.integtests.acme2.zyborg.io"
-//     }
-//   ],
-//   "authorizations": [
-//     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/740KRMwcT0UrLXdUKOlgMnfNbzpSQtRaWjbyA1UgIJ4",
-//     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/EytmrLH_JI61fDCfUdesq1bcp6nHBT0wDXmmdT4bjzQ",
-//     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/ZQaC05HtAxpv5RB2Ik2GvY_Cp-izmSCItRZor3gfcX0"
-//   ],
-//   "finalize": "https://acme-staging-v02.api.letsencrypt.org/acme/finalize/6294712/2084859"
-// }
+    // Sample Order Response:
+    // Created
+    // Server: nginx
+    // Boulder-Requester: 6294712
+    // Location: https://acme-staging-v02.api.letsencrypt.org/acme/order/6294712/2084859
+    // Replay-Nonce: FUrj6pGWocJoAUTr85N6ukDW_KliS75MdDcmZllaQgk
+    // X-Frame-Options: DENY
+    // Strict-Transport-Security: max-age=604800
+    // Cache-Control: no-store, no-cache, max-age=0
+    // Pragma: no-cache
+    // Date: Fri, 15 Jun 2018 21:06:12 GMT
+    // Connection: keep-alive
+    // Content-Type: application/json
+    // Content-Length: 815
+    // Expires: Fri, 15 Jun 2018 21:06:12 GMT
+    // {
+    //   "status": "pending",
+    //   "expires": "2018-06-22T21:06:12Z",
+    //   "identifiers": [
+    //     {
+    //       "type": "dns",
+    //       "value": "8b-15-d9-10-57-1st.integtests.acme2.zyborg.io"
+    //     },
+    //     {
+    //       "type": "dns",
+    //       "value": "8b-2e-54-44-17-3rd.integtests.acme2.zyborg.io"
+    //     },
+    //     {
+    //       "type": "dns",
+    //       "value": "9d-d6-29-43-84-2nd.integtests.acme2.zyborg.io"
+    //     }
+    //   ],
+    //   "authorizations": [
+    //     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/740KRMwcT0UrLXdUKOlgMnfNbzpSQtRaWjbyA1UgIJ4",
+    //     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/EytmrLH_JI61fDCfUdesq1bcp6nHBT0wDXmmdT4bjzQ",
+    //     "https://acme-staging-v02.api.letsencrypt.org/acme/authz/ZQaC05HtAxpv5RB2Ik2GvY_Cp-izmSCItRZor3gfcX0"
+    //   ],
+    //   "finalize": "https://acme-staging-v02.api.letsencrypt.org/acme/finalize/6294712/2084859"
+    // }
 
 
     [Route(AcmeController.ControllerRoute)]

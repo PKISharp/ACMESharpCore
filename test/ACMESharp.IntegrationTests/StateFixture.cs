@@ -1,10 +1,6 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
-using ACMESharp.Testing.Xunit;
 using Microsoft.Extensions.Logging;
 
 namespace ACMESharp.IntegrationTests
