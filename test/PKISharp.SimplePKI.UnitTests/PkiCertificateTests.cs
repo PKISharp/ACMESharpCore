@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PKISharp.SimplePKI.UnitTests
@@ -49,7 +50,19 @@ namespace PKISharp.SimplePKI.UnitTests
                     "Subject Name on BCL Certificate");
 
             Assert.IsFalse(bclCert.HasPrivateKey);
-            Assert.IsNull(bclCert.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa: 
+                    Assert.IsNull(bclCert.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(bclCert.GetECDsaPrivateKey());
+                    break;
+                default: 
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
+
 
             File.WriteAllBytes(pemOut, cert.Export(PkiEncodingFormat.Pem));
             File.WriteAllBytes(derOut, cert.Export(PkiEncodingFormat.Der));
@@ -155,7 +168,18 @@ namespace PKISharp.SimplePKI.UnitTests
                     "Subject Name on BCL Certificate");
 
             Assert.IsFalse(bclCert.HasPrivateKey);
-            Assert.IsNull(bclCert.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNull(bclCert.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(bclCert.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
 
             File.WriteAllBytes(pfxSansKey, cert.Export(PkiArchiveFormat.Pkcs12));
             File.WriteAllBytes(pfxWithKey, cert.Export(PkiArchiveFormat.Pkcs12,
@@ -183,15 +207,37 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var certSansKey = new System.Security.Cryptography.X509Certificates.X509Certificate2(File.ReadAllBytes(pfxSansKey));
             Assert.IsFalse(certSansKey.HasPrivateKey);
-            Assert.IsNull(certSansKey.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNull(certSansKey.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(certSansKey.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
+
             var certWithKey = new System.Security.Cryptography.X509Certificates.X509Certificate2(File.ReadAllBytes(pfxWithKey));
             Assert.IsTrue(certWithKey.HasPrivateKey);
-            if (algor != PkiAsymmetricAlgorithm.Ecdsa)
-                // This throws: System.NotSupportedException: The certificate key algorithm is not supported.
-                Assert.IsNotNull(certWithKey.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNotNull(certWithKey.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNotNull(certWithKey.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
+
         }
 
-        
+
         [TestMethod]
         [DataRow(PkiAsymmetricAlgorithm.Rsa, 2048)]
         [DataRow(PkiAsymmetricAlgorithm.Ecdsa, 256)]
@@ -250,12 +296,32 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var certSansKey = new System.Security.Cryptography.X509Certificates.X509Certificate2(File.ReadAllBytes(pfxSansKey));
             Assert.IsFalse(certSansKey.HasPrivateKey);
-            Assert.IsNull(certSansKey.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNull(certSansKey.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(certSansKey.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
             var certWithKey = new System.Security.Cryptography.X509Certificates.X509Certificate2(File.ReadAllBytes(pfxWithKey));
             Assert.IsTrue(certWithKey.HasPrivateKey);
-            if (algor != PkiAsymmetricAlgorithm.Ecdsa)
-                // This throws: System.NotSupportedException: The certificate key algorithm is not supported.
-                Assert.IsNotNull(certWithKey.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNotNull(certWithKey.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNotNull(certWithKey.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
         }
 
         [TestMethod]
@@ -290,7 +356,18 @@ namespace PKISharp.SimplePKI.UnitTests
                     "Subject Name on BCL Certificate");
 
             Assert.IsFalse(bclCert.HasPrivateKey);
-            Assert.IsNull(bclCert.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNull(bclCert.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(bclCert.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
 
             File.WriteAllBytes(pemSansKey, cert.Export(PkiArchiveFormat.Pem));
             File.WriteAllBytes(pemWithKey, cert.Export(PkiArchiveFormat.Pem,
@@ -322,9 +399,20 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var certSansKey = new System.Security.Cryptography.X509Certificates.X509Certificate2(File.ReadAllBytes(pemSansKey));
             Assert.IsFalse(certSansKey.HasPrivateKey);
-            Assert.IsNull(certSansKey.PrivateKey);
+            switch (algor)
+            {
+                case PkiAsymmetricAlgorithm.Rsa:
+                    Assert.IsNull(certSansKey.GetRSAPrivateKey());
+                    break;
+                case PkiAsymmetricAlgorithm.Ecdsa:
+                    Assert.IsNull(certSansKey.GetECDsaPrivateKey());
+                    break;
+                default:
+                    Assert.Fail($"Add private key check for {algor} ");
+                    break;
+            }
         }
- 
+
         [TestMethod]
         [DataRow(PkiAsymmetricAlgorithm.Rsa, 2048)]
         [DataRow(PkiAsymmetricAlgorithm.Ecdsa, 256)]
