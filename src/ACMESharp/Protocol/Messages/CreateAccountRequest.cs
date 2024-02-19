@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ACMESharp.Crypto.JOSE;
-using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -10,18 +10,18 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class CreateAccountRequest
     {
-        [JsonProperty("contact", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required, MinLength(1)]
         public IEnumerable<string> Contact { get; set; }
 
-        [JsonProperty("termsOfServiceAgreed", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? TermsOfServiceAgreed { get; set; }
 
-        [JsonProperty("onlyReturnExisting", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? OnlyReturnExisting  { get; set; }
 
-        [JsonProperty("externalAccountBinding", NullValueHandling=NullValueHandling.Ignore)]
-        public object ExternalAccountBinding { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public object? ExternalAccountBinding { get; set; }
         //public JwsSignedPayload ExternalAccountBinding { get; set; }
     }
 }

@@ -1,10 +1,3 @@
-using System;
-using System.Text;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-
 namespace ACMESharp.Crypto
 {
     /// <summary>

@@ -13,9 +13,7 @@ using ACMESharp.Logging;
 using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 using _Authorization = ACMESharp.Protocol.Resources.Authorization;
 
 namespace ACMESharp.Protocol
@@ -26,11 +24,6 @@ namespace ACMESharp.Protocol
     public class AcmeProtocolClient : IDisposable
     {
         private static readonly HttpStatusCode[] SkipExpectedStatuses = new HttpStatusCode[0];
-
-        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
 
         private bool _disposeHttpClient;
         private HttpClient _http;
@@ -819,8 +812,8 @@ namespace ACMESharp.Protocol
 
         async Task<T> Deserialize<T>(HttpResponseMessage resp)
         {
-            return JsonConvert.DeserializeObject<T>(
-                    await resp.Content.ReadAsStringAsync());
+            return await JsonSerializer.DeserializeAsync<T>(
+                    await resp.Content.ReadAsStreamAsync(), JsonHelpers.JsonWebOptions);
         }
 
         async Task<AcmeProtocolException> DecodeResponseErrorAsync(HttpResponseMessage resp,
@@ -992,10 +985,8 @@ namespace ACMESharp.Protocol
             var payload = string.Empty;
             if (message is string)
                 payload = (string)message;
-            else if (message is JObject)
-                payload = ((JObject)message).ToString(Formatting.None);
             else
-                payload = JsonConvert.SerializeObject(message, Formatting.None);
+                payload = JsonSerializer.Serialize(message, JsonHelpers.JsonWebOptions);
             return payload;
         }
 

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ACMESharp.Protocol;
 using ACMESharp.Protocol.Resources;
 using ACMESharp.Testing.Xunit;
-using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 

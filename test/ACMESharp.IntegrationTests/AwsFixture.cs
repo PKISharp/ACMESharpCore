@@ -1,5 +1,5 @@
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace ACMESharp.IntegrationTests
 {
@@ -10,10 +10,10 @@ namespace ACMESharp.IntegrationTests
             var thisAsmLocation = Path.GetDirectoryName(typeof(AwsFixture).Assembly.Location);
             var jsonPathBase = Path.Combine(thisAsmLocation, @"config/_IGNORE/");
 
-            R53 = JsonConvert.DeserializeObject<R53Helper>(
-                    File.ReadAllText(jsonPathBase + "R53Helper.json"));
-            S3 = JsonConvert.DeserializeObject<S3Helper>(
-                    File.ReadAllText(jsonPathBase + "S3Helper.json"));
+            R53 = JsonSerializer.Deserialize<R53Helper>(
+                    File.ReadAllText(jsonPathBase + "R53Helper.json"), JsonHelpers.JsonWebOptions);
+            S3 = JsonSerializer.Deserialize<S3Helper>(
+                    File.ReadAllText(jsonPathBase + "S3Helper.json"), JsonHelpers.JsonWebOptions);
 
             // For testing this makes it easier to repeat tests
             // that use the same DNS names and need to be refreshed

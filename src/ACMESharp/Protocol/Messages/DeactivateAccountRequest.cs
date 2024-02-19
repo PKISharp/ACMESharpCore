@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ACMESharp.Crypto.JOSE;
-using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -9,7 +9,7 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class DeactivateAccountRequest
     {
-        [JsonProperty("status", NullValueHandling=NullValueHandling.Ignore)]
-        public string Status { get => "deactivated"; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Status { get => "deactivated"; }
     }
 }

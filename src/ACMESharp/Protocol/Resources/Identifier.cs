@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ACMESharp.Protocol.Resources
 {
     public class Identifier
     {
-        [JsonProperty("type", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required]
         public string Type { get; set; }
 
-        [JsonProperty("value", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required]
         public string Value { get; set; }
     }

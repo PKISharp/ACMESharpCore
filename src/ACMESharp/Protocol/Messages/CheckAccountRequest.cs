@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using ACMESharp.Crypto.JOSE;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -9,7 +8,7 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class CheckAccountRequest
     {
-        [JsonProperty("onlyReturnExisting", NullValueHandling=NullValueHandling.Ignore)]
-        public bool OnlyReturnExisting  { get => true; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? OnlyReturnExisting  { get => true; }
     }
 }

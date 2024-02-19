@@ -10,8 +10,8 @@ using System;
 using ACMESharp.Protocol.Resources;
 using ACMESharp.MockServer.Storage;
 using System.IO;
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text.Json;
 
 namespace ACMESharp.MockServer.UnitTests
 {
@@ -81,7 +81,7 @@ namespace ACMESharp.MockServer.UnitTests
                 ["x"] = 1,
                 ["y"] = 2
             };
-            var jwk = JsonConvert.SerializeObject(key);
+            var jwk = JsonSerializer.Serialize(key, JsonHelpers.JsonWebOptions);
             var kid = Guid.NewGuid();
 
             var dbAcct = new DbAccount

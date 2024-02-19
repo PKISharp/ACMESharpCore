@@ -11,9 +11,9 @@ namespace PKISharp.SimplePKI.UnitTests
         {
             ProcessStartInfo psi = new ProcessStartInfo();
             psi.Arguments = arguments;
-            psi.EnvironmentVariables.Add("OPENSSL_MODULES", "C:\\Program Files\\OpenSSL\\bin");
             if (File.Exists(OpenSslLightPath))
             {
+                psi.EnvironmentVariables["OPENSSL_MODULES"] = "C:\\Program Files\\OpenSSL\\bin";
                 psi.FileName = OpenSslLightPath;
 
             }

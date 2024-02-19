@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using ACMESharp.Crypto.JOSE;
 using ACMESharp.Protocol.Resources;
-using Newtonsoft.Json;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -10,8 +10,8 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class FinalizeOrderRequest
     {
-        [JsonProperty("csr", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required]
-        public string Csr { get; set; }
+        public string Csr { get; set; } = string.Empty;
     }
 }

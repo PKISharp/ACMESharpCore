@@ -1,7 +1,7 @@
 using System;
-using System.IO;
 using System.Security.Cryptography;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ACMESharp.Crypto.JOSE.Impl
 {
@@ -75,14 +75,14 @@ namespace ACMESharp.Crypto.JOSE.Impl
                 X = Convert.ToBase64String(ecParams.Q.X),
                 Y = Convert.ToBase64String(ecParams.Q.Y),
             };
-            return JsonConvert.SerializeObject(details);
+            return JsonSerializer.Serialize<ExportDetails>(details, JsonHelpers.JsonWebOptions);
         }
 
         public void Import(string exported)
         {
             // TODO: this is inefficient and corner cases exist that will break this -- FIX THIS!!!
 
-            var details = JsonConvert.DeserializeObject<ExportDetails>(exported);
+            var details = JsonSerializer.Deserialize<ExportDetails>(exported, JsonHelpers.JsonWebOptions);
             HashSize = details.HashSize;
             Init();
 
@@ -141,17 +141,17 @@ namespace ACMESharp.Crypto.JOSE.Impl
         // JWK and are sorted in lexicographic order to produce a canonical form
         class ESJwk
         {
-            [JsonProperty(Order = 1)]
-            public string crv;
+            [JsonPropertyOrder(1)]
+            public string crv { get; set; }
 
-            [JsonProperty(Order = 2)]
-            public string kty = "EC";
+            [JsonPropertyOrder(2)]
+            public string kty { get; set; } = "EC";
 
-            [JsonProperty(Order = 3)]
-            public string x;
+            [JsonPropertyOrder(3)]
+            public string x { get; set; }
 
-            [JsonProperty(Order = 4)]
-            public string y;
+            [JsonPropertyOrder(4)]
+            public string y { get; set; }
         }
     }
 }

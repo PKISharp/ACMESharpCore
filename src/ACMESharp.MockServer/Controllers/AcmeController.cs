@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ACMESharp.Crypto;
 using ACMESharp.Crypto.JOSE;
@@ -16,7 +17,6 @@ using ACMESharp.Protocol.Messages;
 using ACMESharp.Protocol.Resources;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using PKISharp.SimplePKI;
 
 namespace ACMESharp.MockServer.Controllers
@@ -89,6 +89,7 @@ namespace ACMESharp.MockServer.Controllers
 
         private static readonly IEnumerable<string> ChallengeTypes = new[] { "dns-01", "http-01" };
         private static readonly IEnumerable<string> ChallengeTypesForWildcard = new[] { "dns-01" };
+        private static readonly object _lock = new object();
 
         IRepository _repo;
         INonceManager _nonceMgr;
@@ -114,8 +115,8 @@ namespace ACMESharp.MockServer.Controllers
         [HttpPost("new-acct")]
         public ActionResult<Account> NewAccount([FromBody]JwsSignedPayload signedPayload)
         {
-            var ph = ExtractProtectedHeader(signedPayload);
-            var jwkSer = JsonConvert.SerializeObject(ph.Jwk);
+            ProtectedHeader ph = ExtractProtectedHeader(signedPayload);
+            var jwkSer = JsonSerializer.Serialize(ph.Jwk, JsonHelpers.JsonWebOptions);
 
             ValidateNonce(ph);
 
@@ -605,14 +606,17 @@ namespace ACMESharp.MockServer.Controllers
         T ExtractPayload<T>(JwsSignedPayload signedPayload)
         {
             var payloadBytes = CryptoHelper.Base64.UrlDecode(signedPayload.Payload);
-            var payloadJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Payload);
-            return JsonConvert.DeserializeObject<T>(payloadJson);
+            if (payloadBytes.Length > 0)
+            {
+                return JsonSerializer.Deserialize<T>(payloadBytes, JsonHelpers.JsonWebOptions);
+            }
+            return default;
         }
 
         ProtectedHeader ExtractProtectedHeader(JwsSignedPayload signedPayload)
         {
             var protectedJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Protected);
-            return JsonConvert.DeserializeObject<ProtectedHeader>(protectedJson);
+            return JsonSerializer.Deserialize<ProtectedHeader>(protectedJson, JsonHelpers.JsonWebOptions);
         }
 
         Uri ComputeRelativeUrl(string relPath)
@@ -627,9 +631,7 @@ namespace ACMESharp.MockServer.Controllers
 
         void GenerateNonce()
         {
-            Response.Headers.Add(
-                    Constants.ReplayNonceHeaderName,
-                    _nonceMgr.GenerateNonce());
+            Response.Headers[Constants.ReplayNonceHeaderName] = _nonceMgr.GenerateNonce();
         }
 
         void ValidateNonce(JwsSignedPayload signedPayload)
@@ -647,7 +649,7 @@ namespace ACMESharp.MockServer.Controllers
         void ValidateAccount(DbAccount acct, JwsSignedPayload signedPayload)
         {
             var ph = ExtractProtectedHeader(signedPayload);
-            var jwk = JsonConvert.DeserializeObject<Dictionary<string, string>>(acct.Jwk);
+            var jwk = JsonSerializer.Deserialize<Dictionary<string, string>>(acct.Jwk, JsonHelpers.JsonWebOptions);
 
             if (string.IsNullOrEmpty(ph.Alg))
                 throw new Exception("invalid JWS header, missing 'alg'");
@@ -699,7 +701,7 @@ namespace ACMESharp.MockServer.Controllers
         {
             if (_caCertPem == null)
             {
-                lock (typeof(AcmeController))
+                lock (_lock)
                 {
                     if (_caCertPem == null)
                     {

@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace ACMESharp.Protocol.Messages
 {
@@ -9,11 +9,11 @@ namespace ACMESharp.Protocol.Messages
     /// </summary>
     public class KeyChangeRequest
     {
-        [JsonProperty("account", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required]
         public string Account { get; set; }
 
-        [JsonProperty("oldKey", Required = Required.Always)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [Required]
         public object OldKey { get; set; }
     }
