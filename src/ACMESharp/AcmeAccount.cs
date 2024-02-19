@@ -6,23 +6,14 @@ namespace ACMESharp
     /// <summary>
     /// Represents the details of a registered ACME Account with a specific ACME CA.
     /// </summary>
-    public class AcmeAccount : AcmeAccount.IAccountDetails
+    public class AcmeAccount(Account account, string kid, string tosLink) : AcmeAccount.IAccountDetails
     {
-        private Account _account;
 
-        public AcmeAccount(Account account, string kid, string tosLink)
-        {
-            _account = account;
+        Account IAccountDetails.AccountDetails => account;
 
-            Kid = kid;
-            TosLink = tosLink;
-        }
+        public IEnumerable<string> Contacts => account?.Contact;
 
-        Account IAccountDetails.AccountDetails => _account;
-
-        public IEnumerable<string> Contacts => _account?.Contact;
-
-        public object PublicKey => _account?.Key;
+        public object PublicKey => account?.Key;
 
         /// <summary>
         /// This is the Key Identifier used in most messages sent to the ACME CA after
@@ -38,27 +29,27 @@ namespace ACMESharp
         /// </para>
         /// </remarks>
         /// <returns></returns>
-        public string Kid { get; }
+        public string Kid { get; } = kid;
 
-        public string TosLink { get; }
+        public string TosLink { get; } = tosLink;
 
         /// <summary>
         /// CA-assigned unique identifier for the Account.
         /// </summary>
         /// <returns></returns>
-        public string Id => _account?.Id;
+        public string Id => account?.Id;
 
         public AccountStatus Status { get; }
 
         public AccountStatus GeStatus()
         {
-            switch (_account?.Status)
+            return (account?.Status) switch
             {
-                case "valid": return AccountStatus.Valid;
-                case "deactivated": return AccountStatus.Deactivated;
-                case "revoked": return AccountStatus.Revoked;
-                default: return AccountStatus.Unknown;
-            }
+                "valid" => AccountStatus.Valid,
+                "deactivated" => AccountStatus.Deactivated,
+                "revoked" => AccountStatus.Revoked,
+                _ => AccountStatus.Unknown,
+            };
         }
 
         public enum AccountStatus
