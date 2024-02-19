@@ -34,21 +34,13 @@ namespace ACMESharp.Crypto.JOSE.Impl
 
         public void Init()
         {
-            switch (HashSize)
+            _sha = HashSize switch
             {
-                case 256:
-                    _sha = SHA256.Create();
-                    break;
-                case 384:
-                    _sha = SHA384.Create();
-                    break;
-                case 512:
-                    _sha = SHA512.Create();
-                    break;
-                default:
-                    throw new System.InvalidOperationException("illegal SHA2 hash size");
-            }
-
+                256 => SHA256.Create(),
+                384 => SHA384.Create(),
+                512 => SHA512.Create(),
+                _ => throw new System.InvalidOperationException("illegal SHA2 hash size"),
+            };
             if (KeySize < 2048 || KeySize > 4096)
                 throw new InvalidOperationException("illegal RSA key bit length");
 
