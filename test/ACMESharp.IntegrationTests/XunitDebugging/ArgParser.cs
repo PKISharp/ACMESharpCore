@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ACMESharp.IntegrationTests.Debugging
 {
     public static class ArgParser
     {
+        private const char StartChar = '-';
         // Simple argument parser that doesn't do much validation, since we will rely on the inner
         // runners to do the argument validation.
         public static Dictionary<string, List<string>> Parse(string[] args)
@@ -15,7 +16,7 @@ namespace ACMESharp.IntegrationTests.Debugging
             while (idx < args.Length)
             {
                 var arg = args[idx++];
-                if (!arg.StartsWith("-"))
+                if (!arg.StartsWith(StartChar))
                     throw new ArgumentException($"Unexpected parameter: {arg}");
 
                 if (!result.TryGetValue(arg, out var values))
@@ -24,7 +25,7 @@ namespace ACMESharp.IntegrationTests.Debugging
                     result.Add(arg, values);
                 }
 
-                if (idx < args.Length && !args[idx].StartsWith("-"))
+                if (idx < args.Length && !args[idx].StartsWith(StartChar))
                     values.Add(args[idx++]);
                 else
                     values.Add(null);
