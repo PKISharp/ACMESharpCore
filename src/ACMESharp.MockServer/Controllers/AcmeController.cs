@@ -88,10 +88,10 @@ namespace ACMESharp.MockServer.Controllers
         private static readonly IEnumerable<string> ChallengeTypesForWildcard = new[] { "dns-01" };
         private static readonly object _lock = new object();
 
-        IRepository _repo;
-        INonceManager _nonceMgr;
+        private readonly IRepository _repo;
+        private readonly INonceManager _nonceMgr;
 
-        CertificateAuthority _ca;
+        private readonly CertificateAuthority _ca;
         string _caCertPem;
 
         public AcmeController(IRepository repo, INonceManager nonceMgr, CertificateAuthority ca)
@@ -189,7 +189,7 @@ namespace ACMESharp.MockServer.Controllers
             if (requ.Identifiers.Length > 100)
                 throw new Exception("too many identifiers");
 
-            if (requ.Identifiers.Count(x => x.Type != "dns") > 0)
+            if (requ.Identifiers.Any(x => x.Type != "dns"))
                 throw new Exception("unsupported identifier type");
 
             // We start by saving an empty order so we can compute the next ID

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +7,7 @@ namespace PKISharp.SimplePKI.UnitTests
     [TestClass]
     public class PkiKeyTests
     {
-        string _testTemp;
+        private readonly string _testTemp;
 
         public PkiKeyTests()
         {

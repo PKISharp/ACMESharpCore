@@ -41,7 +41,7 @@ namespace PKISharp.SimplePKI
             var gnames = new List<GeneralName>(
                     dnsNames.Select(x => new GeneralName(GeneralName.DnsName, x)));
 
-            var altNames = new GeneralNames(gnames.ToArray());
+            var altNames = new GeneralNames([.. gnames]);
 
             return new PkiCertificateExtension
             {

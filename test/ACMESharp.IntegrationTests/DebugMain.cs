@@ -10,13 +10,13 @@ namespace ACMESharp.IntegrationTests
 {
     public class DebugMain
     {
-        public async static Task Main(string[] args)
+        public static async Task Main(string[] args)
         {
             Console.WriteLine("Debugging: " + typeof(AcmeAccountTests));
             await DebugMain.Run<AcmeAccountTests>();
         }
 
-        public async static Task Run<T>() where T : class
+        public static async Task Run<T>() where T : class
         {
             var conObjects = new List<object>
             {

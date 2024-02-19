@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,9 +10,9 @@ namespace ACMESharp.IntegrationTests.Debugging
 {
     public class DebugMain
     {
-        static HashSet<string> HelpArgs = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "-?", "/?", "-h", "--help" };
-        static HashSet<string> OutputFileArgs = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "-xml", "-xmlv1", "-nunit", "-html" };
-        static Version Version452 = new Version("4.5.2");
+        private static readonly HashSet<string> HelpArgs = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "-?", "/?", "-h", "--help" };
+        private static readonly HashSet<string> OutputFileArgs = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "-xml", "-xmlv1", "-nunit", "-html" };
+        private static readonly Version Version452 = new Version("4.5.2");
 
         string BuildStdProps;
         string Configuration;

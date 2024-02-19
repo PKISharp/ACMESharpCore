@@ -8,7 +8,7 @@ namespace PKISharp.SimplePKI.UnitTests
     [TestClass]
     public class PkiCertificateTests
     {
-        string _testTemp;
+        private readonly string _testTemp;
 
         public PkiCertificateTests()
         {

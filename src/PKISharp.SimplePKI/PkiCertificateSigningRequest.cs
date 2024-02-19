@@ -20,7 +20,7 @@ namespace PKISharp.SimplePKI
 {
     public class PkiCertificateSigningRequest
     {
-        private PkiKeyPair _keyPair;
+        private readonly PkiKeyPair _keyPair;
 
         /// <summary>
         /// Creates a new instance of a PKI Certificate Signing Request.
@@ -150,7 +150,7 @@ namespace PKISharp.SimplePKI
         public PkiHashAlgorithm HashAlgorithm { get; }
 
         public Collection<PkiCertificateExtension> CertificateExtensions { get; }
-                = new Collection<PkiCertificateExtension>();
+                = [];
 
         /// <summary>
         /// Creates an ASN.1 DER-encoded PKCS#10 CertificationRequest object representing

@@ -7,7 +7,7 @@ namespace ACMESharp.MockServer
 {
     public class CertificateAuthority
     {
-        private Options _opts;
+        private readonly Options _opts;
         private PkiKeyPair _keyPair;
 
       //private long _serNum;

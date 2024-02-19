@@ -23,9 +23,11 @@ namespace ACMESharp.Protocol
     /// </summary>
     public class AcmeProtocolClient : IDisposable
     {
-        private static readonly HttpStatusCode[] SkipExpectedStatuses = Array.Empty<HttpStatusCode>();
+        private static readonly HttpStatusCode[] SkipExpectedStatuses = [];
 
+#pragma warning disable IDE0044 // Add readonly modifier
         private bool _disposeHttpClient;
+#pragma warning restore IDE0044 // Add readonly modifier
         private HttpClient _http;
         private ILogger _log;
 
@@ -414,7 +416,7 @@ namespace ACMESharp.Protocol
         {
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
-            var skipNonce = _usePostAsGet ? false : true;
+            var skipNonce = !_usePostAsGet;
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderUrl),
                     method: method,
@@ -492,7 +494,7 @@ namespace ACMESharp.Protocol
         {
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
-            var skipNonce = _usePostAsGet ? false : true;
+            var skipNonce = !_usePostAsGet;
             var typedResp = await SendAcmeAsync<_Authorization>(
                     new Uri(_http.BaseAddress, authzDetailsUrl),
                     method: method,
@@ -532,7 +534,7 @@ namespace ACMESharp.Protocol
         {
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
-            var skipNonce = _usePostAsGet ? false : true;
+            var skipNonce = !_usePostAsGet;
             var typedResp = await SendAcmeAsync<Challenge>(
                     new Uri(_http.BaseAddress, challengeDetailsUrl),
                     method: method,
@@ -688,7 +690,7 @@ namespace ACMESharp.Protocol
             var url = new Uri(_http.BaseAddress, relativeUrl);
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
-            var skipNonce = _usePostAsGet ? false : true;
+            var skipNonce = !_usePostAsGet;
             var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel).ConfigureAwait(false);
             resp.EnsureSuccessStatusCode();
             return resp;
@@ -709,7 +711,7 @@ namespace ACMESharp.Protocol
             var url = new Uri(_http.BaseAddress, relativeUrl);
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
-            var skipNonce = _usePostAsGet ? false : true;
+            var skipNonce = !_usePostAsGet;
             var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel).ConfigureAwait(false);
             resp.EnsureSuccessStatusCode();
             return await resp.Content.ReadAsByteArrayAsync(cancel).ConfigureAwait(false);

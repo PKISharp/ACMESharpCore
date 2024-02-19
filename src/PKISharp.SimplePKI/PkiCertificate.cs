@@ -110,7 +110,7 @@ namespace PKISharp.SimplePKI
                     }
                     using (var buff = new MemoryStream())
                     {
-                        store.Save(buff, password ?? new char[0], new SecureRandom());
+                        store.Save(buff, password ?? [], new SecureRandom());
                         return buff.ToArray();
                     }
 
@@ -119,7 +119,7 @@ namespace PKISharp.SimplePKI
             }
         }
 
-        internal string AliasOf(PkiCertificate cert)
+        internal static string AliasOf(PkiCertificate cert)
         {
             var x509Name = new X509Name(cert.SubjectName);
             return (x509Name.GetValueList(X509Name.CN)?[0] ?? cert.SubjectName) as string;

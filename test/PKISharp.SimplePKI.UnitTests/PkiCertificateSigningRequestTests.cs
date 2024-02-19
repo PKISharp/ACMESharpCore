@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -7,7 +7,7 @@ namespace PKISharp.SimplePKI.UnitTests
     [TestClass]
     public class PkiCertificateSigningRequestTests
     {
-        string _testTemp;
+        private readonly string _testTemp;
 
         public PkiCertificateSigningRequestTests()
         {
@@ -296,7 +296,7 @@ namespace PKISharp.SimplePKI.UnitTests
                     csr2.PublicKey.Export(PkiEncodingFormat.Der));
         }
 
-        static CertExtComparer CertExtComparerInstance = new CertExtComparer();
+        private readonly CertExtComparer CertExtComparerInstance = new CertExtComparer();
 
         class CertExtComparer : IComparer
         {
