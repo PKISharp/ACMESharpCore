@@ -25,9 +25,9 @@ namespace PKISharp.SimplePKI
             if (that == null)
                 return -1;
 
-            var thisVal = this.Identifier.ToString()
-                    + this.IsCritical
-                    + Convert.ToBase64String(this.Value.GetDerEncoded());
+            var thisVal = Identifier.ToString()
+                    + IsCritical
+                    + Convert.ToBase64String(Value.GetDerEncoded());
             var thatVal = that.Identifier.ToString()
                     + that.IsCritical
                     + Convert.ToBase64String(that.Value.GetDerEncoded());

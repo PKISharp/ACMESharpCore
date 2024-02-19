@@ -25,7 +25,7 @@ namespace ACMESharp.IntegrationTests
                 int subseq = -1,
                 [System.Runtime.CompilerServices.CallerMemberName]string caller = "")
         {
-            var m = this.GetType().GetMember(caller);
+            var m = GetType().GetMember(caller);
             if (m.Length != 1)
                 throw new InvalidOperationException("Unable to resolve single member from caller name");
 
@@ -118,7 +118,7 @@ namespace ACMESharp.IntegrationTests
         private string ComputePrefix(int subseq = -1)
         {
             var to = TestOrderer.GetTestOrder(this);
-            var nm = this.GetType().Name;
+            var nm = GetType().Name;
 
             var pfx = $"{to:D3}-{nm}";
             if (subseq >= 0)

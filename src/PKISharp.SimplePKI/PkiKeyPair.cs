@@ -160,7 +160,7 @@ namespace PKISharp.SimplePKI
             if (_signer == null)
                 throw new NotSupportedException();
 
-            return _signer(this.PrivateKey, data);
+            return _signer(PrivateKey, data);
         }
 
         public bool Verify(byte[] data, byte[] sig)
@@ -168,7 +168,7 @@ namespace PKISharp.SimplePKI
             if (_verifier == null)
                 throw new NotSupportedException();
             
-            return _verifier(this.PublicKey, data, sig);
+            return _verifier(PublicKey, data, sig);
         }
 
         internal static byte[] Sign(string algor, PkiKey prv, byte[] input, int transcodeLength = 0)

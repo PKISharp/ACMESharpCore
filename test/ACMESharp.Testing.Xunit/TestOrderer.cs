@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,7 +19,7 @@ namespace ACMESharp.Testing.Xunit
         public const string TypeName = "ACMESharp.Testing.Xunit.TestOrderer";
         public const string AssemblyName = "ACMESharp.Testing.Xunit";
 
-        private Random _rng = new Random();
+        private readonly Random _rng = new();
 
         static TestOrderer()
         {

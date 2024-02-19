@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -79,7 +79,7 @@ namespace ACMESharp.IntegrationTests
             Clients.Acme.Directory = dir;
             await Clients.Acme.GetNonceAsync();
 
-            this.SaveObject("dir.json", dir);
+            SaveObject("dir.json", dir);
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace ACMESharp.IntegrationTests
             var testCtx = SetTestContext();
 
             var acct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
-            this.SaveObject("acct.json", acct);
+            SaveObject("acct.json", acct);
             Clients.Acme.Account = acct;
         }
 
@@ -119,7 +119,7 @@ namespace ACMESharp.IntegrationTests
         {
             var testCtx = SetTestContext();
 
-            var oldAcct = this.LoadObject<AcmeAccount>("acct.json");
+            var oldAcct = LoadObject<AcmeAccount>("acct.json");
             var dupAcct = await Clients.Acme.CreateAccountAsync(_contactsInit, true);
 
             // For a duplicate account, the returned object is not complete...

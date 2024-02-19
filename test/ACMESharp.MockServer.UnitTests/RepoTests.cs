@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -94,11 +94,11 @@ namespace ACMESharp.MockServer.UnitTests
                     {
                         Id = BitConverter.ToString(kid.ToByteArray()),
                         Key = key,
-                        Contact = new string[]
-                        {
+                        Contact =
+                        [
                             "foo1@bar.com",
                             "foo2@bar.com",
-                        }
+                        ]
                     }
                 }
             };
