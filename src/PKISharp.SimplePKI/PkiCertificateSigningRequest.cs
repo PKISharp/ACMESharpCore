@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -323,10 +323,10 @@ namespace PKISharp.SimplePKI
                 keyUsage = new X509KeyUsage(X509KeyUsage.KeyEncipherment |
                         X509KeyUsage.DigitalSignature);
             if (extKeyUsage == null)
-                extKeyUsage = new[] {
+                extKeyUsage = [
                     KeyPurposeID.IdKPClientAuth,
                     KeyPurposeID.IdKPServerAuth
-                };
+                ];
             
             certGen.AddExtension("2.5.29.15", true, keyUsage);
             certGen.AddExtension("2.5.29.37", true, new DerSequence(extKeyUsage));

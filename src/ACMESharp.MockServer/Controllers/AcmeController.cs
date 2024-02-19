@@ -580,10 +580,10 @@ namespace ACMESharp.MockServer.Controllers
 
             dbChlng.Payload.Status = "valid";
             dbChlng.Payload.Validated = DateTime.Now.ToUniversalTime().ToString();
-            dbChlng.Payload.ValidationRecord = new object[]
-            {
+            dbChlng.Payload.ValidationRecord =
+            [
                 new { iTakeYourWordForIt = answer }
-            };
+            ];
             _repo.SaveChallenge(dbChlng);
 
             if (dbAuthz.Payload.Status == "pending")

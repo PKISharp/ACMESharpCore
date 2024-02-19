@@ -64,13 +64,13 @@ namespace ACMESharp.UnitTests
                     " \"http://example.com/is_root\":true}";
 
             byte[] payloadBytesExpected = // From the RFC example
-            {
+            [
                 123, 34, 105, 115, 115, 34, 58, 34, 106, 111, 101, 34, 44, 13, 10,
                 32, 34, 101, 120, 112, 34, 58, 49, 51, 48, 48, 56, 49, 57, 51, 56,
                 48, 44, 13, 10, 32, 34, 104, 116, 116, 112, 58, 47, 47, 101, 120, 97,
                 109, 112, 108, 101, 46, 99, 111, 109, 47, 105, 115, 95, 114, 111,
                 111, 116, 34, 58, 116, 114, 117, 101, 125
-            };
+            ];
             byte[] payloadBytesActual = Encoding.UTF8.GetBytes(payloadSample);
             CollectionAssert.AreEqual(payloadBytesExpected, payloadBytesActual);
 
@@ -83,7 +83,7 @@ namespace ACMESharp.UnitTests
             string signingInput = $"{protectedB64uActual}.{payloadB64uActual}";
 
             byte[] signingBytesExpected = // From the RFC example
-            {
+            [
                 101, 121, 74, 48, 101, 88, 65, 105, 79, 105, 74, 75, 86, 49, 81,
                 105, 76, 65, 48, 75, 73, 67, 74, 104, 98, 71, 99, 105, 79, 105, 74,
                 73, 85, 122, 73, 49, 78, 105, 74, 57, 46, 101, 121, 74, 112, 99, 51,
@@ -93,7 +93,7 @@ namespace ACMESharp.UnitTests
                 72, 65, 54, 76, 121, 57, 108, 101, 71, 70, 116, 99, 71, 120, 108, 76,
                 109, 78, 118, 98, 83, 57, 112, 99, 49, 57, 121, 98, 50, 57, 48, 73,
                 106, 112, 48, 99, 110, 86, 108, 102, 81
-            };
+            ];
             byte[] signingBytesActual = Encoding.ASCII.GetBytes(signingInput);
             CollectionAssert.AreEqual(signingBytesExpected, signingBytesActual);
 
@@ -106,11 +106,11 @@ namespace ACMESharp.UnitTests
                     "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75" +
                     "aKtMN3Yj0iPS4hcgUuTwjAzZr1Z9CAow");
             byte[] hmacExpected = // From the RFC example:
-            {
+            [
                 116, 24, 223, 180, 151, 153, 224, 37, 79, 250, 96, 125, 216, 173,
                 187, 186, 22, 212, 37, 77, 105, 214, 191, 240, 91, 88, 5, 88, 83,
                 132, 141, 121
-            };
+            ];
             byte[] hmacActual;
             using (var hmacAlgor = new System.Security.Cryptography.HMACSHA256(symKey))
             {
@@ -232,9 +232,9 @@ namespace ACMESharp.UnitTests
             string protectedSample = // From the RFC example
                     "{\"alg\":\"RS256\"}";
             byte[] protectedBytesExpected = // From the RFC example
-            {
+            [
                 123, 34, 97, 108, 103, 34, 58, 34, 82, 83, 50, 53, 54, 34, 125
-            };
+            ];
             byte[] protectedBytesActual = Encoding.UTF8.GetBytes(protectedSample);
             CollectionAssert.AreEqual(protectedBytesExpected, protectedBytesActual);
 
@@ -251,7 +251,7 @@ namespace ACMESharp.UnitTests
             string signingInput = $"{protectedB64uActual}.{payloadB64uActual}";
 
             byte[] signingBytesExpected = // From the RFC example
-            {
+            [
                 101, 121, 74, 104, 98, 71, 99, 105, 79, 105, 74, 83, 85, 122, 73,
                 49, 78, 105, 74, 57, 46, 101, 121, 74, 112, 99, 51, 77, 105, 79, 105,
                 74, 113, 98, 50, 85, 105, 76, 65, 48, 75, 73, 67, 74, 108, 101, 72,
@@ -260,13 +260,13 @@ namespace ACMESharp.UnitTests
                 121, 57, 108, 101, 71, 70, 116, 99, 71, 120, 108, 76, 109, 78, 118,
                 98, 83, 57, 112, 99, 49, 57, 121, 98, 50, 57, 48, 73, 106, 112, 48,
                 99, 110, 86, 108, 102, 81
-            };
+            ];
             byte[] signingBytesActual = Encoding.ASCII.GetBytes(signingInput);
             CollectionAssert.AreEqual(signingBytesExpected, signingBytesActual);
 
 
             byte[] sigExpected = // From the RFC example
-            {
+            [
                 112, 46, 33, 137, 67, 232, 143, 209, 30, 181, 216, 45, 191, 120, 69,
                 243, 65, 6, 174, 27, 129, 255, 247, 115, 17, 22, 173, 209, 113, 125,
                 131, 101, 109, 66, 10, 253, 60, 150, 238, 221, 115, 162, 102, 62, 81,
@@ -285,7 +285,7 @@ namespace ACMESharp.UnitTests
                 234, 86, 222, 64, 92, 178, 33, 90, 69, 178, 194, 85, 102, 181, 90,
                 193, 167, 72, 160, 112, 223, 200, 163, 42, 70, 149, 67, 208, 25, 238,
                 251, 71
-            };
+            ];
             byte[] sigActual = null;
             using (var rsa = new System.Security.Cryptography.RSACryptoServiceProvider())
             {

@@ -96,7 +96,7 @@ namespace PKISharp.SimplePKI
                     var store = new Pkcs12StoreBuilder().Build();
                     if (privateKey != null)
                         store.SetKeyEntry(alias, new AsymmetricKeyEntry(privateKey.NativeKey),
-                                new[] { new X509CertificateEntry(NativeCertificate) });
+                                [new X509CertificateEntry(NativeCertificate)]);
                     else
                         store.SetCertificateEntry(alias, new X509CertificateEntry(NativeCertificate));
 

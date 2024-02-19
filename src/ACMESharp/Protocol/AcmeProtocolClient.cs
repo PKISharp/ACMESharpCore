@@ -23,7 +23,7 @@ namespace ACMESharp.Protocol
     /// </summary>
     public class AcmeProtocolClient : IDisposable
     {
-        private static readonly HttpStatusCode[] SkipExpectedStatuses = new HttpStatusCode[0];
+        private static readonly HttpStatusCode[] SkipExpectedStatuses = Array.Empty<HttpStatusCode>();
 
         private bool _disposeHttpClient;
         private HttpClient _http;
@@ -76,7 +76,7 @@ namespace ACMESharp.Protocol
             _log.LogInformation("ACME client initialized");
         }
 
-        private IJwsTool ResolveDefaultSigner()
+        private Crypto.JOSE.Impl.ESJwsTool ResolveDefaultSigner()
         {
             // We default to ES256 signer
             var signer = new Crypto.JOSE.Impl.ESJwsTool();
@@ -173,10 +173,10 @@ namespace ACMESharp.Protocol
             await SendAcmeAsync(
                     new Uri(Directory.NewNonce),
                     method: HttpMethod.Head,
-                    expectedStatuses: new[] {
+                    expectedStatuses: [
                         HttpStatusCode.OK,
                         HttpStatusCode.NoContent,
-                    },
+                    ],
                     cancel: cancel).ConfigureAwait(false);
         }
 
@@ -201,7 +201,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, Directory.NewAccount),
                     method: HttpMethod.Post,
                     message: message,
-                    expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
+                    expectedStatuses: [HttpStatusCode.Created, HttpStatusCode.OK],
                     includePublicKey: true,
                     cancel: cancel).ConfigureAwait(false);
 
@@ -371,7 +371,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, Directory.NewOrder),
                     method: HttpMethod.Post,
                     message: message,
-                    expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
+                    expectedStatuses: [HttpStatusCode.Created, HttpStatusCode.OK],
                     cancel: cancel).ConfigureAwait(false);
 
             var order = await DecodeOrderResponseAsync(resp).ConfigureAwait(false);
@@ -577,7 +577,7 @@ namespace ACMESharp.Protocol
             };
             var resp = await SendAcmeAsync(
                     new Uri(_http.BaseAddress, orderFinalizeUrl),
-                    expectedStatuses: new[] { HttpStatusCode.OK, HttpStatusCode.Created },
+                    expectedStatuses: [HttpStatusCode.OK, HttpStatusCode.Created],
                     method: HttpMethod.Post,
                     message: message,
                     cancel: cancel).ConfigureAwait(false);
@@ -669,7 +669,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, Directory.RevokeCert),
                     method: HttpMethod.Post,
                     message: message,
-                    expectedStatuses: new[] { HttpStatusCode.OK },
+                    expectedStatuses: [HttpStatusCode.OK],
                     cancel: cancel).ConfigureAwait(false);
         }
 
@@ -748,7 +748,7 @@ namespace ACMESharp.Protocol
             if (method == null)
                 method = HttpMethod.Get;
             if (expectedStatuses == null)
-                expectedStatuses = new[] { HttpStatusCode.OK };
+                expectedStatuses = [HttpStatusCode.OK];
 
             BeforeAcmeSign?.Invoke(opName, message);
             var requ = new HttpRequestMessage(method, uri);

@@ -115,7 +115,7 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var subjCert = subjCsr.Create(isurCert, isurKeys.PrivateKey,
                     DateTime.Now.AddMonths(-1),
-                    DateTime.Now.AddMonths(1), new[] { (byte)0x2b });
+                    DateTime.Now.AddMonths(1), [(byte)0x2b]);
 
             Assert.AreEqual(isurName, isurCert.SubjectName,
                     "Subject Name on Subject Certificate");
@@ -272,7 +272,7 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var subjCert = subjCsr.Create(isurCert, isurKeys.PrivateKey,
                     DateTime.Now.AddMonths(-1),
-                    DateTime.Now.AddMonths(1), new[] { (byte)0x2b });
+                    DateTime.Now.AddMonths(1), [(byte)0x2b]);
 
             Assert.AreEqual(isurName, isurCert.SubjectName,
                     "Subject Name on Subject Certificate");
@@ -444,7 +444,7 @@ namespace PKISharp.SimplePKI.UnitTests
 
             var subjCert = subjCsr.Create(isurCert, isurKeys.PrivateKey,
                     DateTime.Now.AddMonths(-1),
-                    DateTime.Now.AddMonths(1), new[] { (byte)0x2b });
+                    DateTime.Now.AddMonths(1), [(byte)0x2b]);
 
             using (var ms = new MemoryStream())
             {
