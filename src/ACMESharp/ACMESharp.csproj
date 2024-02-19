@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <!--
@@ -11,20 +13,37 @@
    -    https://docs.microsoft.com/en-us/nuget/reference/msbuild-targets
    -->
   <PropertyGroup>
-      <PackageId>ACMESharpCore</PackageId>
-      <Description>ACME v2 protocol client library for .NET Standard</Description>
-      <Copyright>Copyright (C) Eugene Bekker.</Copyright>
-      <PackageLicenseUrl>https://github.com/PKISharp/ACMESharpCore/blob/master/LICENSE</PackageLicenseUrl>
-      <PackageProjectUrl>https://github.com/PKISharp/ACMESharpCore/</PackageProjectUrl>
-      <PackageIconUrl>https://raw.githubusercontent.com/PKISharp/ACMESharpCore/master/docs/acmesharp-logo-color.png</PackageIconUrl>
+      <PackageId>ElCamino.ACMESharpCore</PackageId>
+      <AssemblyName>ElCamino.ACMESharpCore</AssemblyName>
+      <Description>ACME v2 protocol client library for .NET Standard forked from https://github.com/PKISharp/ACMESharpCore</Description>
+      <Copyright>Copyright (C) Eugene Bekker, David Melendez, MIT License</Copyright>
+      <PackageProjectUrl>https://github.com/dlmelendez/ACMESharpCore</PackageProjectUrl>
+      <PackageIcon>projectNugetPic.png</PackageIcon>
+      <PackageLicenseUrl></PackageLicenseUrl>
+      <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
       <PackageTags>pki;ssl;tls;security;certificates;letsencrypt;acme;acmesharp</PackageTags>
-      <RepositoryUrl>https://github.com/PKISharp/ACMESharpCore.git</RepositoryUrl>
+      <PackageReleaseNotes>
+        Check https://github.com/dlmelendez/ACMESharpCore/releases for the latest release information.
+      </PackageReleaseNotes>
+      <RepositoryUrl>https://github.com/dlmelendez/identityazuretable.git</RepositoryUrl>
+      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
       <RepositoryType>git</RepositoryType>
-      <Authors>https://github.com/PKISharp/ACMESharpCore/graphs/contributors</Authors>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+      <PackageReadmeFile>README.md</PackageReadmeFile>
+      <NeutralLanguage>en-US</NeutralLanguage>
+      <Authors>Eugene Bekker, David Melendez</Authors>
   </PropertyGroup>
 
   <Import Project="../../version.props" />
-
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="projectNugetPic.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
