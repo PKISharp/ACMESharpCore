@@ -63,7 +63,7 @@ namespace ACMESharp.IntegrationTests
         {
             var json = ReadFrom(saveName);
 
-            return json == null ? default(T) : JsonSerializer.Deserialize<T>(json, JsonHelpers.JsonWebIndentedOptions);
+            return json == null ? default : JsonSerializer.Deserialize<T>(json, JsonHelpers.JsonWebIndentedOptions);
         }
 
         public byte[] RandomBytes(int byteLen)
