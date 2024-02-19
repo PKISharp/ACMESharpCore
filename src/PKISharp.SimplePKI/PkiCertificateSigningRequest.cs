@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -202,7 +202,7 @@ namespace PKISharp.SimplePKI
 
             var sigFactory = ComputeSignatureAlgorithm(prvKey);
             var pkcs10 = new Pkcs10CertificationRequest(sigFactory, x509name,
-                    pubKey, new DerSet(attr), prvKey);
+                    pubKey, new DerSet(attr));
 
             switch (format)
             {
