@@ -120,11 +120,9 @@ namespace ACMESharp.Crypto.JOSE
         /// </summary>
         public static string ComputeKeyAuthorization(IJwsTool signer, string token)
         {
-            using (var sha = SHA256.Create())
-            {
-                var jwkThumb = CryptoHelper.Base64.UrlEncode(ComputeThumbprint(signer, sha));
-                return $"{token}.{jwkThumb}";
-            }
+            using var sha = SHA256.Create();
+            var jwkThumb = CryptoHelper.Base64.UrlEncode(ComputeThumbprint(signer, sha));
+            return $"{token}.{jwkThumb}";
         }
 
         /// <summary>
@@ -134,13 +132,11 @@ namespace ACMESharp.Crypto.JOSE
         /// </summary>
         public static string ComputeKeyAuthorizationDigest(IJwsTool signer, string token)
         {
-            using (var sha = SHA256.Create())
-            {
-                var jwkThumb = CryptoHelper.Base64.UrlEncode(ComputeThumbprint(signer, sha));
-                var keyAuthz = $"{token}.{jwkThumb}";
-                var keyAuthzDig = sha.ComputeHash(Encoding.UTF8.GetBytes(keyAuthz));
-                return CryptoHelper.Base64.UrlEncode(keyAuthzDig);
-            }
+            using var sha = SHA256.Create();
+            var jwkThumb = CryptoHelper.Base64.UrlEncode(ComputeThumbprint(signer, sha));
+            var keyAuthz = $"{token}.{jwkThumb}";
+            var keyAuthzDig = sha.ComputeHash(Encoding.UTF8.GetBytes(keyAuthz));
+            return CryptoHelper.Base64.UrlEncode(keyAuthzDig);
         }
     }
 }

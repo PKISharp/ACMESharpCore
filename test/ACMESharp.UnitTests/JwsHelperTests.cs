@@ -15,14 +15,10 @@ namespace ACMESharp.UnitTests
         {
             Func<byte[], byte[]> sigFunc = (x) =>
             {
-                using (var rsa = new RSACryptoServiceProvider())
-                {
-                    rsa.ImportParameters(JwsTests.GetRsaParamsForRfc7515Example_A_2_1());
-                    using (var sha256 = SHA256.Create())
-                    {
-                        return rsa.SignData(x, sha256);
-                    }
-                }
+                using var rsa = new RSACryptoServiceProvider();
+                rsa.ImportParameters(JwsTests.GetRsaParamsForRfc7515Example_A_2_1());
+                using var sha256 = SHA256.Create();
+                return rsa.SignData(x, sha256);
             };
 
             object protectedSample = new // From the RFC example

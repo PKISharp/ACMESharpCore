@@ -140,15 +140,13 @@ namespace ACMESharp.Protocol
 
             try
             {
-                using (var resp = await _http.GetAsync(tosUrl, cancel).ConfigureAwait(false))
-                {
-                    var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
-                    if (string.IsNullOrEmpty(filename))
-                        filename = new Uri(tosUrl).AbsolutePath;
-                    return (resp.Content.Headers.ContentType,
-                            Path.GetFileName(filename),
-                            await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
-                }
+                using var resp = await _http.GetAsync(tosUrl, cancel).ConfigureAwait(false);
+                var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
+                if (string.IsNullOrEmpty(filename))
+                    filename = new Uri(tosUrl).AbsolutePath;
+                return (resp.Content.Headers.ContentType,
+                        Path.GetFileName(filename),
+                        await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
             }
             catch (Exception ex)
             {
@@ -645,10 +643,8 @@ namespace ACMESharp.Protocol
             OrderDetails order,
             CancellationToken cancel = default)
         {
-            using (var resp = await GetAsync(order.Payload.Certificate, cancel).ConfigureAwait(false))
-            {
-                return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-            }
+            using var resp = await GetAsync(order.Payload.Certificate, cancel).ConfigureAwait(false);
+            return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
         }
 
         /// <summary>

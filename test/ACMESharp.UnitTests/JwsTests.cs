@@ -290,10 +290,8 @@ namespace ACMESharp.UnitTests
             using (var rsa = new System.Security.Cryptography.RSACryptoServiceProvider())
             {
                 rsa.ImportParameters(GetRsaParamsForRfc7515Example_A_2_1());
-                using (var sha256 = SHA256.Create())
-                {
-                    sigActual = rsa.SignData(signingBytesExpected, sha256);
-                }
+                using var sha256 = SHA256.Create();
+                sigActual = rsa.SignData(signingBytesExpected, sha256);
             }
             CollectionAssert.AreEqual(sigExpected, sigActual);
 
