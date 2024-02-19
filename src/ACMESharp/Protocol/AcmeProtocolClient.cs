@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -120,7 +120,7 @@ namespace ACMESharp.Protocol
             return await SendAcmeAsync<ServiceDirectory>(
                     new Uri(_http.BaseAddress, Directory.Directory),
                     skipNonce: true,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -140,14 +140,14 @@ namespace ACMESharp.Protocol
 
             try
             {
-                using (var resp = await _http.GetAsync(tosUrl, cancel))
+                using (var resp = await _http.GetAsync(tosUrl, cancel).ConfigureAwait(false))
                 {
                     var filename = resp.Content?.Headers?.ContentDisposition?.FileName;
                     if (string.IsNullOrEmpty(filename))
                         filename = new Uri(tosUrl).AbsolutePath;
                     return (resp.Content.Headers.ContentType,
                             Path.GetFileName(filename),
-                            await resp.Content.ReadAsByteArrayAsync());
+                            await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
                 }
             }
             catch (Exception ex)
@@ -179,7 +179,7 @@ namespace ACMESharp.Protocol
                         HttpStatusCode.OK,
                         HttpStatusCode.NoContent,
                     },
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace ACMESharp.Protocol
                     message: message,
                     expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
                     includePublicKey: true,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             if (resp.StatusCode == HttpStatusCode.OK)
             {
@@ -213,7 +213,7 @@ namespace ACMESharp.Protocol
                     throw new InvalidOperationException("Existing account public key found");
             }
 
-            var acct = await DecodeAccountResponseAsync(resp);
+            var acct = await DecodeAccountResponseAsync(resp).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -244,16 +244,16 @@ namespace ACMESharp.Protocol
                     message: new CheckAccountRequest(),
                     expectedStatuses: SkipExpectedStatuses,
                     includePublicKey: true,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             if (resp.StatusCode == HttpStatusCode.BadRequest)
                 throw new InvalidOperationException(
                         $"Invalid or missing account ({resp.StatusCode})");
 
             if (resp.StatusCode != HttpStatusCode.OK)
-                throw await DecodeResponseErrorAsync(resp);
+                throw await DecodeResponseErrorAsync(resp).ConfigureAwait(false);
 
-            var acct = await DecodeAccountResponseAsync(resp, existing: Account);
+            var acct = await DecodeAccountResponseAsync(resp, existing: Account).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -285,9 +285,9 @@ namespace ACMESharp.Protocol
                     requUrl,
                     method: HttpMethod.Post,
                     message: message,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
-            var acct = await DecodeAccountResponseAsync(resp, existing: Account);
+            var acct = await DecodeAccountResponseAsync(resp, existing: Account).ConfigureAwait(false);
 
             if (string.IsNullOrEmpty(acct.Kid))
                 throw new InvalidDataException(
@@ -323,11 +323,11 @@ namespace ACMESharp.Protocol
                     requUrl,
                     method: HttpMethod.Post,
                     message: innerPayload,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             Signer = newSigner;
 
-            return await DecodeAccountResponseAsync(resp, existing: Account);
+            return await DecodeAccountResponseAsync(resp, existing: Account).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -343,9 +343,9 @@ namespace ACMESharp.Protocol
                     new Uri(Account.Kid),
                     method: HttpMethod.Post,
                     message: new DeactivateAccountRequest(),
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
-            return await DecodeAccountResponseAsync(resp, existing: Account);
+            return await DecodeAccountResponseAsync(resp, existing: Account).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -374,9 +374,9 @@ namespace ACMESharp.Protocol
                     method: HttpMethod.Post,
                     message: message,
                     expectedStatuses: new[] { HttpStatusCode.Created, HttpStatusCode.OK },
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
-            var order = await DecodeOrderResponseAsync(resp);
+            var order = await DecodeOrderResponseAsync(resp).ConfigureAwait(false);
             return order;
         }
 
@@ -422,18 +422,18 @@ namespace ACMESharp.Protocol
                     method: method,
                     message: message,
                     skipNonce: skipNonce,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
-            var order = await DecodeOrderResponseAsync(resp, existing);
+            var order = await DecodeOrderResponseAsync(resp, existing).ConfigureAwait(false);
             return order;
 
             // var resp = await SendAcmeAsync(
             //         new Uri(_http.BaseAddress, order.OrderUrl),
             //         skipNonce: true,
-            //         cancel: cancel);
+            //         cancel: cancel).ConfigureAwait(false);
 
             // var coResp = JsonConvert.DeserializeObject<Order>(
-            //         await resp.Content.ReadAsStringAsync());
+            //         await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
 
             // var updatedOrder = new AcmeOrder
             // {
@@ -453,8 +453,8 @@ namespace ACMESharp.Protocol
 
             // foreach (var authz in updatedOrder.Authorizations)
             // {
-            //     resp = await _http.GetAsync(authz.DetailsUrl);
-            //     var body = await resp.Content.ReadAsStringAsync();
+            //     resp = await _http.GetAsync(authz.DetailsUrl).ConfigureAwait(false);
+            //     var body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             //     if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
             //     {
@@ -500,7 +500,7 @@ namespace ACMESharp.Protocol
                     method: method,
                     message: message,
                     skipNonce: skipNonce,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             return typedResp;
         }
@@ -519,7 +519,7 @@ namespace ACMESharp.Protocol
                     new Uri(_http.BaseAddress, authzDetailsUrl),
                     method: HttpMethod.Post,
                     message: new DeactivateAuthorizationRequest(),
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             return typedResp;
         }
@@ -540,7 +540,7 @@ namespace ACMESharp.Protocol
                     method: method,
                     message: message,
                     skipNonce: skipNonce,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             return typedResp;
         }
@@ -559,7 +559,7 @@ namespace ACMESharp.Protocol
                     // TODO:  for now, none of the challenge types
                     // take any input data to answer the challenge
                     message: new { },
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
             return typedResp;
         }
@@ -582,9 +582,9 @@ namespace ACMESharp.Protocol
                     expectedStatuses: new[] { HttpStatusCode.OK, HttpStatusCode.Created },
                     method: HttpMethod.Post,
                     message: message,
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
 
-            return await DecodeOrderResponseAsync(resp);
+            return await DecodeOrderResponseAsync(resp).ConfigureAwait(false);
 
             // var message = new FinalizeOrderRequest
             // {
@@ -594,10 +594,10 @@ namespace ACMESharp.Protocol
             //         new Uri(_http.BaseAddress, order.FinalizeUrl),
             //         method: HttpMethod.Post,
             //         message: message,
-            //         cancel: cancel);
+            //         cancel: cancel).ConfigureAwait(false);
 
             // var coResp = JsonConvert.DeserializeObject<Order>(
-            //         await resp.Content.ReadAsStringAsync());
+            //         await resp.Content.ReadAsStringAsync().ConfigureAwait(false));
 
             // var newOrder = new AcmeOrder
             // {
@@ -616,8 +616,8 @@ namespace ACMESharp.Protocol
 
             // foreach (var authz in newOrder.Authorizations)
             // {
-            //     resp = await _http.GetAsync(authz.DetailsUrl);
-            //     var body = await resp.Content.ReadAsStringAsync();
+            //     resp = await _http.GetAsync(authz.DetailsUrl).ConfigureAwait(false);
+            //     var body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             //     if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
             //     {
@@ -645,9 +645,9 @@ namespace ACMESharp.Protocol
             OrderDetails order,
             CancellationToken cancel = default(CancellationToken))
         {
-            using (var resp = await GetAsync(order.Payload.Certificate, cancel))
+            using (var resp = await GetAsync(order.Payload.Certificate, cancel).ConfigureAwait(false))
             {
-                return await resp.Content.ReadAsByteArrayAsync();
+                return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             }
         }
 
@@ -674,7 +674,7 @@ namespace ACMESharp.Protocol
                     method: HttpMethod.Post,
                     message: message,
                     expectedStatuses: new[] { HttpStatusCode.OK },
-                    cancel: cancel);
+                    cancel: cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -693,7 +693,7 @@ namespace ACMESharp.Protocol
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
             var skipNonce = _usePostAsGet ? false : true;
-            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel);
+            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel).ConfigureAwait(false);
             resp.EnsureSuccessStatusCode();
             return resp;
         }
@@ -714,9 +714,9 @@ namespace ACMESharp.Protocol
             var method = _usePostAsGet ? HttpMethod.Post : HttpMethod.Get;
             var message = _usePostAsGet ? "" : null;
             var skipNonce = _usePostAsGet ? false : true;
-            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel);
+            var resp = await SendAcmeAsync(url, method, message, skipNonce: skipNonce, cancel: cancel).ConfigureAwait(false);
             resp.EnsureSuccessStatusCode();
-            return await resp.Content.ReadAsByteArrayAsync();
+            return await resp.Content.ReadAsByteArrayAsync(cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -769,7 +769,7 @@ namespace ACMESharp.Protocol
             }
 
             BeforeHttpSend?.Invoke(opName, requ);
-            var resp = await _http.SendAsync(requ);
+            var resp = await _http.SendAsync(requ, cancel).ConfigureAwait(false);
             AfterHttpSend?.Invoke(opName, resp);
 
             if (expectedStatuses.Length > 0
@@ -781,7 +781,7 @@ namespace ACMESharp.Protocol
                 if (!skipNonce)
                     ExtractNextNonce(resp, true);
 
-                throw await DecodeResponseErrorAsync(resp, opName: opName);
+                throw await DecodeResponseErrorAsync(resp, opName: opName).ConfigureAwait(false);
             }
 
             if (!skipNonce)
@@ -804,16 +804,16 @@ namespace ACMESharp.Protocol
             CancellationToken cancel = default(CancellationToken),
             [System.Runtime.CompilerServices.CallerMemberName]string opName = "")
         {
-            return await Deserialize<T>(await SendAcmeAsync(
+            return await DeserializeAsync<T>(await SendAcmeAsync(
                     uri, method, message, expectedStatuses,
                     skipNonce, skipSigning, includePublicKey,
-                    cancel, opName));
+                    cancel, opName).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        async Task<T> Deserialize<T>(HttpResponseMessage resp)
+        static async Task<T> DeserializeAsync<T>(HttpResponseMessage resp, CancellationToken cancel = default(CancellationToken))
         {
             return await JsonSerializer.DeserializeAsync<T>(
-                    await resp.Content.ReadAsStreamAsync(), JsonHelpers.JsonWebOptions);
+                    await resp.Content.ReadAsStreamAsync(cancel).ConfigureAwait(false), JsonHelpers.JsonWebOptions, cancel).ConfigureAwait(false);
         }
 
         async Task<AcmeProtocolException> DecodeResponseErrorAsync(HttpResponseMessage resp,
@@ -826,7 +826,7 @@ namespace ACMESharp.Protocol
             // if (Constants.ProblemContentTypeHeaderValue.Equals(resp.Content?.Headers?.ContentType))
             if (Constants.ProblemContentTypeHeaderValue.Equals(resp.Content?.Headers?.ContentType))
             {
-                problem = await Deserialize<Problem>(resp);
+                problem = await DeserializeAsync<Problem>(resp).ConfigureAwait(false);
                 msg = problem.Detail;
             }
 
@@ -860,7 +860,7 @@ namespace ACMESharp.Protocol
             // If this is a response to "duplicate account" then the body
             // will be empty and this will produce a null which we have
             // to account for when we build up the AcmeAccount instance
-            var typedResp = await Deserialize<Account>(resp);
+            var typedResp = await DeserializeAsync<Account>(resp).ConfigureAwait(false);
 
             // caResp will be null if this
             // is a duplicate account resp
@@ -878,7 +878,7 @@ namespace ACMESharp.Protocol
             OrderDetails existing = null)
         {
             var orderUrl = resp.Headers.Location?.ToString();
-            var typedResponse = await Deserialize<Order>(resp);
+            var typedResponse = await DeserializeAsync<Order>(resp).ConfigureAwait(false);
 
             var order = new OrderDetails
             {
@@ -903,8 +903,8 @@ namespace ACMESharp.Protocol
 
             // foreach (var authz in order.Authorizations)
             // {
-            //     resp = await _http.GetAsync(authz.DetailsUrl);
-            //     var body = await resp.Content.ReadAsStringAsync();
+            //     resp = await _http.GetAsync(authz.DetailsUrl).ConfigureAwait(false);
+            //     var body = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             //     if (resp.StatusCode != HttpStatusCode.OK || string.IsNullOrEmpty(body))
             //     {
