@@ -25,12 +25,6 @@ namespace ACMESharp.Protocol
             Init(problem);
         }
 
-        protected AcmeProtocolException(SerializationInfo info, StreamingContext context, Problem problem = null)
-            : base(info, context)
-        {
-            Init(problem);
-        }
-
         private void Init(Problem problem = null)
         {
             _problem = problem;
