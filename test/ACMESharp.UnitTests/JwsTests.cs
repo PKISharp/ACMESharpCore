@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -290,7 +290,7 @@ namespace ACMESharp.UnitTests
             using (var rsa = new System.Security.Cryptography.RSACryptoServiceProvider())
             {
                 rsa.ImportParameters(GetRsaParamsForRfc7515Example_A_2_1());
-                using (var sha256 = new System.Security.Cryptography.SHA256CryptoServiceProvider())
+                using (var sha256 = SHA256.Create())
                 {
                     sigActual = rsa.SignData(signingBytesExpected, sha256);
                 }
