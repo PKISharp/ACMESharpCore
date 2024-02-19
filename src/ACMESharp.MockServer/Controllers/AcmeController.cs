@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -148,9 +148,7 @@ namespace ACMESharp.MockServer.Controllers
             _repo.SaveAccount(dbAcct);
 
             GenerateNonce();
-            Response.Headers.Add(
-                    "Location",
-                    dbAcct.Details.Kid);
+            Response.Headers["Location"] = dbAcct.Details.Kid;
 
             return dbAcct.Details.Payload;
         }
