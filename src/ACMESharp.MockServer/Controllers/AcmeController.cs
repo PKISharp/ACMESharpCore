@@ -176,9 +176,7 @@ namespace ACMESharp.MockServer.Controllers
 
             var requ = ExtractPayload<CreateOrderRequest>(signedPayload);
 
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             var acctId = acct.Id.ToString();
 
             ValidateAccount(acct, signedPayload);
@@ -313,9 +311,7 @@ namespace ACMESharp.MockServer.Controllers
         {
             var ph = ExtractProtectedHeader(signedPayload);
             ValidateNonce(ph);
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             ValidateAccount(acct, signedPayload);
             var requ = ExtractPayload<string>(signedPayload);
             if (requ != null)
@@ -340,10 +336,7 @@ namespace ACMESharp.MockServer.Controllers
 
             ValidateNonce(ph);
 
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
-
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             ValidateAccount(acct, signedPayload);
 
             var dbOrder = _repo.GetOrder(orderIdNum);
@@ -423,10 +416,7 @@ namespace ACMESharp.MockServer.Controllers
 
             var requ = ExtractPayload<RevokeCertificateRequest>(signedPayload);
 
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
-
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             ValidateAccount(acct, signedPayload);
 
             var derEncodedCertificate = CryptoHelper.Base64.UrlDecode(requ.Certificate);
@@ -504,9 +494,7 @@ namespace ACMESharp.MockServer.Controllers
         {
             var ph = ExtractProtectedHeader(signedPayload);
             ValidateNonce(ph);
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             ValidateAccount(acct, signedPayload);
             var requ = ExtractPayload<string>(signedPayload);
             if (requ != null)
@@ -536,10 +524,7 @@ namespace ACMESharp.MockServer.Controllers
 
             ValidateNonce(ph);
 
-            var acct = _repo.GetAccountByKid(ph.Kid);
-            if (acct == null)
-                throw new Exception("could not resolve account");
-
+            var acct = _repo.GetAccountByKid(ph.Kid) ?? throw new Exception("could not resolve account");
             ValidateAccount(acct, signedPayload);
 
             var chlngUrl = Request.GetEncodedUrl();
@@ -598,7 +583,7 @@ namespace ACMESharp.MockServer.Controllers
         }
 
 
-        T ExtractPayload<T>(JwsSignedPayload signedPayload)
+        private static T ExtractPayload<T>(JwsSignedPayload signedPayload)
         {
             var payloadBytes = CryptoHelper.Base64.UrlDecode(signedPayload.Payload);
             if (payloadBytes.Length > 0)
@@ -608,7 +593,7 @@ namespace ACMESharp.MockServer.Controllers
             return default;
         }
 
-        ProtectedHeader ExtractProtectedHeader(JwsSignedPayload signedPayload)
+        private static ProtectedHeader ExtractProtectedHeader(JwsSignedPayload signedPayload)
         {
             var protectedJson = CryptoHelper.Base64.UrlDecodeToString(signedPayload.Protected);
             return JsonSerializer.Deserialize<ProtectedHeader>(protectedJson, JsonHelpers.JsonWebOptions);
@@ -616,9 +601,7 @@ namespace ACMESharp.MockServer.Controllers
 
         Uri ComputeRelativeUrl(string relPath)
         {
-            var requPort = Request.Host.Port.HasValue
-                ? Request.Host.Port.Value
-                : Request.IsHttps ? 443 : 80;
+            var requPort = Request.Host.Port ?? (Request.IsHttps ? 443 : 80);
             var requUrl = new UriBuilder(Request.Scheme, Request.Host.Host, requPort,
                     $"/acme/{relPath}").Uri;
             return requUrl;
@@ -641,7 +624,7 @@ namespace ACMESharp.MockServer.Controllers
                 throw new Exception("Bad Nonce");
         }
 
-        void ValidateAccount(DbAccount acct, JwsSignedPayload signedPayload)
+        private static void ValidateAccount(DbAccount acct, JwsSignedPayload signedPayload)
         {
             var ph = ExtractProtectedHeader(signedPayload);
             var jwk = JsonSerializer.Deserialize<Dictionary<string, string>>(acct.Jwk, JsonHelpers.JsonWebOptions);

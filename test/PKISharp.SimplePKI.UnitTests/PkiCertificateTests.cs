@@ -96,10 +96,9 @@ namespace PKISharp.SimplePKI.UnitTests
             var subjCsr = new PkiCertificateSigningRequest(subjName, subjKeys, hashAlgor);
             subjCsr.CertificateExtensions.Add(
                     PkiCertificateExtension.CreateDnsSubjectAlternativeNames(
-                            new[] {
-                                "foo-alt1.example.com",
+                            [   "foo-alt1.example.com",
                                 "foo-alt2.example.com",
-                            }));
+                            ]));
 
             var pemOut = Path.Combine(_testTemp,
                     $"cert-{algor}-{bits}-{hashAlgor}.pem");
@@ -253,10 +252,9 @@ namespace PKISharp.SimplePKI.UnitTests
             var subjCsr = new PkiCertificateSigningRequest(subjName, subjKeys, hashAlgor);
             subjCsr.CertificateExtensions.Add(
                     PkiCertificateExtension.CreateDnsSubjectAlternativeNames(
-                            new[] {
-                                "foo-alt1.example.com",
+                            [   "foo-alt1.example.com",
                                 "foo-alt2.example.com",
-                            }));
+                            ]));
 
             var pfxSansKey = Path.Combine(_testTemp,
                     $"certexp-{algor}-{bits}-{hashAlgor}-sanskey.pfx");

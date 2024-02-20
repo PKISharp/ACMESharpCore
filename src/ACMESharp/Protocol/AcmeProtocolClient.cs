@@ -78,7 +78,7 @@ namespace ACMESharp.Protocol
             _log.LogInformation("ACME client initialized");
         }
 
-        private Crypto.JOSE.Impl.ESJwsTool ResolveDefaultSigner()
+        private static Crypto.JOSE.Impl.ESJwsTool ResolveDefaultSigner()
         {
             // We default to ES256 signer
             var signer = new Crypto.JOSE.Impl.ESJwsTool();
@@ -148,7 +148,7 @@ namespace ACMESharp.Protocol
                     filename = new Uri(tosUrl).AbsolutePath;
                 return (resp.Content.Headers.ContentType,
                         Path.GetFileName(filename),
-                        await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false));
+                        await resp.Content.ReadAsByteArrayAsync(cancel).ConfigureAwait(false));
             }
             catch (Exception ex)
             {
@@ -646,7 +646,7 @@ namespace ACMESharp.Protocol
             CancellationToken cancel = default)
         {
             using var resp = await GetAsync(order.Payload.Certificate, cancel).ConfigureAwait(false);
-            return await resp.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+            return await resp.Content.ReadAsByteArrayAsync(cancel).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -808,13 +808,13 @@ namespace ACMESharp.Protocol
                     cancel, opName).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        static async Task<T> DeserializeAsync<T>(HttpResponseMessage resp, CancellationToken cancel = default)
+        private static async Task<T> DeserializeAsync<T>(HttpResponseMessage resp, CancellationToken cancel = default)
         {
             return await JsonSerializer.DeserializeAsync<T>(
                     await resp.Content.ReadAsStreamAsync(cancel).ConfigureAwait(false), JsonHelpers.JsonWebOptions, cancel).ConfigureAwait(false);
         }
 
-        async Task<AcmeProtocolException> DecodeResponseErrorAsync(HttpResponseMessage resp,
+        private static async Task<AcmeProtocolException> DecodeResponseErrorAsync(HttpResponseMessage resp,
             string message = null,
             [System.Runtime.CompilerServices.CallerMemberName]string opName = "")
         {
@@ -831,7 +831,9 @@ namespace ACMESharp.Protocol
             if (string.IsNullOrEmpty(msg))
             {
                 if (opName.EndsWith("Async"))
-                    opName.Substring(0, opName.Length - "Async".Length);
+                {
+                    opName = opName.Substring(0, opName.Length - "Async".Length);
+                }
                 msg = $"Unexpected response status code [{resp.StatusCode}] for [{opName}]";
             }
             return new AcmeProtocolException(message ?? msg, problem);
@@ -847,7 +849,7 @@ namespace ACMESharp.Protocol
         ///         Account object; some ACME Account operations do not return the full
         ///         details of an existing Account</param>
         /// <returns></returns>
-        protected async Task<AccountDetails> DecodeAccountResponseAsync(HttpResponseMessage resp,
+        protected static async Task<AccountDetails> DecodeAccountResponseAsync(HttpResponseMessage resp,
             AccountDetails existing = null)
         {
             resp.Headers.TryGetValues("Link", out var linkValues);
@@ -872,7 +874,7 @@ namespace ACMESharp.Protocol
             return acct;
         }
 
-        protected async Task<OrderDetails> DecodeOrderResponseAsync(HttpResponseMessage resp,
+        protected static async Task<OrderDetails> DecodeOrderResponseAsync(HttpResponseMessage resp,
             OrderDetails existing = null)
         {
             var orderUrl = resp.Headers.Location?.ToString();
@@ -978,7 +980,7 @@ namespace ACMESharp.Protocol
             return acmeSigned;
         }
 
-        protected string ResolvePayload(object message)
+        protected static string ResolvePayload(object message)
         {
             var payload = string.Empty;
             if (message is string)
@@ -1016,7 +1018,9 @@ namespace ACMESharp.Protocol
         // }
 
         // This code added to correctly implement the disposable pattern.
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
         public void Dispose()
+#pragma warning restore CA1816 // Dispose methods should call SuppressFinalize
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);

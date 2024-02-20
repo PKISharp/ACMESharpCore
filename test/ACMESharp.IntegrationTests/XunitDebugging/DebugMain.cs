@@ -470,7 +470,7 @@ Console.Error.WriteLine($"  IN: {psi.WorkingDirectory}");
             return runTests.ExitCode;
         }
 
-        string ToArgumentsString(Dictionary<string, List<string>> parsedArgs)
+        static string ToArgumentsString(Dictionary<string, List<string>> parsedArgs)
             => string.Join(" ", parsedArgs.SelectMany(kvp => kvp.Value.Select(value => value == null ? kvp.Key : $"{kvp.Key} \"{value}\"")));
 
         void WriteLine(string message)

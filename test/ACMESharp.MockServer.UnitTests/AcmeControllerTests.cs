@@ -423,7 +423,7 @@ namespace ACMESharp.MockServer.UnitTests
         }
 
 
-        private async Task<ServiceDirectory> GetDir()
+        private static async Task<ServiceDirectory> GetDir()
         {
             // var dir = new ServiceDirectory
             // {
