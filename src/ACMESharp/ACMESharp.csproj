@@ -2,9 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>12.0</LangVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <!-- Enabling nullable creates invalid http requests coming from AcmeProtocolClient, 
+         bad request 400 from test server for NewAccount -->
     <Nullable>disable</Nullable>
   </PropertyGroup>
 

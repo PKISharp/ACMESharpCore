@@ -56,7 +56,7 @@ namespace ACMESharp.Crypto.JOSE
         /// <param name="unprotectedHeaders"></param>
         /// <returns>Returns a signed, structured object containing the input payload.</returns>
         public static JwsSignedPayload SignFlatJsonAsObject(Func<byte[], byte[]> sigFunc, string payload,
-                object protectedHeaders = null, object unprotectedHeaders = null)
+                object? protectedHeaders = null, object? unprotectedHeaders = null)
         {
             if (protectedHeaders == null && unprotectedHeaders == null)
                 throw new ArgumentException("at least one of protected or unprotected headers must be specified");
@@ -88,7 +88,7 @@ namespace ACMESharp.Crypto.JOSE
             return jwsFlatJS;
         }
         public static string SignFlatJson(Func<byte[], byte[]> sigFunc, string payload,
-                object protectedHeaders = null, object unprotectedHeaders = null)
+                object? protectedHeaders = null, object? unprotectedHeaders = null)
         {
             var jwsFlatJS = SignFlatJsonAsObject(sigFunc, payload, protectedHeaders, unprotectedHeaders);
             return JsonSerializer.Serialize(jwsFlatJS, JsonHelpers.JsonWebIndentedOptions);

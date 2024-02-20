@@ -16,7 +16,7 @@ namespace ACMESharp.Crypto
             /// <summary>
             /// URL-safe Base64 encoding as prescribed in RFC 7515 Appendix C.
             /// </summary>
-            public static string UrlEncode(string raw, Encoding encoding = null)
+            public static string UrlEncode(string raw, Encoding? encoding = null)
             {
                 encoding ??= Encoding.UTF8;
                 return UrlEncode(encoding.GetBytes(raw));
@@ -53,7 +53,7 @@ namespace ACMESharp.Crypto
                 return Convert.FromBase64String(raw); // Standard base64 decoder
             }
 
-            public static string UrlDecodeToString(string enc, Encoding encoding = null)
+            public static string UrlDecodeToString(string enc, Encoding? encoding = null)
             {
                 encoding ??= Encoding.UTF8;
                 return encoding.GetString(UrlDecode(enc));
