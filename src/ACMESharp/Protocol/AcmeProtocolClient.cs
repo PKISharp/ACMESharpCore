@@ -749,8 +749,7 @@ namespace ACMESharp.Protocol
         {
             if (method == null)
                 method = HttpMethod.Get;
-            if (expectedStatuses == null)
-                expectedStatuses = [HttpStatusCode.OK];
+            expectedStatuses ??= [HttpStatusCode.OK];
 
             BeforeAcmeSign?.Invoke(opName, message);
             var requ = new HttpRequestMessage(method, uri);
@@ -949,8 +948,7 @@ namespace ACMESharp.Protocol
             bool includePublicKey = false,
             bool excludeNonce = false)
         {
-            if (signer == null)
-                signer = Signer;
+            signer ??= Signer;
 
             var protectedHeader = new Dictionary<string, object>
             {
@@ -982,12 +980,7 @@ namespace ACMESharp.Protocol
 
         protected static string ResolvePayload(object message)
         {
-            var payload = string.Empty;
-            if (message is string)
-                payload = (string)message;
-            else
-                payload = JsonSerializer.Serialize(message, JsonHelpers.JsonWebOptions);
-            return payload;
+            return message is string payload ? payload : JsonSerializer.Serialize(message, JsonHelpers.JsonWebOptions);
         }
 
         #region IDisposable Support

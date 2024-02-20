@@ -5,24 +5,24 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace ACMESharp.Crypto
 {
-    public static class RsaToolExtensions
+    public static class RsaHelper
     {
-        public static RSA GenerateAlgorithm(this RsaTool tool, int keyBitLength)
+        public static RSA GenerateAlgorithm(int keyBitLength)
         {
             return RSA.Create(keyBitLength);
         }
 
-        public static string GenerateKeys(this RsaTool tool, int keyBitLength)
+        public static string GenerateKeys(int keyBitLength)
         {
-            var rsa = GenerateAlgorithm(tool, keyBitLength);
-            return tool.GenerateKeys(rsa);
+            var rsa = GenerateAlgorithm(keyBitLength);
+            return CryptoHelper.Rsa.GenerateKeys(rsa);
         }
 
         /// <summary>
         /// Returns a DER-encoded PKCS#10 Certificate Signing Request for the given RSA parametes
         /// and the given hash algorithm.
         /// </summary>
-        public static byte[] GenerateCsr(this RsaTool tool, IEnumerable<string> dnsNames,
+        public static byte[] GenerateCsr(IEnumerable<string> dnsNames,
             RSA rsa, HashAlgorithmName? hashAlgor = null)
         {
             if (hashAlgor == null)

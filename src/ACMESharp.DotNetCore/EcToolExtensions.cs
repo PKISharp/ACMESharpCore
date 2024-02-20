@@ -5,13 +5,13 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace ACMESharp.Crypto
 {
-    public static class EcToolExtensions
+    public static class EcHelper
     {
         /// <summary>
         /// Returns a DER-encoded PKCS#10 Certificate Signing Request for the given ECDsa parametes
         /// and the given hash algorithm.
         /// </summary>
-        public static byte[] GenerateCsr(this EcTool tool, IEnumerable<string> dnsNames,
+        public static byte[] GenerateCsr(IEnumerable<string> dnsNames,
             ECDsa dsa, HashAlgorithmName? hashAlgor = null)
         {
             if (hashAlgor == null)
@@ -34,5 +34,5 @@ namespace ACMESharp.Crypto
 
             return csr.CreateSigningRequest();
         }
-    }
+    }   
 }

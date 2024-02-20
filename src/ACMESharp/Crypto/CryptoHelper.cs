@@ -8,25 +8,10 @@ namespace ACMESharp.Crypto
     /// * ECDSA Keys (P-256, P-384)
     /// 
     /// Thats' for both account keys and cert keys.
+    /// Partial classes support Base64, Ec, and Rsa tools
     /// </summary>
-    public static class CryptoHelper
+    public static partial class CryptoHelper
     {
-        /// <summary>
-        /// Returns a singleton instance of cryptographic tool
-        /// for URL-safe Base64 encoding.
-        /// </summary>
-        public static Base64Tool Base64 { get; } = new Base64Tool();
-
-        /// <summary>
-        /// Returns a singleton instance of cryptographic tool
-        /// for working with RSA keys and algorithms.
-        /// </summary>
-        public static RsaTool Rsa { get; } = new RsaTool();
-
-        /// <summary>
-        /// Returns a singleton instance of cryptographic tool
-        /// for working with EC keys and algorithms.
-        /// </summary>
-        public static EcTool Ec { get; } = new EcTool();
+        //Partial classes support Base64, Ec, and Rsa tools
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -122,7 +122,7 @@ namespace ACMESharp.IntegrationTests
                     var chlngDetails = testCtx.GroupLoadObject<Dns01ChallengeValidationDetails>(
                             $"order-authz_{authzIndex}-chlng_{chlngIndex}.json");
 
-                    Log.LogInformation("Creating DNS for Authorization {0} Challenge {1} as per {@Details}",
+                    Log.LogInformation("Creating DNS for Authorization {authzIndex} Challenge {chlngIndex} as per {Details}",
                             authzIndex, chlngIndex, chlngDetails);
                     await Aws.R53.EditTxtRecord(
                             chlngDetails.DnsRecordName,
@@ -190,7 +190,7 @@ namespace ACMESharp.IntegrationTests
                 foreach (var chlng in authz.Challenges.Where(
                     x => x.Type == Dns01ChallengeValidationDetails.Dns01ChallengeType))
                 {
-                    Log.LogInformation("Answering Authorization {0} Challenge {1}", authzIndex, chlngIndex);
+                    Log.LogInformation("Answering Authorization {authzIndex} Challenge {chlngIndex}", authzIndex, chlngIndex);
                     var updated = await Clients.Acme.AnswerChallengeAsync(chlng.Url);
 
                     ++chlngIndex;
@@ -275,10 +275,10 @@ namespace ACMESharp.IntegrationTests
 
             var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
-            var rsaKeys = CryptoHelper.Rsa.GenerateKeys(4096);
+            var rsaKeys = RsaHelper.GenerateKeys(4096);
             var rsa = CryptoHelper.Rsa.GenerateAlgorithm(rsaKeys);
             testCtx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
-            var derEncodedCsr = CryptoHelper.Rsa.GenerateCsr(
+            var derEncodedCsr = RsaHelper.GenerateCsr(
                     oldOrder.Payload.Identifiers.Select(x => x.Value), rsa);
             testCtx.GroupWriteTo("order-csr.der", derEncodedCsr);
 

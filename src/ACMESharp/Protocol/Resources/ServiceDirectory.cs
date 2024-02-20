@@ -42,8 +42,7 @@ namespace ACMESharp.Protocol.Resources
 
         public void SetExtra(string name, object value)
         {
-            if (_extra == null)
-                _extra = new Dictionary<string, object>();
+            _extra ??= new Dictionary<string, object>();
             _extra[name] = value;
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -284,10 +284,10 @@ namespace ACMESharp.IntegrationTests
 
             var oldOrder = testCtx.GroupLoadObject<OrderDetails>("order.json");
 
-            var rsaKeys = CryptoHelper.Rsa.GenerateKeys(4096);
+            var rsaKeys = RsaHelper.GenerateKeys(4096);
             var rsa = CryptoHelper.Rsa.GenerateAlgorithm(rsaKeys);
             testCtx.GroupWriteTo("order-csr-keys.txt", rsaKeys);
-            var derEncodedCsr = CryptoHelper.Rsa.GenerateCsr(
+            var derEncodedCsr = RsaHelper.GenerateCsr(
                     oldOrder.Payload.Identifiers.Select(x => x.Value), rsa);
             testCtx.GroupWriteTo("order-csr.der", derEncodedCsr);
 
