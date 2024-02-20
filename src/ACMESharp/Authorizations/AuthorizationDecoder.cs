@@ -17,25 +17,16 @@ namespace ACMESharp.Authorizations
                 Authorization authz, string challengeType, IJwsTool signer)
         {
             var challenge = authz.Challenges.Where(x => x.Type == challengeType)
-                    .FirstOrDefault();
-            if (challenge == null)
-            {
-                throw new InvalidOperationException(
+                    .FirstOrDefault() ?? throw new InvalidOperationException(
                         $"Challenge type [{challengeType}] not found for given Authorization");
-            }
-
-            switch (challengeType)
+            return challengeType switch
             {
-                case Dns01ChallengeValidationDetails.Dns01ChallengeType:
-                    return ResolveChallengeForDns01(authz, challenge, signer);
-                case Http01ChallengeValidationDetails.Http01ChallengeType:
-                    return ResolveChallengeForHttp01(authz, challenge, signer);
-                case TlsAlpn01ChallengeValidationDetails.TlsAlpn01ChallengeType:
-                    return ResolveChallengeForTlsAlpn01(authz, challenge, signer);
-            }
-
-            throw new NotImplementedException(
-                    $"Unknown or unsupported Challenge type [{challengeType}]");
+                Dns01ChallengeValidationDetails.Dns01ChallengeType => ResolveChallengeForDns01(authz, challenge, signer),
+                Http01ChallengeValidationDetails.Http01ChallengeType => ResolveChallengeForHttp01(authz, challenge, signer),
+                TlsAlpn01ChallengeValidationDetails.TlsAlpn01ChallengeType => ResolveChallengeForTlsAlpn01(authz, challenge, signer),
+                _ => throw new NotImplementedException(
+                                    $"Unknown or unsupported Challenge type [{challengeType}]"),
+            };
         }
 
         /// <summary>
