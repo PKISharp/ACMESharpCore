@@ -1,17 +1,51 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
 - master
 
 pool:
-  vmImage: 'Ubuntu-16.04'
-
-variables:
-  buildConfiguration: 'Release'
+  vmImage: 'ubuntu-latest'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+
+- task: Bash@3
+  displayName: 'install openssl'
+  inputs:
+    targetType: 'inline'
+    script: 'apt-get install -y openssl'
+
+- task: Bash@3
+  displayName: 'openssl version'
+  inputs:
+    targetType: 'inline'
+    script: 'openssl --version'
+
+- task: UseDotNet@2
+  displayName: 'Use .Net Core sdk 8.x'
+  inputs:
+    version: 8.x
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: '**/ACMESharpCore.sln'
+    arguments: '-c $(BuildConfiguration) '
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    publishTestResults: true
+    projects: '**/**UnitTests.csproj'
+    arguments: '--no-build -c $(BuildConfiguration) -v d'
+
+- task: CopyFiles@1
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    Contents: |
+     **/*.dll
+     **/*.nupkg
+     **/*.snupkg
+     **/*.zip
+     **/publish/**
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
